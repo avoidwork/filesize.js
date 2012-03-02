@@ -56,6 +56,7 @@
 				if (x.hasOwnProperty(n)) {
 					size   = x[n];
 					suffix = n
+					break;
 				}
 			}
 			if (num >= size) {
