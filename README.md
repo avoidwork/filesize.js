@@ -3,12 +3,14 @@ filesize.js provides a simple way to get a human readable file size string from 
 
 An optional second parameter is the decimal place to round to.
 
+The maximum supported size is a terabyte. When hard drives get bigger, I'll add support for petabytes.
+
 ## Sample
-filesize(1500); // "1.46MB"
+filesize(1500); // "1.46KB"
 
-filesize("1500000000"); // "1.40TB"
+filesize("1500000000"); // "1.40GB"
 
-filesize("1500000000", 0); // "1TB"
+filesize("1500000000", 0); // "1GB"
 
 ## Information
 #### License
