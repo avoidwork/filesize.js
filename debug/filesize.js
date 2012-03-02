@@ -29,7 +29,7 @@
  * filesize.js
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.0
+ * @version 1.1
  */
 (function (window) {
 	"use strict";
@@ -43,7 +43,7 @@
 	 */
 	var filesize = function (arg, pos) {
 		var num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg),
-		    sizes  = [{"kB": 0}, {"MB": 1024}, {"GB": 1048576}, {"TB": 1073741824}],
+		    sizes  = [{"B": 0}, {"KB": 1024}, {"MB": 1048576}, {"GB": 1073741824}, {"TB": 1099511627776}],
 		    i      = sizes.length,
 		    result = "",
 		    size, suffix, n, x;
@@ -59,7 +59,7 @@
 				}
 			}
 			if (num >= size) {
-				result = (suffix === "kB" ? num : (num / size).toFixed(pos)) + suffix;
+				result = (suffix === "B" ? num : (num / size).toFixed(pos)) + suffix;
 				break;
 			}
 		}

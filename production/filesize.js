@@ -29,6 +29,6 @@
  * filesize.js
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.0
+ * @version 1.1
  */
-(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{kB:0},{MB:1024},{GB:1048576},{TB:1073741824}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)j.hasOwnProperty(i)&&(g=j[i],h=i);if(c>=g){f=(h==="kB"?c:(c/g).toFixed(b))+h;break}}return f};typeof define=="function"?define("filesize",[],function(){return b}):a.filesize=b})(window)
+(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)j.hasOwnProperty(i)&&(g=j[i],h=i);if(c>=g){f=(h==="B"?c:(c/g).toFixed(b))+h;break}}return f};typeof define=="function"?define("filesize",[],function(){return b}):a.filesize=b})(window)
