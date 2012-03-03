@@ -5,12 +5,12 @@ An optional second parameter is the decimal place to round to.
 
 The maximum supported size is a terabyte. When hard drives get bigger, I'll add support for petabytes.
 
-## Sample
+## Examples
+``` js
 filesize(1500); // "1.46KB"
-
 filesize("1500000000"); // "1.40GB"
-
 filesize("1500000000", 0); // "1GB"
+```
 
 ## Information
 #### License
