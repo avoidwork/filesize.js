@@ -24,6 +24,8 @@
 
 			$("year").text(new Date().getFullYear());
 			$("body").css("opacity", 1);
+			$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
+			$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
 		};
 
 		// @constructor

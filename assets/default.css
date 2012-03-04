@@ -142,6 +142,11 @@ ul.downloads:last-child {
 	margin          : 10px -50px 0 0;
 }
 
+.amd:hover,
+.license:hover {
+	cursor          : pointer;
+}
+
 /* Sprites */
 .dl_debugging {
   background: url(sprites.png) -277px 0px no-repeat;
