@@ -31,44 +31,4 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @version 1.2
  */
-(function (window) {
-	"use strict";
-
-	/**
-	 * Transforms a file size into a readable String
-	 * 
-	 * @param  {Mixed}  arg String, Int or Float to transform
-	 * @param  {Number} pos Position to round to
-	 * @return {String} Readable file size String
-	 */
-	var filesize = function (arg, pos) {
-		var num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg),
-		    sizes  = [{"B": 0}, {"KB": 1024}, {"MB": 1048576}, {"GB": 1073741824}, {"TB": 1099511627776}],
-		    i      = sizes.length,
-		    result = "",
-		    size, suffix, n, x;
-
-		pos = typeof pos === "undefined" ? 2 : parseInt(pos);
-
-		while (i--) {
-			x = sizes[i];
-			for (n in x) {
-				if (x.hasOwnProperty(n)) {
-					size   = x[n];
-					suffix = n
-					break;
-				}
-			}
-			if (num >= size) {
-				result = (suffix === "B" ? num : (num / size).toFixed(pos)) + suffix;
-				break;
-			}
-		}
-
-		return result;
-	},
-	fn = function () { window.filesize = filesize; };
-
-	// AMD support
-	typeof define === "function" ? define("filesize", fn) : fn();
-})(window);
+(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:(c/g).toFixed(b))+h;break}}return f},c=function(){a.filesize=b};typeof define=="function"?define("filesize",c):c()})(window)
