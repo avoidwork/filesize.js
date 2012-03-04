@@ -69,7 +69,7 @@ section.root {
 	display    : inline-block;
 }
 
-.code ul li {
+ul.code li {
 	margin     : 0 0 5pt 0;
 	list-style-type : none;
 }
