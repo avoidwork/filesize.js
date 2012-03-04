@@ -152,6 +152,10 @@ ul.downloads:last-child {
 	cursor          : pointer;
 }
 
+.code {
+	font-family : 'Coda', monospace;
+}
+
 /* Sprites */
 .dl_debugging {
   background: url(sprites.png) -277px 0px no-repeat;
