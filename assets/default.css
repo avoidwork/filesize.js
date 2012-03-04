@@ -132,6 +132,16 @@ ul.downloads:last-child {
 	padding         : 10px;
 }
 
+.amd {
+	float           : left;
+	margin          : -5px 0 0 -100px;
+}
+
+.license {
+	float           : right;
+	margin          : 10px -50px 0 0;
+}
+
 /* Sprites */
 .dl_debugging {
   background: url(sprites.png) -277px 0px no-repeat;
