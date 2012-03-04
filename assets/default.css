@@ -103,12 +103,6 @@ ul.downloads:last-child {
 	margin     : 0 0 0 0 !important;
 }
 
-h1 span,
-h2 span,
-h3 span {
-	display   : none;
-}
-
 .active {
 	color   : #000;
 }
