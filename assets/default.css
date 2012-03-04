@@ -7,7 +7,8 @@
 	transition         : all 0.5s ease-in;
 }
 
-html, body {
+html,
+body {
 	min-height  : 100%;
 	min-width   : 1000px;
 }
@@ -55,12 +56,25 @@ h1 {
 	background  : url(logo.png) no-repeat;
 }
 
-h2, h3, h4, h5, h6 {
+h2,
+h3,
+h4,
+h5,
+h6 {
 	font-weight : bold;
 }
 
-p, h2, h5, h6, pre {
+p,
+h2,
+h5,
+h6,
+pre {
 	margin    : 0 0 20pt 0;
+}
+
+p,
+ul {
+	padding   : 0 0 0 40px;
 }
 
 h3, h4 {
