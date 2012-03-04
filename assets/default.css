@@ -66,6 +66,20 @@ footer {
 	font-size : 10pt;
 }
 
+ul li {
+	margin     : 0 0 5pt 0;
+	list-style-type : none;
+}
+
+ul.downloads:last-child {
+	margin     : 0 0 0 0;
+}
+
+ul.downloads li {
+	display    : inline;
+	margin     : 0 20px 0 0;
+}
+
 h1 span,
 h2 span,
 h3 span {
