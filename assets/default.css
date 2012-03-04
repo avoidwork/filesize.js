@@ -17,7 +17,7 @@ body {
 	background  : #fff;
 	color       : #000;
 	font-family : arial, sans-serif, monospace;
-	font-size   : 18pt;
+	font-size   : 16pt;
 	line-height : 22pt;
 	opacity     : 0;
 }
@@ -130,9 +130,9 @@ ul.downloads:last-child {
 }
 
 .shadow {
-	-webkit-box-shadow: 0px 5px 10px 1px #888;
-	-moz-box-shadow: 0px 5px 10px 1px #888;
-	box-shadow: 0px 5px 10px 1px #888;
+	-webkit-box-shadow: 0px 1px 1em 1px #888;
+	-moz-box-shadow: 0px 1px 1em 1px #888;
+	box-shadow: 0px 1px 1em 1px #888;
 }
 
 .padded {
