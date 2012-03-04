@@ -58,8 +58,7 @@ header {
 h1 {
 	line-height : 80px;
 	font-size   : 50px;
-	padding     : 0 0 0 90px;
-	background  : url(logo.png) no-repeat;
+	padding     : 0 0 0 40px;
 }
 
 h2,
