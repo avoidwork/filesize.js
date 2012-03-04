@@ -82,7 +82,7 @@ h3 {
 }
 
 h3:first-child {
-	margin-top : 0px !important;
+	margin-top : 25px !important;
 }
 
 p,
@@ -139,7 +139,7 @@ ul.downloads:last-child {
 
 .amd {
 	float           : left;
-	margin          : -5px 0 0 -50px;
+	margin          : -5px 0 0 -55px;
 }
 
 .license {
