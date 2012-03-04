@@ -154,6 +154,7 @@ ul.downloads:last-child {
 
 .code {
 	font-family : 'Coda', monospace;
+	margin-left : 20px !important;
 }
 
 /* Sprites */
