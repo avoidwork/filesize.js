@@ -8,9 +8,13 @@
 	"use strict";
 
 	var dashboard = (function () {
-		var render;
+		var $ = window[abaaso.aliased],
+		    render;
 
 		render = function () {
+			// Setting viewport to maintain required size (until media queries are in place)
+			if ($.client.mobile || $.client.tablet) $("head").create("meta", {name: "viewport", content: "width=1200"});
+
 			$.repeat(function () {
 				if (/loaded|complete/.test(document.readyState) && typeof $("body")[0] !== "undefined") {
 					$("year").text(new Date().getFullYear());
