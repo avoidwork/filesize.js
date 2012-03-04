@@ -80,13 +80,13 @@ ul li {
 	list-style-type : none;
 }
 
-ul.downloads:last-child {
-	margin     : 0 0 0 0;
+ul.downloads li {
+	display    : inline-block;
+	margin     : 0 20px 0 0;
 }
 
-ul.downloads li {
-	display    : inline;
-	margin     : 0 20px 0 0;
+ul.downloads:last-child {
+	margin     : 0 0 0 0 !important;
 }
 
 h1 span,
