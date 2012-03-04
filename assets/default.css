@@ -81,6 +81,10 @@ h3 {
 	margin    : 75px 0 25px 0;	
 }
 
+h3:first-child {
+	margin-top : 0px !important;
+}
+
 p,
 ul {
 	padding   : 0 0 0 40px;
@@ -106,10 +110,6 @@ ul.downloads li {
 
 ul.downloads:last-child {
 	margin     : 0 0 0 0 !important;
-}
-
-#stage:first-child {
-	margin-top : 0px !important;
 }
 
 .hide,
