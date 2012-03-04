@@ -83,8 +83,7 @@ h3 {
 }
 
 p,
-ul,
-footer section {
+ul {
 	padding   : 0 0 0 40px;
 }
 
@@ -93,7 +92,7 @@ code, pre {
 }
 
 footer {
-	font-size : 10pt;
+	font-size : 12pt;
 }
 
 ul li {
