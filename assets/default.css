@@ -90,10 +90,6 @@ ul {
 	padding   : 0 0 0 40px;
 }
 
-code, pre {
-	font-size : 10pt;
-}
-
 footer {
 	font-size : 12pt;
 }
@@ -155,6 +151,7 @@ ul.downloads:last-child {
 .code {
 	font-family : 'Coda', monospace;
 	margin-left : 20px !important;
+	font-size   : 12pt;
 }
 
 .command {
