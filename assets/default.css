@@ -35,13 +35,19 @@ a:hover {
 header section,
 article section,
 footer section {
-	width    : 960px;
-	display  : block;
-	margin   : 25px auto 25px auto;
+	width         : 960px;
+	display       : block;
+	margin-right  : auto;
+	margin-left   : auto;
+	margin-bottom : 0px;
 }
 
 header section {
-	margin-top  : 0px !important;
+	margin-top  : 0px;
+}
+
+footer section {
+	margin-top  : 100px;
 }
 
 header {
@@ -77,7 +83,8 @@ h3 {
 }
 
 p,
-ul {
+ul,
+footer section {
 	padding   : 0 0 0 40px;
 }
 
