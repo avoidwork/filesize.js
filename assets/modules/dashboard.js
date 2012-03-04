@@ -8,29 +8,23 @@
 	"use strict";
 
 	var dashboard = (function () {
-		var ready, render;
-
-		ready = function () {
-			var dashboard = window.dashboard
-
-			delete dashboard.ready;
-		};
+		var render;
 
 		render = function () {
-			var stage     = $("#stage"),
-			    dashboard = window.dashboard;
-
-			delete dashboard.render;
-
-			$("year").text(new Date().getFullYear());
-			$("body").css("opacity", 1);
-			$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
-			$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
+			$.repeat(function () {
+				if (/loaded|complete/.test(document.readyState) && typeof $("body")[0] !== "undefined") {
+					$("year").text(new Date().getFullYear());
+					$("body").css("opacity", 1);
+					$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
+					$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
+					delete window.dashboard;
+					return false;
+				}
+			}, 10);
 		};
 
 		// @constructor
 		return {
-			ready  : ready,
 			render : render
 		}
 	});
@@ -41,7 +35,6 @@
 			define("dashboard", ["abaaso"], function () {
 				var $ = window[abaaso.aliased];
 				window.dashboard = dashboard();
-				window.dashboard.ready();
 				window.dashboard.render();
 			});
 			break;
