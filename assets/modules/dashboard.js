@@ -76,7 +76,7 @@
 
 			$.route.set("main", function () {
 				obj = $("section[data-hash='main']")[0];
-				obj.get("views/intro.htm");
+				obj.get("views/main.htm");
 			});
 
 			// Prepping the UI
