@@ -1,0 +1,55 @@
+.dl_debugging {
+  background: url(sprites.png) -277px 0px no-repeat;
+  display: block;
+  width: 210px;
+  height: 89px;
+}
+
+.dl_production {
+  background: url(sprites.png) -277px -91px no-repeat;
+  display: block;
+  width: 210px;
+  height: 89px;
+}
+
+.header_about {
+  background: url(sprites.png) 0px -50px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.header_download {
+  background: url(sprites.png) 0px -100px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.header_examples {
+  background: url(sprites.png) 0px -150px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.ribbon_amd {
+  background: url(sprites.png) -168px -200px no-repeat;
+  display: block;
+  width: 47px;
+  height: 105px;
+}
+
+.round_license {
+  background: url(sprites.png) 0px -200px no-repeat;
+  display: block;
+  width: 166px;
+  height: 167px;
+}
+
+.twitter {
+  background: url(sprites.png) 0px 0px no-repeat;
+  display: block;
+  width: 275px;
+  height: 48px;
+}
