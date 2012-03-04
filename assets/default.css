@@ -72,13 +72,13 @@ pre {
 	margin    : 0 0 20pt 0;
 }
 
+h3 {
+	margin    : 50px 0 5px 0;	
+}
+
 p,
 ul {
 	padding   : 0 0 0 40px;
-}
-
-h3, h4 {
-	margin    : 0 0 5px 0;	
 }
 
 code, pre {
@@ -103,8 +103,8 @@ ul.downloads:last-child {
 	margin     : 0 0 0 0 !important;
 }
 
-.active {
-	color   : #000;
+#stage:first-child {
+	margin-top : 0px !important;
 }
 
 .hide,
