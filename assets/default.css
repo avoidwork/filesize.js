@@ -157,6 +157,11 @@ ul.downloads:last-child {
 	margin-left : 20px !important;
 }
 
+.command {
+	width       : 200px !important;
+	font-weight : bold;
+}
+
 /* Sprites */
 .dl_debugging {
   background: url(sprites.png) -277px 0px no-repeat;
