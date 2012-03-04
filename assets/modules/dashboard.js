@@ -84,7 +84,6 @@
 			$("version").text($.version);
 			$("year").text(new Date().getFullYear());
 			$("section").on("beforeGet", function () { this.loading(); }, "loading");
-			$("section[data-hash='main']").on("afterGet", function () { twitter.display(); }, "twitter");
 			$("ul.tab a").addClass("shadow round button padded");
 			$("body").css("opacity", 1);
 
@@ -98,12 +97,9 @@
 
 		// @constructor
 		return {
-			api     : api,
 			blog    : blog,
-			collabs : collabs,
 			ready   : ready,
-			render  : render,
-			twitter : twitter
+			render  : render
 		}
 	});
 
