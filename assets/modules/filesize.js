@@ -66,8 +66,9 @@
 		}
 
 		return result;
-	};
+	},
+	fn = function () { window.filesize = filesize; };
 
 	// AMD support
-	typeof define === "function" ? define("filesize", [], filesize) : window.filesize = filesize;
+	typeof define === "function" ? define("filesize", fn) : fn();
 })(window);

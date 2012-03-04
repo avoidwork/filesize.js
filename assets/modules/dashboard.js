@@ -4,7 +4,7 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @version 1.0
  */
-(function () {
+(function (window) {
 	"use strict";
 
 	var dashboard = (function () {
@@ -49,4 +49,4 @@
 			window.dashboard = dashboard();
 			abaaso.on("ready", window.dashboard.ready).on("render", window.dashboard.render);
 	}
-})();
+})(window);
