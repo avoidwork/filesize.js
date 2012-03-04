@@ -1,10 +1,10 @@
 * {
 	margin      : 0 0 0 0;
 	padding     : 0 0 0 0;
-	-webkit-transition : all 0.2s ease-in;
-	-moz-transition    : all 0.2s ease-in;
-	-o-transition      : all 0.2s ease-in;
-	transition         : all 0.2s ease-in;
+	-webkit-transition : all 0.5s ease-in;
+	-moz-transition    : all 0.5s ease-in;
+	-o-transition      : all 0.5s ease-in;
+	transition         : all 0.5s ease-in;
 }
 
 html, body {
@@ -13,10 +13,10 @@ html, body {
 }
 
 body {
-	background  : #f6f7fa;
+	background  : #fff;
 	color       : #000;
-	font-family : 'Asap', arial, sans-serif, monospace;
-	font-size   : 12pt;
+	font-family : arial, sans-serif, monospace;
+	font-size   : 18pt;
 	line-height : 22pt;
 	opacity     : 0;
 }
@@ -31,47 +31,12 @@ a:hover {
 	color              : #ff9900;
 }
 
-article, footer {
+header section,
+article section,
+footer section {
 	width    : 960px;
 	display  : block;
-}
-
-article, footer {
 	margin   : 25px auto 25px auto;
-	filter   : dropshadow(color=#000, offx=0, offy=0);
-	text-shadow : 0px 0px 3px #fff;
-}
-
-header {
-	display    : inline-block;
-	width      : 555px;
-}
-
-ul.tab {
-	display    : inline-block;
-	width      : 400px;
-	margin-top : -30px;
-	vertical-align : middle;
-}
-
-ul.tab:last-child {
-	margin     : 0 0 0 0;
-}
-
-ul.tab li {
-	display    : inline;
-	margin     : 0 20px 0 0;
-}
-
-section.root {
-	margin-top : 25px;
-	clear      : both;
-	display    : inline-block;
-}
-
-ul.code li {
-	margin     : 0 0 5pt 0;
-	list-style-type : none;
 }
 
 h1 {
@@ -101,43 +66,8 @@ footer {
 	font-size : 10pt;
 }
 
-#copy {
-	display    : inline-block;
-	vertical-align : top;
-	width      : 700px;
-	min-height : 500px;
-}
-
-#gradient {
-	opacity    : .2;
-	height     : 500px;
-	width      : 100%;
-	position   : absolute;
-	left       : 0px;
-	top        : 0px;
-	z-index    : -1;
-	background : -moz-linear-gradient(top,  rgba(0,0,0,0.65) 0%, rgba(0,0,0,0) 100%);
-	background : -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.65)), color-stop(100%,rgba(0,0,0,0)));
-	background : -webkit-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
-	background : -o-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
-	background : -ms-linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
-	background : linear-gradient(top,  rgba(0,0,0,0.65) 0%,rgba(0,0,0,0) 100%);
-	filter     : progid:DXImageTransform.Microsoft.gradient( startColorstr='#a6000000', endColorstr='#00000000',GradientType=0 );
-}
-
 .active {
 	color   : #000;
-}
-
-.col {
-	width   : 28%;
-	float   : left;
-	clear   : none;
-	margin  : auto 5% auto auto;
-}
-
-.col:last-child {
-	margin-right : auto 0 auto auto;
 }
 
 .hide,
@@ -161,49 +91,63 @@ footer {
 	box-shadow: 0px 5px 10px 1px #888;
 }
 
-.button {
-	text-shadow     : none;
-	color           : #fff;
-	font-weight     : normal;
-	line-height     : 40px;
-	text-decoration : none !important;
-	background-color: #404040;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(64, 64, 64)), to(rgb(27, 27, 27)));
-	background-image: -webkit-linear-gradient(top, rgb(64, 64, 64), rgb(27, 27, 27));
-	background-image: -moz-linear-gradient(top, rgb(64, 64, 64), rgb(27, 27, 27));
-	background-image: -o-linear-gradient(top, rgb(64, 64, 64), rgb(27, 27, 27));
-	background-image: -ms-linear-gradient(top, rgb(64, 64, 64), rgb(27, 27, 27));
-	background-image: linear-gradient(top, rgb(64, 64, 64), rgb(27, 27, 27));
-	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#404040', EndColorStr='#1b1b1b');
-	border             : 1px solid #000;
-}
-
-.button:hover {
-	color           : #000;
-	background-color: #ffffff;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)), to(rgb(252, 253, 57)));
-	background-image: -webkit-linear-gradient(top, rgb(255, 255, 255), rgb(252, 253, 57));
-	background-image: -moz-linear-gradient(top, rgb(255, 255, 255), rgb(252, 253, 57));
-	background-image: -o-linear-gradient(top, rgb(255, 255, 255), rgb(252, 253, 57));
-	background-image: -ms-linear-gradient(top, rgb(255, 255, 255), rgb(252, 253, 57));
-	background-image: linear-gradient(top, rgb(255, 255, 255), rgb(252, 253, 57));
-	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#ffffff', EndColorStr='#fcfd39');
-	border          : 1px solid #fcfd39;
-}
-
-a.active {
-	color           : #000;
-	background-color: #fcfd39;
-	background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(252, 253, 57)), to(rgb(255, 145, 35)));
-	background-image: -webkit-linear-gradient(top, rgb(252, 253, 57), rgb(255, 145, 35));
-	background-image: -moz-linear-gradient(top, rgb(252, 253, 57), rgb(255, 145, 35));
-	background-image: -o-linear-gradient(top, rgb(252, 253, 57), rgb(255, 145, 35));
-	background-image: -ms-linear-gradient(top, rgb(252, 253, 57), rgb(255, 145, 35));
-	background-image: linear-gradient(top, rgb(252, 253, 57), rgb(255, 145, 35));
-	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#fcfd39', EndColorStr='#ff9123');
-	border          : 1px solid #ff9123;
-}
-
 .padded {
 	padding         : 10px;
+}
+
+/* Sprites */
+.dl_debugging {
+  background: url(sprites.png) -277px 0px no-repeat;
+  display: block;
+  width: 210px;
+  height: 89px;
+}
+
+.dl_production {
+  background: url(sprites.png) -277px -91px no-repeat;
+  display: block;
+  width: 210px;
+  height: 89px;
+}
+
+.header_about {
+  background: url(sprites.png) 0px -50px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.header_download {
+  background: url(sprites.png) 0px -100px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.header_examples {
+  background: url(sprites.png) 0px -150px no-repeat;
+  display: block;
+  width: 264px;
+  height: 48px;
+}
+
+.ribbon_amd {
+  background: url(sprites.png) -168px -200px no-repeat;
+  display: block;
+  width: 47px;
+  height: 105px;
+}
+
+.round_license {
+  background: url(sprites.png) 0px -200px no-repeat;
+  display: block;
+  width: 166px;
+  height: 167px;
+}
+
+.twitter {
+  background: url(sprites.png) 0px 0px no-repeat;
+  display: block;
+  width: 275px;
+  height: 48px;
 }
