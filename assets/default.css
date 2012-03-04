@@ -39,6 +39,10 @@ footer section {
 	margin   : 25px auto 25px auto;
 }
 
+header section {
+	margin-top  : 0px !important;
+}
+
 header {
 	background  : #000;
 	color       : #fff;
