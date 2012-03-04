@@ -66,6 +66,12 @@ footer {
 	font-size : 10pt;
 }
 
+h1 span,
+h2 span,
+h3 span {
+	display   : none;
+}
+
 .active {
 	color   : #000;
 }
