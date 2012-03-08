@@ -14,9 +14,9 @@
 <script type="text/javascript">
 require.config({baseUrl: "assets/modules"});
 require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesize) {
-  window.filesize  = filesize;
-  window.dashboard = dashboard;
-  window.dashboard.render();
+    window.filesize  = filesize;
+    window.dashboard = dashboard;
+    window.dashboard.render();
 });
 </script>
 <script type="text/javascript">
@@ -41,43 +41,42 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
 <body>
 
 <header class="shadow">
-  <section>
-    <h1>filesize.js</h1>
-    <h2 class="amd ribbon_amd"><span class="hidden">AMD</span></h2>
-    <h2 class="license round_license"><span class="hidden">BSD3 licensed</span></h2>
-  </section>
+    <section>
+        <h1>filesize.js</h1>
+        <h2 class="amd ribbon_amd"><span class="hidden">AMD</span></h2>
+        <h2 class="license round_license"><span class="hidden">BSD3 licensed</span></h2>
+    </section>
 </header>
 
 <article>
-  <section id="stage">
-    <h3 class="header_about"><span class="hidden">About</span></h3>
-    <p>filesize.js is a tiny JavaScript library that creates a Global function named filesize().</p>
-    <p>It provides an easy way to get a human readable file size String. It works great with all kinds of APIs that describe files.</p>
-    <p>filesize.js is an AMD module, which can be lazy loaded with AMD loaders like <a href="http://requirejs.org/">require.js</a> and <a href="https://github.com/unscriptable/curl">curl.js</a>.</p>
+    <section id="stage">
+        <h3 class="header_about"><span class="hidden">About</span></h3>
+        <p>filesize.js is a tiny JavaScript library that creates a Global function named filesize().</p>
+        <p>It provides an easy way to get a human readable file size String. It works great with all kinds of APIs that describe files.</p>
+        <p>filesize.js is an AMD module, which can be lazy loaded with AMD loaders like <a href="http://requirejs.org/">require.js</a> and <a href="https://github.com/unscriptable/curl">curl.js</a>.</p>
 
-    <h3 class="header_examples"><span class="hidden">Examples</span></h3>
-    <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2).</p>
-    <p>It returns a String that can be read by people.</p>
-    <ul class="code">
-      <li><div class="inline command">filesize(1500);</div> = "1.46KB"</li>
-      <li><div class="inline command">filesize("1500000000");</div> = "1.40GB"</li>
-      <li><div class="inline command">filesize("1500000000", 0);</div> = "1GB"</li>
-    </ul>
+        <h3 class="header_examples"><span class="hidden">Examples</span></h3>
+        <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2).</p>
+        <p>It returns a String that can be read by people.</p>
+        <ul class="code">
+            <li><div class="inline command">filesize(1500);</div> = "1.46KB"</li>
+            <li><div class="inline command">filesize("1500000000");</div> = "1.40GB"</li>
+            <li><div class="inline command">filesize("1500000000", 0);</div> = "1GB"</li>
+        </ul>
 
-    <h3 class="header_download"><span class="hidden">Download</span></h3>
-    <p>Latest version is available from <a href="https://github.com/avoidwork/filesize.js">GitHub</a></p>
-    <ul class="downloads">
-      <li><a href="https://raw.github.com/avoidwork/filesize.js/master/debug/filesize.js"><div class="inline dl_debugging"><span class="hidden">Debugging</span></div></a></li>
-      <li><a href="https://raw.github.com/avoidwork/filesize.js/master/production/filesize.js"><div class="inline dl_production"><span class="hidden">Production</span></div></a></li>
-    </ul>
-
-  </section>
+        <h3 class="header_download"><span class="hidden">Download</span></h3>
+        <p>Latest version is available from <a href="https://github.com/avoidwork/filesize.js">GitHub</a></p>
+        <ul class="downloads">
+            <li><a href="https://raw.github.com/avoidwork/filesize.js/master/debug/filesize.js"><div class="inline dl_debugging"><span class="hidden">Debugging</span></div></a></li>
+            <li><a href="https://raw.github.com/avoidwork/filesize.js/master/production/filesize.js"><div class="inline dl_production"><span class="hidden">Production</span></div></a></li>
+        </ul>
+    </section>
 </article>
 
 <footer>
-  <section>
-    <p>Copyright &copy <year></year> <a href="http://avoidwork.com">Jason Mulligan</a></p>
-  </section>
+    <section>
+        <p>Copyright &copy <year></year> <a href="http://avoidwork.com">Jason Mulligan</a></p>
+    </section>
 </footer>
 
 <a href="https://github.com/avoidwork/filesize.js"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
