@@ -20,7 +20,7 @@
 					$("body").css("opacity", 1);
 					$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
 					$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
-					delete window.dashboard;
+					if (typeof global.dashboard !== "undefined") delete global.dashboard;
 					return false;
 				}
 			}, 10);
@@ -36,7 +36,7 @@
 	switch (true) {
 		case typeof define === "function":
 			define("dashboard", ["abaaso"], function (abaaso) {
-				return dashboard(global[abaaso[abaaso.aliased]]);
+				return dashboard(global[abaaso["aliased"]];
 			});
 			break;
 		default:
