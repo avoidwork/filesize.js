@@ -29,7 +29,7 @@
  * filesize.js
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.2
+ * @version 1.3
  */
 (function (window) {
 	"use strict";
@@ -69,5 +69,5 @@
 	};
 
 	// AMD support
-	typeof define === "function" ? define("filesize", function () { return filesize; }) : window.filesize = filesize;
+	typeof define === "function" ? define("filesize", filesize) : window.filesize = filesize;
 })(window);
