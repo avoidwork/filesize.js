@@ -4,12 +4,11 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @version 1.0
  */
-(function (window) {
+(function (global) {
 	"use strict";
 
-	var dashboard = (function () {
-		var $ = window[abaaso.aliased],
-		    render;
+	var dashboard = (function ($) {
+		var render;
 
 		render = function () {
 			// Setting viewport to maintain required size (until media queries are in place)
@@ -36,14 +35,13 @@
 	// AMD support
 	switch (true) {
 		case typeof define === "function":
-			define("dashboard", ["abaaso"], function () {
-				var $ = window[abaaso.aliased];
-				window.dashboard = dashboard();
-				window.dashboard.render();
+			define("dashboard", ["abaaso"], function (abaaso) {
+				global.dashboard = dashboard(global[abaaso[abaaso.aliased]]);
+				global.dashboard.render();
 			});
 			break;
 		default:
-			window.dashboard = dashboard();
-			abaaso.on("ready", window.dashboard.ready).on("render", window.dashboard.render);
+			global.dashboard = dashboard();
+			abaaso.on("ready", global.dashboard.ready).on("render", global.dashboard.render);
 	}
-})(window);
+})(this);
