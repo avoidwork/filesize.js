@@ -28,9 +28,9 @@
 		};
 
 		// @constructor
-		return {init : init };
+		return {init : init};
 	});
 
 	// AMD support
-	define("dashboard", ["abaaso"], function (abaaso) { return dashboard(global[abaaso["aliased"]]); });
+	define("dashboard", ["abaaso"], function (abaaso) { return dashboard(global[abaaso.aliased]); });
 })(this);
