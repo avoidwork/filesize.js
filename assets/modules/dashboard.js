@@ -36,8 +36,7 @@
 	switch (true) {
 		case typeof define === "function":
 			define("dashboard", ["abaaso"], function (abaaso) {
-				global.dashboard = dashboard(global[abaaso[abaaso.aliased]]);
-				global.dashboard.render();
+				return dashboard(global[abaaso[abaaso.aliased]]);
 			});
 			break;
 		default:

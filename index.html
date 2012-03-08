@@ -13,7 +13,11 @@
 <script type="text/javascript" src="assets/require.js"></script>
 <script type="text/javascript">
 require.config({baseUrl: "assets/modules"});
-require(["abaaso", "dashboard", "filesize"]);
+require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesize) {
+  window.filesize  = filesize;
+  window.dashboard = dashboard;
+  window.dashboard.render();
+});
 </script>
 <script type="text/javascript">
 
