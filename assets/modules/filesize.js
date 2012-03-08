@@ -31,4 +31,4 @@
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @version 1.3
  */
-(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:(c/g).toFixed(b))+h;break}}return f};typeof define=="function"?define("filesize",b):a.filesize=b})(this)
+(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:(c/g).toFixed(b))+h;break}}return f};typeof define=="function"?define("filesize",function(){return b}):a.filesize=b})(this)
