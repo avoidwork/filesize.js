@@ -27,18 +27,9 @@
 		};
 
 		// @constructor
-		return {
-			render : render
-		}
+		return {render : render };
 	});
 
 	// AMD support
-	switch (true) {
-		case typeof define === "function":
-			define("dashboard", ["abaaso"], function (abaaso) { return dashboard(global[abaaso["aliased"]]); });
-			break;
-		default:
-			global.dashboard = dashboard();
-			abaaso.on("ready", global.dashboard.ready).on("render", global.dashboard.render);
-	}
+	define("dashboard", ["abaaso"], function (abaaso) { return dashboard(global[abaaso["aliased"]]); });
 })(this);
