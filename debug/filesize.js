@@ -69,5 +69,5 @@
 	};
 
 	// AMD support
-	typeof define === "function" ? define("filesize", filesize) : global.filesize = filesize;
+	typeof define === "function" ? define("filesize", function () { return filesize; }) : global.filesize = filesize;
 })(this);
