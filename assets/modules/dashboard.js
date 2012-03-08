@@ -35,9 +35,7 @@
 	// AMD support
 	switch (true) {
 		case typeof define === "function":
-			define("dashboard", ["abaaso"], function (abaaso) {
-				return dashboard(global[abaaso["aliased"]];
-			});
+			define("dashboard", ["abaaso"], function (abaaso) { return dashboard(global[abaaso["aliased"]]); });
 			break;
 		default:
 			global.dashboard = dashboard();
