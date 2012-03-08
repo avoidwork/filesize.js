@@ -15,8 +15,7 @@
 require.config({baseUrl: "assets/modules"});
 require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesize) {
     window.filesize  = filesize;
-    window.dashboard = dashboard;
-    window.dashboard.render();
+    dashboard.init();
 });
 </script>
 <script type="text/javascript">
