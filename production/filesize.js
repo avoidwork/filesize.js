@@ -28,7 +28,14 @@
 /**
  * filesize.js
  *
+ * Transforms a file size Number into a readable String
+ * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.3
+ * @module filesize
+ * @version 1.4
+ * 
+ * @param  {Mixed}  arg String, Int or Float to transform
+ * @param  {Number} pos Position to round to
+ * @return {String} Readable file size String
  */
-(function(a){"use strict";var b=function(a,b){var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:(c/g).toFixed(b))+h;break}}return f};typeof define=="function"?define("filesize",function(){return b}):a.filesize=b})(this)
+(function(a){"use strict";var b=function(a,b){if(isNaN(a)||typeof b!="undefined"&&isNaN(b))throw Error("Invalid arguments");var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:c/g).toFixed(b)+h;break}}return f};typeof define=="function"?define("filesize",function(){return b}):a.filesize=b})(this)
