@@ -149,7 +149,7 @@ ul.downloads:last-child {
 }
 
 .code {
-	font-family : 'Coda', monospace;
+	font-family : monospace;
 	font-size   : 12pt;
 }
 
@@ -217,4 +217,9 @@ ul.downloads:last-child {
   display: block;
   width: 275px;
   height: 48px;
+}
+
+.sample {
+	width       : 900px;
+	font-size   : 14px !important;
 }

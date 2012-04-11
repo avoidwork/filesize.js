@@ -7,7 +7,6 @@
 <meta name="description" content="Creates human readable file size strings" />
 <link rel="shortcut icon" type="image/ico" href="assets/favicon.png" />
 <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Coda' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="assets/default.css" media="print,screen" />
 <script type="text/javascript" src="assets/require.js"></script>
 <script type="text/javascript">
@@ -17,20 +16,6 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
     dashboard.init();
 });
 </script>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-332770-13']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
-
 <script type="text/javascript">
   var _gauges = _gauges || [];
   (function() {
@@ -44,7 +29,6 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
     s.parentNode.insertBefore(t, s);
   })();
 </script>
-
 <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
@@ -71,11 +55,10 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
         <h3 class="header_examples"><span class="hidden">Examples</span></h3>
         <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2).</p>
         <p>It returns a String that can be read by people.</p>
-        <ul class="code">
-            <li><div class="inline command">filesize(1500);</div> = "1.46KB"</li>
-            <li><div class="inline command">filesize("1500000000");</div> = "1.40GB"</li>
-            <li><div class="inline command">filesize("1500000000", 0);</div> = "1GB"</li>
-        </ul>
+
+        <section class="sample">
+            <script src="https://gist.github.com/2176936.js?file=gistfile1.js"></script>
+        </section>
 
         <h3 class="header_download"><span class="hidden">Download</span></h3>
         <p>Latest version is available from <a href="https://github.com/avoidwork/filesize.js">GitHub</a></p>
