@@ -3,9 +3,11 @@ filesize.js provides a simple way to get a human readable file size string from 
 
 ## Examples
 ``` js
-filesize(1500); // "1.46KB"
-filesize("1500000000"); // "1.40GB"
-filesize("1500000000", 0); // "1GB"
+filesize(1500);                  // "1.46KB"
+filesize("1500000000");          // "1.40GB"
+filesize("1500000000", 0);       // "1GB"
+filesize(1212312421412412)       // "1102.59TB"
+filesize(1212312421412412, true) // "1102.6T" - shorthand output, similar to *nix "ls -lh"
 ```
 
 ## Information
