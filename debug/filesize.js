@@ -32,25 +32,33 @@
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @module filesize
- * @version 1.4
+ * @version 1.5
  * 
- * @param  {Mixed}  arg String, Int or Float to transform
- * @param  {Number} pos Position to round to
+ * @param  {Mixed}   arg   String, Int or Float to transform
+ * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
+ * @param  {Boolean} short [Optional] Shorthand output, similar to "ls -lh", overrides pos to 1
  * @return {String} Readable file size String
  */
 (function (global) {
 	"use strict";
 
-	var filesize = function (arg, pos) {
+	var filesize = function (arg) {
+		var pos, short, num, sizes, size, result, suffix, i, n, x, z;
+
+		if (typeof arguments[2] !== "undefined") {
+			pos   = arguments[1];
+			short = arguments[2];
+		}
+		else typeof arguments[1] === "boolean" ? short = arguments[1] : pos = arguments[1];
+
 		if (isNaN(arg) || (typeof pos !== "undefined" && isNaN(pos))) throw Error("Invalid arguments");
 
-		var num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg),
-		    sizes  = [{"B": 0}, {"KB": 1024}, {"MB": 1048576}, {"GB": 1073741824}, {"TB": 1099511627776}],
-		    i      = sizes.length,
-		    result = "",
-		    size, suffix, n, x;
-
-		pos = typeof pos === "undefined" ? 2 : parseInt(pos);
+		short  = (short === true);
+		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos));
+		num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg);
+		sizes  = [{"B": 0}, {"KB": 1024}, {"MB": 1048576}, {"GB": 1073741824}, {"TB": 1099511627776}];
+		i      = sizes.length;
+		result = "";
 
 		while (i--) {
 			x = sizes[i];
@@ -62,7 +70,13 @@
 				}
 			}
 			if (num >= size) {
-				result = (suffix === "B" ? num : (num / size)).toFixed(pos) + suffix;
+				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
+				if (short) {
+					suffix = suffix.slice(0, 1);
+					z      = /\.(.*)/.exec(result);
+					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result);
+				}
+				result += suffix;
 				break;
 			}
 		}
