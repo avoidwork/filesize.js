@@ -138,6 +138,11 @@ ul.downloads:last-child {
 	margin          : -5px 0 0 -55px;
 }
 
+.node {
+	float           : left;
+	margin          : -5px 0 0 -115px;
+}
+
 .license {
 	float           : right;
 	margin          : 10px -50px 0 0;

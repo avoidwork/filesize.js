@@ -20,6 +20,7 @@
 				if (/loaded|complete/.test(document.readyState) && typeof $("body")[0] !== "undefined") {
 					$("year").text(new Date().getFullYear());
 					$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
+					$(".node").on("click", function (e) { location = "http://nodejs.org"; });
 					$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
 					$("body").css("opacity", 1);
 					return false;
