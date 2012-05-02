@@ -148,7 +148,7 @@ ul.downloads:last-child {
 	margin          : 10px -50px 0 0;
 }
 
-.amd:hover,
+.anchor:hover,
 .license:hover {
 	cursor          : pointer;
 }
