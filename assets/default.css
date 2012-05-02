@@ -167,6 +167,10 @@ ul.downloads:last-child {
 	display     : inline-block;
 }
 
+.sample {
+	font-size   : 14px;
+}
+
 /* Sprites */
 .dl_debugging {
   background: url(sprites.png) 0px -150px no-repeat;

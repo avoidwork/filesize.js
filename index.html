@@ -3,7 +3,7 @@
 <head>
 <title>filesize.js - JavaScript library for readable file sizes</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="JavaScript,filesizejs, filesize.js, file, size, human, read, readable, easy" />
+<meta name="keywords" content="JavaScript,filesizejs, filesize.js, file, size, human, read, readable, easy, amd, node, nodejs, node.js, asynchronous, module, definition" />
 <meta name="description" content="Creates human readable file size strings" />
 <link rel="shortcut icon" type="image/ico" href="assets/favicon.png" />
 <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
@@ -54,7 +54,7 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
         <p>filesize.js is an AMD module, which can be lazy loaded with AMD loaders like <a href="http://requirejs.org/">require.js</a> and <a href="https://github.com/unscriptable/curl">curl.js</a>.</p>
 
         <h3 class="header_examples"><span class="hidden">Examples</span></h3>
-        <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2).</p>
+        <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2), or <em>true</em> to emulate *nix "ls -lh".</p>
         <p>It returns a String that can be read by people.</p>
 
         <section class="sample">
