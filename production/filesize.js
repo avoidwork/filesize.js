@@ -32,7 +32,7 @@
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @module filesize
- * @version 1.5
+ * @version 1.6
  * 
  * @param  {Mixed}   arg   String, Int or Float to transform
  * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
