@@ -10,6 +10,9 @@ filesize(1212312421412412);       // "1102.59TB"
 filesize(1212312421412412, true); // "1102.6T" - shorthand output, similar to *nix "ls -lh"
 ```
 
+## How can I load filesize.js?
+filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm install filesize), or using a script tag.
+
 ## Information
 #### License
 filesize.js is licensed under BSD-3 http://www.opensource.org/licenses/BSD-3-Clause
