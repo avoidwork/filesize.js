@@ -32,10 +32,11 @@
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @module filesize
- * @version 1.4
+ * @version 1.6.3
  * 
- * @param  {Mixed}  arg String, Int or Float to transform
- * @param  {Number} pos Position to round to
+ * @param  {Mixed}   arg   String, Int or Float to transform
+ * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
+ * @param  {Boolean} short [Optional] Shorthand output, similar to "ls -lh", overrides pos to 1
  * @return {String} Readable file size String
  */
-(function(a){"use strict";var b=function(a,b){if(isNaN(a)||typeof b!="undefined"&&isNaN(b))throw Error("Invalid arguments");var c=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),d=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],e=d.length,f="",g,h,i,j;b=typeof b=="undefined"?2:parseInt(b);while(e--){j=d[e];for(i in j)if(j.hasOwnProperty(i)){g=j[i],h=i;break}if(c>=g){f=(h==="B"?c:c/g).toFixed(b)+h;break}}return f};typeof define=="function"?define("filesize",function(){return b}):a.filesize=b})(this)
+(function(a){"use strict";var b=function(a){var b,c,d,e,f,g,h,i,j,k,l;typeof arguments[2]!="undefined"?(b=arguments[1],c=arguments[2]):typeof arguments[1]=="boolean"?c=arguments[1]:b=arguments[1];if(isNaN(a)||typeof b!="undefined"&&isNaN(b))throw Error("Invalid arguments");c=c===!0,b=c?1:typeof b=="undefined"?2:parseInt(b),d=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),e=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],i=e.length,g="";while(i--){k=e[i];for(j in k)if(k.hasOwnProperty(j)){f=k[j],h=j;break}if(d>=f){g=(h==="B"?d:d/f).toFixed(b),c&&(h=h.slice(0,1),l=/\.(.*)/.exec(g),l!==null&&typeof l[1]!="undefined"&&l[1]==="0"&&(g=parseInt(g))),g+=h;break}}return g};switch(!0){case typeof exports!="undefined":module.exports=b;break;case typeof define=="function":define("filesize",function(){return b});break;default:a.filesize=b}})(this)
