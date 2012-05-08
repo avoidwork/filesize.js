@@ -32,7 +32,7 @@
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @module filesize
- * @version 1.6.1
+ * @version 1.6.2
  * 
  * @param  {Mixed}   arg   String, Int or Float to transform
  * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
@@ -86,7 +86,7 @@
 
 	switch (true) {
 		case typeof exports !== "undefined":
-			exports = filesize;
+			exports.filesize = filesize;
 			break;
 		case typeof define === "function":
 			define("filesize", function () { return filesize; });
