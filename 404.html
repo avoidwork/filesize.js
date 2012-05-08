@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>filesize.js - 404</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="JavaScript,filesizejs, filesize.js, file, size, human, read, readable, easy, amd, node, nodejs, node.js, asynchronous, module, definition" />
+<meta name="description" content="Creates human readable file size strings" />
+<link rel="shortcut icon" type="image/ico" href="assets/favicon.png" />
+<link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="assets/default.css" media="print,screen" />
+<script type="text/javascript" src="assets/require.js"></script>
+<script type="text/javascript">
+require.config({baseUrl: "assets/modules"});
+require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesize) {
+    window.filesize  = filesize;
+    dashboard.init();
+    $.defer(function () { location = "/"; }, 5000);
+});
+</script>
+<script type="text/javascript">
+  var _gauges = _gauges || [];
+  (function() {
+    var t   = document.createElement('script');
+    t.type  = 'text/javascript';
+    t.async = true;
+    t.id    = 'gauges-tracker';
+    t.setAttribute('data-site-id', '4f6bc3cff5a1f51df800001c');
+    t.src = '//secure.gaug.es/track.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(t, s);
+  })();
+</script>
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<header class="shadow">
+    <section>
+        <h1>404</h1>
+    </section>
+</header>
+
+<article>
+    <section id="stage">
+        <p>File not found.</p>
+    </section>
+</article>
+
+<a href="https://github.com/avoidwork/filesize.js"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+</body>
+</html>
