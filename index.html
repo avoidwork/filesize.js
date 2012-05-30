@@ -8,14 +8,7 @@
 <link rel="shortcut icon" type="image/ico" href="assets/favicon.png" />
 <link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="assets/default.css" media="print,screen" />
-<script type="text/javascript" src="assets/require.js"></script>
-<script type="text/javascript">
-require.config({baseUrl: "assets/modules"});
-require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesize) {
-    window.filesize  = filesize;
-    dashboard.init();
-});
-</script>
+<script type="text/javascript" data-config="config" src="assets/require.js"></script>
 <script type="text/javascript">
   var _gauges = _gauges || [];
   (function() {
@@ -65,8 +58,8 @@ require(["abaaso", "dashboard", "filesize"], function (abaaso, dashboard, filesi
         <h3 class="header_download"><span class="hidden">Download</span></h3>
         <p>Latest version is available from <a href="https://github.com/avoidwork/filesize.js">GitHub</a></p>
         <ul class="downloads">
-            <li><a href="https://raw.github.com/avoidwork/filesize.js/master/debug/filesize.js"><div class="inline dl_debugging"><span class="hidden">Debugging</span></div></a></li>
-            <li><a href="https://raw.github.com/avoidwork/filesize.js/master/production/filesize.js"><div class="inline dl_production"><span class="hidden">Production</span></div></a></li>
+            <li><a href="http://cdn.filesizejs.com/debug/filesize.js"><div class="inline dl_debugging"><span class="hidden">Debugging</span></div></a></li>
+            <li><a href="http://cdn.filesizejs.com/filesize.js"><div class="inline dl_production"><span class="hidden">Production</span></div></a></li>
         </ul>
     </section>
 </article>
