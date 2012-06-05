@@ -62,7 +62,7 @@
 		regex  = /\.(.*)/;
 
 		while (i--) {
-			x = sizes[i].split(":");
+			x      = sizes[i].split(":");
 			size   = parseInt(x[1]);
 			suffix = x[0];
 			if (num >= size) {
