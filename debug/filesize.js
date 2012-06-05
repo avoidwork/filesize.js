@@ -56,7 +56,7 @@
 		short  = (short === true);
 		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos));
 		num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg);
-		sizes  = ["B:0", "KB:1024", "MB:1048576", "GB:1073741824", "TB:1099511627776"]
+		sizes  = ["B:0", "KB:1024", "MB:1048576", "GB:1073741824", "TB:1099511627776"];
 		i      = sizes.length;
 		result = "";
 		regex  = /\.(.*)/;
