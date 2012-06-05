@@ -2,13 +2,13 @@
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com> (http://avoidwork.com/)",
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "homepage": "http://filesizejs.com",
   "repository": {
     "type": "git",
     "url": "git://github.com/avoidwork/filesize.js.git"
   },
-  "main": "production/filesize.js",
+  "main": "debug/filesize.js",
   "engines": {
     "node": "~0.6.11"
   },
