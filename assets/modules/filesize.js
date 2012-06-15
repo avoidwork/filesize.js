@@ -32,11 +32,62 @@
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
  * @module filesize
- * @version 1.6.3
+ * @version 1.6.4
  * 
  * @param  {Mixed}   arg   String, Int or Float to transform
  * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
  * @param  {Boolean} short [Optional] Shorthand output, similar to "ls -lh", overrides pos to 1
  * @return {String} Readable file size String
  */
-(function(a){"use strict";var b=function(a){var b,c,d,e,f,g,h,i,j,k,l;typeof arguments[2]!="undefined"?(b=arguments[1],c=arguments[2]):typeof arguments[1]=="boolean"?c=arguments[1]:b=arguments[1];if(isNaN(a)||typeof b!="undefined"&&isNaN(b))throw Error("Invalid arguments");c=c===!0,b=c?1:typeof b=="undefined"?2:parseInt(b),d=String(a).indexOf(".")>-1?parseFloat(a):parseInt(a),e=[{B:0},{KB:1024},{MB:1048576},{GB:1073741824},{TB:1099511627776}],i=e.length,g="";while(i--){k=e[i];for(j in k)if(k.hasOwnProperty(j)){f=k[j],h=j;break}if(d>=f){g=(h==="B"?d:d/f).toFixed(b),c&&(h=h.slice(0,1),l=/\.(.*)/.exec(g),l!==null&&typeof l[1]!="undefined"&&l[1]==="0"&&(g=parseInt(g))),g+=h;break}}return g};switch(!0){case typeof exports!="undefined":module.exports=b;break;case typeof define=="function":define("filesize",function(){return b});break;default:a.filesize=b}})(this)
+(function (global) {
+	"use strict";
+
+	var filesize = function (arg) {
+		var pos, short, num, sizes, size, result, regex, suffix, i, n, x, z;
+
+		if (typeof arguments[2] !== "undefined") {
+			pos   = arguments[1];
+			short = arguments[2];
+		}
+		else typeof arguments[1] === "boolean" ? short = arguments[1] : pos = arguments[1];
+
+		if (isNaN(arg) || (typeof pos !== "undefined" && isNaN(pos))) throw Error("Invalid arguments");
+
+		short  = (short === true);
+		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos));
+		num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg);
+		sizes  = ["B:0", "KB:1024", "MB:1048576", "GB:1073741824", "TB:1099511627776"];
+		i      = sizes.length;
+		result = "";
+		regex  = /\.(.*)/;
+
+		while (i--) {
+			x      = sizes[i].split(":");
+			size   = parseInt(x[1]);
+			suffix = x[0];
+			if (num >= size) {
+				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
+				if (short) {
+					suffix = suffix.slice(0, 1);
+					z      = regex.exec(result);
+					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result);
+				}
+				result += suffix;
+				break;
+			}
+		}
+
+		return result;
+	};
+
+	switch (true) {
+		case typeof exports !== "undefined":
+			module.exports = filesize;
+			break;
+		case typeof define === "function":
+			define("filesize", function () { return filesize; });
+			break;
+		default:
+			global.filesize  = filesize;
+	}
+})(this);
