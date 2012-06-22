@@ -31,13 +31,14 @@
  * Transforms a file size Number into a readable String
  * 
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @link http://filesizejs.com
  * @module filesize
- * @version 1.6.4
+ * @version 1.6.5
  * 
  * @param  {Mixed}   arg   String, Int or Float to transform
  * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
  * @param  {Boolean} short [Optional] Shorthand output, similar to "ls -lh", overrides pos to 1
- * @return {String} Readable file size String
+ * @return {String}        Readable file size String
  */
 (function (global) {
 	"use strict";
@@ -56,15 +57,14 @@
 		short  = (short === true);
 		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos));
 		num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg);
-		sizes  = ["B:0", "KB:1024", "MB:1048576", "GB:1073741824", "TB:1099511627776"];
+		sizes  = [["B", 0], ["KB", 1024], ["MB", 1048576], ["GB", 1073741824], ["TB", 1099511627776]];
 		i      = sizes.length;
 		result = "";
 		regex  = /\.(.*)/;
 
 		while (i--) {
-			x      = sizes[i].split(":");
-			size   = parseInt(x[1]);
-			suffix = x[0];
+			size   = sizes[i][1];
+			suffix = sizes[i][0];
 			if (num >= size) {
 				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
 				if (short) {
@@ -85,7 +85,7 @@
 			module.exports = filesize;
 			break;
 		case typeof define === "function":
-			define("filesize", function () { return filesize; });
+			define(function () { return filesize; });
 			break;
 		default:
 			global.filesize  = filesize;
