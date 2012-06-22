@@ -44,7 +44,7 @@
 	"use strict";
 
 	var filesize = function (arg) {
-		var pos, short, num, sizes, size, result, regex, suffix, i, n, x, z;
+		var pos, short, num, sizes, size, result, regex, suffix, i, z;
 
 		if (typeof arguments[2] !== "undefined") {
 			pos   = arguments[1];
