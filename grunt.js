@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 					"<banner>",
 					"src/filesize.js"
 				],
-				dest : "dist/filesize.js"
+				dest : "lib/filesize.js"
 			}
 		},
 		test : {
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 			files : ["grunt.js"]
 		},
 		min : {
-			"dist/filesize.min.js" : ["<banner>", "dist/filesize.js"]
+			"lib/filesize.min.js" : ["<banner>", "lib/filesize.js"]
 		},
 		watch : {
 			files : "<config:lint.files>",
