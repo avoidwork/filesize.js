@@ -20,7 +20,7 @@
       "url": "http://opensource.org/licenses/BSD-3-Clause"
     }
   ],
-  "main": "dist/filesize",
+  "main": "lib/filesize",
   "engines": {
     "node": ">= 0.6.0"
   },
