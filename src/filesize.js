@@ -10,7 +10,8 @@
 	 * @return {String}        Readable file size String
 	 */
 	var filesize = function (arg) {
-		var pos, short, num, sizes, size, result, regex, suffix, i, z;
+		var base = 10,
+		    pos, short, num, sizes, size, result, regex, suffix, i, z;
 
 		if (typeof arguments[2] !== "undefined") {
 			pos   = arguments[1];
@@ -21,8 +22,8 @@
 		if (isNaN(arg) || (typeof pos !== "undefined" && isNaN(pos))) throw Error("Invalid arguments");
 
 		short  = (short === true);
-		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos));
-		num    = String(arg).indexOf(".") > -1 ? parseFloat(arg) : parseInt(arg);
+		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos, base));
+		num    = Number(arg);
 		sizes  = [["B", 0], ["KB", 1024], ["MB", 1048576], ["GB", 1073741824], ["TB", 1099511627776]];
 		i      = sizes.length;
 		result = "";
@@ -36,7 +37,7 @@
 				if (short) {
 					suffix = suffix.slice(0, 1);
 					z      = regex.exec(result);
-					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result);
+					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result, base);
 				}
 				result += suffix;
 				break;
