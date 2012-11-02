@@ -24,7 +24,7 @@
 		short  = (short === true);
 		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos, base));
 		num    = Number(arg);
-		sizes  = [["B", 0], ["KB", 1024], ["MB", 1048576], ["GB", 1073741824], ["TB", 1099511627776]];
+		sizes  = [["B", 0], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", "1.049e+6"], ["Gb", "1.342e+8"], ["GB", "1.074e+9"], ["Tb", "1.374e+11"], ["TB", "1.1e+12"], ["Pb", "1.407e+14"], ["PB", "1.126e+15"]];
 		i      = sizes.length;
 		result = "";
 		regex  = /\.(.*)/;
@@ -32,6 +32,7 @@
 		while (i--) {
 			size   = sizes[i][1];
 			suffix = sizes[i][0];
+			if (i > 3) size = Number(size);
 			if (num >= size) {
 				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
 				if (short) {
