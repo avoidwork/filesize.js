@@ -19,9 +19,9 @@ exports["filesize"] = {
 	},
 	invalid: function (test) {
 		test.expect(3);
-		test.throws(function () { filesize(this.abc) },       Error, "Should match");
-		test.throws(function () { filesize(this.abc, 1) },    Error, "Should match");
-		test.throws(function () { filesize(this.abc, true) }, Error, "Should match");
+		test.throws(function () { filesize(this.invld) },       Error, "Should match");
+		test.throws(function () { filesize(this.invld, 1) },    Error, "Should match");
+		test.throws(function () { filesize(this.invld, true) }, Error, "Should match");
 		test.done();
 	}
 };
