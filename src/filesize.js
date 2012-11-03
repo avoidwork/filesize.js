@@ -36,6 +36,7 @@
 			if (num >= size) {
 				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
 				if (short) {
+					if (/b$/.test(suffix)) suffix = suffix.toLowerCase();
 					suffix = suffix.slice(0, 1);
 					z      = regex.exec(result);
 					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result, base);
