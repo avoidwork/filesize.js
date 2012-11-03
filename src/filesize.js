@@ -11,7 +11,7 @@
 	 */
 	var filesize = function (arg) {
 		var base = 10,
-		    pos, short, num, sizes, size, result, regex, suffix, i, z;
+		    bit, byte, i, num, pos, regex, result, short, size, sizes, suffix, z, zero;
 
 		if (typeof arguments[2] !== "undefined") {
 			pos   = arguments[1];
@@ -28,18 +28,21 @@
 		i      = sizes.length;
 		result = "";
 		regex  = /\.(.*)/;
+		bit    = /b$/;
+		byte   = /^B$/;
+		zero   = /^0$/;
 
 		while (i--) {
 			size   = sizes[i][1];
 			suffix = sizes[i][0];
 			if (i > 3) size = Number(size);
 			if (num >= size) {
-				result = (suffix === "B" ? num : (num / size)).toFixed(pos);
+				result = (byte.test(suffix) ? num : (num / size)).toFixed(pos);
 				if (short) {
-					if (/b$/.test(suffix)) suffix = suffix.toLowerCase();
+					if (bit.test(suffix)) suffix = suffix.toLowerCase();
 					suffix = suffix.slice(0, 1);
 					z      = regex.exec(result);
-					if (z !== null && typeof z[1] !== "undefined" && z[1] === "0") result = parseInt(result, base);
+					if (z !== null && typeof z[1] !== "undefined" && zero.test(z[1])) result = parseInt(result, base);
 				}
 				result += suffix;
 				break;
