@@ -1,6 +1,6 @@
 # filesize.js
 
-filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.  An optional second parameter is the decimal place to round to (default is 2), or _true_ which triggers Unix style output. The maximum supported size is a terabyte. When hard drives get bigger, I'll add support for petabytes.
+filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.  An optional second parameter is the decimal place to round to (default is 2), or _true_ which triggers Unix style output.
 
 ## Examples
 
