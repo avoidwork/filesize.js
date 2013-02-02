@@ -1,8 +1,8 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "1.7.3",
-  "homepage": "https://github.com/avoidwork/filesize.js",
+  "version": "1.7.4",
+  "homepage": "http://filesizejs.com",
   "author": {
     "name": "Jason Mulligan",
     "email": "jason.mulligan@avoidwork.com"
