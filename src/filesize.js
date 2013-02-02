@@ -13,16 +13,16 @@
 		var base = 10,
 		    bit, byte, i, neg, num, pos, regex, result, short, size, sizes, suffix, z, zero;
 
-		if (typeof arguments[2] !== "undefined") {
+		if (arguments[2] !== undefined) {
 			pos   = arguments[1];
 			short = arguments[2];
 		}
 		else typeof arguments[1] === "boolean" ? short = arguments[1] : pos = arguments[1];
 
-		if (isNaN(arg) || (typeof pos !== "undefined" && isNaN(pos))) throw Error("Invalid arguments");
+		if (isNaN(arg) || (pos !== undefined && isNaN(pos))) throw Error("Invalid arguments");
 
 		short  = (short === true);
-		pos    = short ? 1 : (typeof pos === "undefined" ? 2 : parseInt(pos, base));
+		pos    = short ? 1 : (pos === undefined ? 2 : parseInt(pos, base));
 		num    = Number(arg);
 		neg    = (num < 0);
 		sizes  = [["B", 0], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", "1.049e+6"], ["Gb", "1.342e+8"], ["GB", "1.074e+9"], ["Tb", "1.374e+11"], ["TB", "1.1e+12"], ["Pb", "1.407e+14"], ["PB", "1.126e+15"]];
@@ -46,7 +46,7 @@
 					if (bit.test(suffix)) suffix = suffix.toLowerCase();
 					suffix = suffix.slice(0, 1);
 					z      = regex.exec(result);
-					if (z !== null && typeof z[1] !== "undefined" && zero.test(z[1])) result = parseInt(result, base);
+					if (z !== null && z[1] !== undefined && zero.test(z[1])) result = parseInt(result, base);
 				}
 				result += suffix;
 				break;
