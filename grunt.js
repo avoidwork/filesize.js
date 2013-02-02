@@ -6,7 +6,7 @@ module.exports = function(grunt) {
 			         " * <%= pkg.name %>\n" +
 			         " *\n" +
 			         " * @author <%= pkg.author.name %> <<%= pkg.author.email %>>\n" +
-			         " * @copyright <%= pkg.author.name %> <%= grunt.template.today('yyyy') %>\n" +
+			         " * @copyright <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
 			         " * @license <%= pkg.licenses[0].type %> <<%= pkg.licenses[0].url %>>\n" +
 			         " * @link <%= pkg.homepage %>\n" +
 			         " * @module <%= pkg.name %>\n" +
