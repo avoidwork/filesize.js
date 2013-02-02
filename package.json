@@ -17,7 +17,7 @@
   "licenses": [
     {
       "type": "BSD-3",
-      "url": "http://opensource.org/licenses/BSD-3-Clause"
+      "url": "https://raw.github.com/avoidwork/filesize.js/master/LICENSE"
     }
   ],
   "main": "lib/filesize",
