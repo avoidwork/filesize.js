@@ -42,13 +42,19 @@
 				result = (num / size).toFixed(pos);
 				if (short) {
 					if (bit.test(suffix)) suffix = suffix.toLowerCase();
-					suffix = suffix.slice(0, 1);
+					suffix = suffix.charAt(0);
 					z      = regex.exec(result);
 					if (z !== null && z[1] !== undefined && zero.test(z[1])) result = parseInt(result, base);
 				}
 				result += suffix;
 				break;
 			}
+		}
+
+		// Zero
+		if (result === "") {
+			if (short) pos = 0;
+			result = Number(0).toFixed(pos) + suffix;
 		}
 
 		return (neg ? "-" : "") + result;
