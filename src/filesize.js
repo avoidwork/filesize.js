@@ -11,7 +11,7 @@
 	 */
 	var filesize = function (arg) {
 		var base = 10,
-		    bit, byte, i, neg, num, pos, regex, result, short, size, sizes, suffix, z, zero;
+		    bit, i, neg, num, pos, regex, result, short, size, sizes, suffix, z, zero;
 
 		if (arguments[2] !== undefined) {
 			pos   = arguments[1];
@@ -25,12 +25,11 @@
 		pos    = short ? 1 : (pos === undefined ? 2 : parseInt(pos, base));
 		num    = Number(arg);
 		neg    = (num < 0);
-		sizes  = [["B", 0], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", "1.049e+6"], ["Gb", "1.342e+8"], ["GB", "1.074e+9"], ["Tb", "1.374e+11"], ["TB", "1.1e+12"], ["Pb", "1.407e+14"], ["PB", "1.126e+15"]];
+		sizes  = [["B", 1], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", 1.049e+6], ["Gb", 1.342e+8], ["GB", 1.074e+9], ["Tb", 1.374e+11], ["TB", 1.1e+12], ["Pb", 1.407e+14], ["PB", 1.126e+15]];
 		i      = sizes.length;
 		result = "";
 		regex  = /\.(.*)/;
 		bit    = /b$/;
-		byte   = /^B$/;
 		zero   = /^0$/;
 
 		// Flipping a negative number to determine the size
@@ -39,9 +38,8 @@
 		while (i--) {
 			size   = sizes[i][1];
 			suffix = sizes[i][0];
-			if (i > 3) size = Number(size);
 			if (num >= size) {
-				result = (byte.test(suffix) ? num : (num / size)).toFixed(pos);
+				result = (num / size).toFixed(pos);
 				if (short) {
 					if (bit.test(suffix)) suffix = suffix.toLowerCase();
 					suffix = suffix.slice(0, 1);
