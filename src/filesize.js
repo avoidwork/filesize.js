@@ -34,7 +34,7 @@
 		zero   = /^0$/;
 
 		// Flipping a negative number to determine the size
-		if (neg) num = Math.abs(num);
+		if (neg) num = -num;
 
 		while (i--) {
 			size   = sizes[i][1];
