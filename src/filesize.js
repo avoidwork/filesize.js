@@ -35,26 +35,27 @@
 		// Flipping a negative number to determine the size
 		if (neg) num = -num;
 
-		while (i--) {
-			size   = sizes[i][1];
-			suffix = sizes[i][0];
-			if (num >= size) {
-				result = (num / size).toFixed(pos);
-				if (short) {
-					if (bit.test(suffix)) suffix = suffix.toLowerCase();
-					suffix = suffix.charAt(0);
-					z      = regex.exec(result);
-					if (z !== null && z[1] !== undefined && zero.test(z[1])) result = parseInt(result, base);
-				}
-				result += suffix;
-				break;
-			}
-		}
-
-		// Zero
-		if (result === "") {
+		// Zero is now a special case because bytes divide by 1
+		if (num === 0) {
 			if (short) pos = 0;
-			result = Number(0).toFixed(pos) + suffix;
+			result = Number(0).toFixed(pos) + "B";
+		}
+		else {
+			while (i--) {
+				size   = sizes[i][1];
+				suffix = sizes[i][0];
+				if (num >= size) {
+					result = (num / size).toFixed(pos);
+					if (short) {
+						if (bit.test(suffix)) suffix = suffix.toLowerCase();
+						suffix = suffix.charAt(0);
+						z      = regex.exec(result);
+						if (z !== null && z[1] !== undefined && zero.test(z[1])) result = parseInt(result, base);
+					}
+					result += suffix;
+					break;
+				}
+			}
 		}
 
 		return (neg ? "-" : "") + result;
