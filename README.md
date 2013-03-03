@@ -22,7 +22,7 @@ filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm
 
 #### License
 
-filesize.js is licensed under BSD-3 http://www.opensource.org/licenses/BSD-3-Clause
+filesize.js is licensed under BSD-3 https://raw.github.com/avoidwork/filesize.js/master/LICENSE
 
 #### Copyright
 
