@@ -1,4 +1,1 @@
-.idea
-dist
-src
-test
+/node_modules/
