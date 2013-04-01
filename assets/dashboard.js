@@ -2,9 +2,9 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.2
+ * @version 1.2.1
  */
-(function (global) {
+(function ($) {
 	"use strict";
 
 	$.on("render", function () {
@@ -18,4 +18,4 @@
 		$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
 		$("body").css("opacity", 1);
 	}, "gui");
-})(this);
+})(abaaso);
