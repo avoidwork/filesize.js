@@ -1,1 +1,7 @@
 /node_modules/
+lib/filesize.min.js
+src
+test
+.jamignore
+.travis.yml
+Gruntfile.js
