@@ -16,7 +16,7 @@ exports["filesize"] = {
 
 		test.equal(filesize(this.Kb),                "3.91Kb",   "Should be '3.91Kb'");
 		test.equal(filesize(this.Kb, 1),             "3.9Kb",    "Should be '3.9Kb'");
-		test.equal(filesize(this.Kb, 1, false),      "500.0B",   "Should be '500.0B'");
+		test.equal(filesize(this.Kb, 1, false),      "500B",     "Should be '500B'");
 		test.equal(filesize(this.Kb, true),          "3.9k",     "Should be '3.9k'");
 		test.equal(filesize(this.Kb, true, false),   "500B",     "Should be '500B'");
 
@@ -38,14 +38,14 @@ exports["filesize"] = {
 		test.equal(filesize(this.neg, true),         "-1K",      "Should be '-1KB'");
 		test.equal(filesize(this.neg, true, false),  "-1K",      "Should be '-1KB'");
 
-		test.equal(filesize(this.byte),              "1.00B",    "Should be '1.00B'");
-		test.equal(filesize(this.byte, 1),           "1.0B",     "Should be '1.0B'");
-		test.equal(filesize(this.byte, 1, false),    "1.0B",     "Should be '1.0B'");
+		test.equal(filesize(this.byte),              "1B",       "Should be '1B'");
+		test.equal(filesize(this.byte, 1),           "1B",       "Should be '1B'");
+		test.equal(filesize(this.byte, 1, false),    "1B",       "Should be '1B'");
 		test.equal(filesize(this.byte, true),        "1B",       "Should be '1B'");
 		test.equal(filesize(this.byte, true, false), "1B",       "Should be '1B'");
 
-		test.equal(filesize(this.zero),              "0.00B",    "Should be '0.00B'");
-		test.equal(filesize(this.zero, 1),           "0.0B",     "Should be '0.0B'");
+		test.equal(filesize(this.zero),              "0B",       "Should be '0B'");
+		test.equal(filesize(this.zero, 1),           "0B",       "Should be '0B'");
 		test.equal(filesize(this.zero, true),        "0B",       "Should be '0B'");
 
 		test.done();
