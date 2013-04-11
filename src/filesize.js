@@ -4,6 +4,7 @@
 	var base    = 10,
 	    right   = /\.(.*)/,
 	    bit     = /b$/,
+	    byte    = /^B$/,
 	    zero    = /^0$/,
 	    options = {
 	    	all : {
@@ -28,6 +29,7 @@
 	function filesize (arg) {
 		var result = "",
 		    bits   = true,
+		    skip   = false,
 		    i, neg, num, pos, short, size, sizes, suffix, z;
 
 		// Determining arguments
@@ -61,11 +63,7 @@
 
 		// Zero is now a special case because bytes divide by 1
 		if ( num === 0 ) {
-			if ( short ) {
-				pos = 0;
-			}
-
-			result = Number( 0 ).toFixed( pos ) + "B";
+			result = Number( 0 ).toFixed( 0 ) + "B";
 		}
 		else {
 			if ( bits ) {
@@ -82,9 +80,15 @@
 				suffix = sizes[i][0];
 
 				if ( num >= size ) {
+					// Treating bytes as cardinal
+					if ( byte.test( suffix ) ) {
+						skip = true;
+						pos  = 0;
+					}
+
 					result = ( num / size ).toFixed( pos );
 
-					if ( short ) {
+					if ( !skip && short ) {
 						if ( bits && bit.test( suffix ) ) {
 							suffix = suffix.toLowerCase();
 						}
