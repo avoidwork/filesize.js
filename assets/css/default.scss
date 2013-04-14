@@ -128,6 +128,12 @@ article {
 			padding: $zeros
 		}
 
+		p {
+			span:last-child {
+				margin-left: $ten * 5;
+			}
+		}
+
 		button,
 		input {
 			height: $fontsize + 4;
