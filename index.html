@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>filesize.js - JavaScript library for readable file sizes</title>
+<title>filesize.js - Easy to read file size strings</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="keywords" content="JavaScript,filesizejs, filesize.js, file, size, human, read, readable, easy, amd, node, nodejs, node.js, asynchronous, module, definition" />
-<meta name="description" content="Creates human readable file size strings" />
+<meta name="keywords" content="JavaScript, filesize, filesizejs, filesize.js, file, size, human, read, readable, easy, amd, node, nodejs, node.js, asynchronous, module, definition" />
+<meta name="description" content="Easy to read file size strings" />
 <link rel="shortcut icon" type="image/ico" href="assets/favicon.png" />
-<link href='http://fonts.googleapis.com/css?family=Asap' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="assets/default.css" media="print,screen" />
+<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="assets/css/default.css" media="print,screen" />
+<link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.min.css" media="print,screen" />
 <script type="text/javascript" src="http://cdn.abaaso.com/abaaso.min.js"></script>
 <script type="text/javascript" src="http://cdn.filesizejs.com/filesize.min.js"></script>
 <script type="text/javascript" src="assets/dashboard.js"></script>
 <script type="text/javascript">
   var _gauges = _gauges || [];
   (function() {
-    var t   = document.createElement('script');
-    t.type  = 'text/javascript';
-    t.async = true;
-    t.id    = 'gauges-tracker';
-    t.setAttribute('data-site-id', '4f6bc3cff5a1f51df800001c');
-    t.src = '//secure.gaug.es/track.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(t, s);
+	var t   = document.createElement('script');
+	t.type  = 'text/javascript';
+	t.async = true;
+	t.id    = 'gauges-tracker';
+	t.setAttribute('data-site-id', '4f6bc3cff5a1f51df800001c');
+	t.src = '//secure.gaug.es/track.js';
+	var s = document.getElementsByTagName('script')[0];
+	s.parentNode.insertBefore(t, s);
   })();
 </script>
 <!--[if lt IE 9]>
@@ -32,45 +33,68 @@
 
 <body>
 
-<header class="shadow">
-    <section>
-        <h1>filesize.js</h1>
-        <h2 class="anchor node ribbon_node"><span class="hidden">node.js</span></h2>
-        <h2 class="anchor amd ribbon_amd"><span class="hidden">AMD</span></h2>
-        <h2 class="license round_license"><span class="hidden">BSD3 licensed</span></h2>
-    </section>
+<header>
+	<div class="container">
+		<h1>filesize.js</h1>
+	</div>
 </header>
 
 <article>
-    <section id="stage">
-        <h3 class="header_about"><span class="hidden">About</span></h3>
-        <p>filesize.js is a tiny JavaScript library that creates a Global function named filesize().</p>
-        <p>It provides an easy way to get a human readable file size String. It works great with all kinds of APIs that describe files.</p>
-        <p>filesize.js is an AMD module, which can be lazy loaded with AMD loaders like <a href="http://requirejs.org/">require.js</a> and <a href="https://github.com/unscriptable/curl">curl.js</a>.</p>
-        <p>node.js is also supported! Install with "npm install filesize".</p>
+	<section id="demo">
+		<div class="container">
+			<h2><span class="icon-thumbs-up"></span> Try it!</h2>
 
-        <h3 class="header_examples"><span class="hidden">Examples</span></h3>
-        <p>filesize() accepts a String or Number (Integer or Float), and an optional second parameter as a Number, which is the decimal place to round to (default is 2), or <em>true</em> to emulate *nix "ls -lh".</p>
-        <p>As of 1.9.0, a third Boolean argument is supported to disable `bit` sizes, e.g. "Kb".</p>
-        <p>filesize() returns a String that can be read by people.</p>
+			<p><span class="icon-check clickable" data-param="bit"></span> Show `bit` sizes <span class="icon-check-empty clickable" data-param="short"></span> Short</p>
 
-        <section class="sample">
-            <script src="https://gist.github.com/4698968.js"></script>
-        </section>
+			<form>
+				<input placeholder="Enter a number" data-short="false" data-bit="true"></input>
+				<span id="result">&nbsp;</span>
+			</form>
+		</div>
+	</section>
 
-        <h3 class="header_download"><span class="hidden">Download</span></h3>
-        <p>Latest version is available from <a href="https://github.com/avoidwork/filesize.js">GitHub</a></p>
-        <ul class="downloads">
-            <li><a href="http://cdn.filesizejs.com/filesize.js"><div class="inline dl_debugging"><span class="hidden">Debugging</span></div></a></li>
-            <li><a href="http://cdn.filesizejs.com/filesize.min.js"><div class="inline dl_production"><span class="hidden">Production</span></div></a></li>
-        </ul>
-    </section>
+	<section id="download">
+		<div class="container">
+			<h2><span class="icon-cloud-download"></span> Download</h2>
+
+			<p>Latest version is available from Content Delivery Network</p>
+
+			<ul>
+				<li><a href="http://cdn.filesizejs.com/filesize.js" title="Debugging version">Debugging</a><span>3.3KB / 1.9KB gzipped</span></li>
+				<li><a href="http://cdn.filesizejs.com/filesize.min.js" title="Production version">Production</a><span>1.4KB / 1.4KB gzipped</span></li>
+			</ul>
+		</div>
+	</section>
+
+	<section id="about">
+		<div class="container">
+			<h2><span class="icon-comments-alt"></span> What does it do?</h2>
+
+			<p>filesize.js is a tiny JavaScript library that creates a Global function named filesize().</p>
+
+			<p>It provides an easy way to get a human readable file size String and works great with all kinds of APIs that describe files.</p>
+
+			<p>filesize.js can be loaded from npm, as an AMD module, or as a regular script.</p>
+		</div>
+	</section>
+
+	<section id="example">
+		<div class="container">
+			<h2><span class="icon-cog"></span> How do I use it?</h2>
+
+			<p>filesize() accepts a String or Number (Integer or Float), and 2 optional parameters: a Number for the decimal place to round to (default is 2), or true for "short" output, and as of 1.9.0 a third Boolean argument is supported to disable `bit` sizes, e.g. "Kb".</p>
+
+			<section class="gist">
+				<script src="https://gist.github.com/4698968.js"></script>
+			</section>
+		</div>
+	</section>
 </article>
 
 <footer>
-    <section>
-        <p>Copyright &copy; <year></year> <a href="http://avoidwork.com">Jason Mulligan</a></p>
-    </section>
+	<div class="container">
+		Copyright &copy <span id="year"></span> <a href="http://avoidwork.com">Jason Mulligan</a> | <a href="https://raw.github.com/avoidwork/filesize.js/master/LICENSE">BSD 3 Licensed</a>
+	</div>
 </footer>
 
 <a href="https://github.com/avoidwork/filesize.js"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>

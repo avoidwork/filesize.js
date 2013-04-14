@@ -2,20 +2,59 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.2.1
+ * @version 1.3.0
  */
 (function ($) {
 	"use strict";
 
 	$.on("render", function () {
-		// Setting viewport to maintain required size (until media queries are in place)
-		if ($.client.mobile || $.client.tablet) $("head").create("meta", {name: "viewport", content: "width=1200"});
+		var result = $("#result"),
+		    input  = $("input")[0],
+		    demo   = $("#demo"),
+		    handler;
 
-		// DOM decoration
-		$("year").text(new Date().getFullYear());
-		$(".amd").on("click", function (e) { location = "https://github.com/amdjs/amdjs-api/wiki/AMD"; });
-		$(".node").on("click", function (e) { location = "http://nodejs.org"; });
-		$(".license").on("click", function (e) { location = "http://www.opensource.org/licenses/BSD-3-Clause"; });
-		$("body").css("opacity", 1);
+		handler = function () {
+			var val = input.val();
+
+			if (!val.isEmpty()) {
+				try {
+					result.html(filesize(val, input.data("short"), input.data("bit")));
+				}
+				catch (e) {
+					result.html(e);
+				}
+			}
+			else {
+				result.html("&nbsp;");
+			}
+		};
+
+		$("#year").text(new Date().getFullYear());
+
+		// Displaying demo
+		demo.removeClass("hidden");
+
+		// Demo filters
+		demo.find(".clickable").on("click", function (e) {
+			var obj   = $.target(e),
+			    param = obj.data("param");
+
+			if (obj.hasClass("icon-check-empty")) {
+				obj.removeClass("icon-check-empty").addClass("icon-check");
+			}
+			else {
+				obj.removeClass("icon-check").addClass("icon-check-empty");
+			}
+
+			input.data(param, !input.data(param));
+			handler();
+		}, "click");
+
+		// Capturing debounced input (125ms)
+		input.on("input", function (e) {
+			$.defer(function () {
+				handler();
+			}, 125, "keyUp");
+		}, "input");
 	}, "gui");
 })(abaaso);

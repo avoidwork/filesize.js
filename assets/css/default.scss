@@ -1,0 +1,201 @@
+$zeros: 0 0 0 0;
+$ten: 10px;
+$lightestgrey: #f2f2f2;
+$lightgrey: #7e7e7e;
+$darkgrey: #282828;
+$white: #fff;
+$black: #000;
+$fontsize: 24pt;
+
+html,
+body {
+	padding: $zeros;
+	margin: $zeros;
+	min-height: 100%;
+}
+
+body {
+	background-color: $white;
+	font-size: $fontsize;
+	font-family: "Lato", arial, helvetica, sans-serif;
+	color: $black;	
+}
+
+a {
+	color: $black;
+
+	&:hover {
+		color: $white;
+	}
+}
+
+header {
+	h1 {
+		font-weight: normal;
+		font-size: 90pt;
+		margin: $zeros;
+	}
+
+	h1,
+	.container {
+		padding: $zeros;
+	}
+}
+
+article {
+	color: $white;
+
+	h2,
+	h3 {
+		margin: $zeros;
+		padding: $zeros;
+	}
+
+	h2 {
+		font-size: $fontsize + 16;
+		margin-bottom: $ten * 2;
+	}
+
+	h3 {
+		font-size: $fontsize + 2;
+	}
+
+	ul {
+		li {
+			margin: 5px;
+		}
+	}
+
+	p,
+	ul {
+		margin: $zeros;
+		padding: 0 0 $ten 0;
+	}
+
+	ul {
+		display: inline-block;
+		width: 100%;
+
+		li {
+			list-style-type: none;
+			margin: $zeros;
+			padding: $zeros;
+			font-size: $fontsize - 8;
+			float: left;
+			width: 50%;
+			text-align: center;
+
+			a {
+				font-size: $fontsize;
+			}
+
+			span {
+				display: block;
+			}
+		}
+	}
+
+	#about {
+		background: #ffa040;
+	}
+
+	#example {
+		background: #ff5f00;
+	}
+
+	#download {
+		background: #36cabe;
+	}
+
+	#demo {
+		background: #057d9f;
+
+		.clickable {
+			cursor: pointer;
+		}
+
+		p,
+		#result {
+			margin: $ten / 2 0 0 0;
+		}
+
+		#result {
+			display: inline-block;
+		}
+
+		form {
+			margin: $zeros;
+			padding: $zeros
+		}
+
+		button,
+		input {
+			height: $fontsize + 4;
+			font-size: $fontsize;
+		}
+
+		button {
+			background: none;
+			border: none;
+
+			&:hover {
+				cursor: pointer;
+				color: $white;
+			}
+		}
+	}
+
+	.code {
+		border: 1px solid #dedede;
+		padding: 2px;
+		font-size: 10pt;
+		background: #f8f8ff;
+	}
+
+	.gist {
+		font-size: 10pt;
+	}
+}
+
+footer {
+	a:hover {
+		color: $lightgrey;
+	}
+}
+
+.container {
+	width: $ten * 96;
+	margin: 0 auto 0 auto;
+	/*transition: width .2s ease-in-out;*/
+	padding-top: $ten * 2;
+	padding-bottom: $ten * 2;
+}
+
+.github {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 100;
+}
+
+.hidden {
+	display: none;
+}
+
+@media screen and (min-width: 900px) and (max-width: 960px) {
+	.container {
+		width: $ten * 89 !important;
+	}
+}
+
+@media screen and (min-width: 600px) and (max-width: 900px) {
+	.container {
+		width: $ten * 59 !important;
+	}
+}
+
+@media screen and (min-width: 1px) and (max-width: 600px) {
+	.container {
+		width: $ten * 40 !important;
+	}
+}
