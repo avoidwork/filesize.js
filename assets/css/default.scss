@@ -195,6 +195,22 @@ footer {
 }
 
 @media screen and (min-width: 1px) and (max-width: 600px) {
+	header {
+		h1 {
+			font-size: 60pt;
+		}
+	}
+
+	article {
+		h2 {
+			font-size: $fontsize + 8;
+		}
+	}
+
+	body {
+		font-size: $fontsize - 6;
+	}
+
 	.container {
 		width: $ten * 40 !important;
 	}
