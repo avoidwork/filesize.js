@@ -20,11 +20,10 @@
 	/**
 	 * filesize
 	 * 
-	 * @param  {Mixed}   arg   String, Int or Float to transform
-	 * @param  {Number}  pos   [Optional] Position to round to, defaults to 2 if short is ommitted
-	 * @param  {Boolean} short [Optional] Shorthand output, similar to "ls -lh", overrides pos to 1
-	 * @param  {Boolean} bits  [Optional] Determines if `bit` sizes are used for result calculation, default is true
-	 * @return {String}        Readable file size String
+	 * @param  {Mixed}   arg  String, Int or Float to transform
+	 * @param  {Mixed}   pos  [Optional] Position to round to, defaults to 2 if short is ommitted, or `true` for shorthand output
+	 * @param  {Boolean} bits [Optional] Determines if `bit` sizes are used for result calculation, default is true
+	 * @return {String}       Readable file size String
 	 */
 	function filesize (arg) {
 		var result = "",
@@ -63,7 +62,7 @@
 
 		// Zero is now a special case because bytes divide by 1
 		if ( num === 0 ) {
-			result = Number( 0 ).toFixed( 0 ) + "B";
+			result = "0B";
 		}
 		else {
 			if ( bits ) {
