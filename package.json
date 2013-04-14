@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "homepage": "http://filesizejs.com",
   "author": {
     "name": "Jason Mulligan",
