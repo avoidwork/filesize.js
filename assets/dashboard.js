@@ -13,6 +13,7 @@
 		    demo   = $("#demo"),
 		    handler;
 
+		// Input handler
 		handler = function () {
 			var val = input.val();
 
@@ -56,5 +57,11 @@
 				handler();
 			}, 125, "keyUp");
 		}, "input");
+
+		// Halting form submission
+		$("form")[0].on("submit", function (e) {
+			$.stop(e);
+			return false;
+		});
 	}, "gui");
 })(abaaso);
