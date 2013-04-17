@@ -2,38 +2,41 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.3.0
+ * @version 1.3.1
  */
 (function ($) {
 	"use strict";
 
-	$.on("render", function () {
-		var result = $("#result"),
-		    input  = $("input")[0],
-		    demo   = $("#demo"),
-		    handler;
+	var result, input, demo;
 
-		// Input handler
-		handler = function () {
-			var val = input.val();
+	/**
+	 * Input handler
+	 * 
+	 * @return {Undefined} undefined
+	 */
+	function handler () {
+		var val = input.val();
 
-			if (!val.isEmpty()) {
-				try {
-					result.html(filesize(val, input.data("short"), input.data("bit")));
-				}
-				catch (e) {
-					result.html(e);
-				}
+		if (!val.isEmpty()) {
+			try {
+				result.html(filesize(val, input.data("short"), input.data("bit")));
 			}
-			else {
-				result.html("&nbsp;");
+			catch (e) {
+				result.html(e);
 			}
-		};
+		}
+		else {
+			result.html("&nbsp;");
+		}
+	};
+
+	// Setting event handler
+	$.on("ready", function () {
+		result = $("#result");
+		input  = $("#filesize");
+		demo   = $("#demo");
 
 		$("#year").text(new Date().getFullYear());
-
-		// Displaying demo
-		demo.removeClass("hidden");
 
 		// Demo filters
 		demo.find(".clickable").on("click", function (e) {
@@ -48,6 +51,7 @@
 			}
 
 			input.data(param, !input.data(param));
+
 			handler();
 		}, "click");
 
