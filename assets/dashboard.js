@@ -2,7 +2,7 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.3.1
+ * @version 1.3.2
  */
 (function ($) {
 	"use strict";
@@ -17,7 +17,7 @@
 	function handler () {
 		var val = input.val();
 
-		if (!val.isEmpty()) {
+		if (val !== undefined && !val.toString().isEmpty()) {
 			try {
 				result.html(filesize(val, input.data("short"), input.data("bit")));
 			}
