@@ -57,7 +57,7 @@
 
 		// Capturing debounced input (125ms)
 		input.on("input", function (e) {
-			$.defer(function () {
+			$.delay(function () {
 				handler();
 			}, 125, "keyUp");
 		}, "input");
