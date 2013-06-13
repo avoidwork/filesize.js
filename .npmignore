@@ -3,5 +3,6 @@ lib/filesize.min.js
 src
 test
 .jamignore
+.jshintrc
 .travis.yml
 Gruntfile.js
