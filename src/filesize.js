@@ -4,24 +4,26 @@
 	var base    = 10,
 	    right   = /\.(.*)/,
 	    bit     = /b$/,
-	    byte    = /^B$/,
+	    bite    = /^B$/,
 	    zero    = /^0$/,
-	    options = {
-	    	all : {
-	    		increments : [["B", 1], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", 1.049e+6], ["Gb", 1.342e+8], ["GB", 1.074e+9], ["Tb", 1.374e+11], ["TB", 1.1e+12], ["Pb", 1.407e+14], ["PB", 1.126e+15]],
-	    		nth        : 11
-	    	},
-	    	bitless : {
-	    		increments : [["B", 1], ["KB", 1024], ["MB", 1.049e+6], ["GB", 1.074e+9], ["TB", 1.1e+12], ["PB", 1.126e+15]],
-	    		nth        : 6
-	    	}
-	    };
+	    options;
+
+	options = {
+		all : {
+			increments : [["B", 1], ["Kb", 128], ["KB", 1024], ["Mb", 131072], ["MB", 1.049e+6], ["Gb", 1.342e+8], ["GB", 1.074e+9], ["Tb", 1.374e+11], ["TB", 1.1e+12], ["Pb", 1.407e+14], ["PB", 1.126e+15]],
+			nth        : 11
+		},
+		bitless : {
+			increments : [["B", 1], ["KB", 1024], ["MB", 1.049e+6], ["GB", 1.074e+9], ["TB", 1.1e+12], ["PB", 1.126e+15]],
+			nth        : 6
+		}
+	};
 
 	/**
 	 * filesize
-	 * 
+	 *
 	 * @param  {Mixed}   arg  String, Int or Float to transform
-	 * @param  {Mixed}   pos  [Optional] Position to round to, defaults to 2 if short is ommitted, or `true` for shorthand output
+	 * @param  {Mixed}   pos  [Optional] Position to round to, defaults to 2 if shrt is ommitted, or `true` for shrthand output
 	 * @param  {Boolean} bits [Optional] Determines if `bit` sizes are used for result calculation, default is true
 	 * @return {String}       Readable file size String
 	 */
@@ -29,16 +31,16 @@
 		var result = "",
 		    bits   = true,
 		    skip   = false,
-		    i, neg, num, pos, short, size, sizes, suffix, z;
+		    i, neg, num, pos, shrt, size, sizes, suffix, z;
 
 		// Determining arguments
 		if (arguments[3] !== undefined) {
-			pos   = arguments[1];
-			short = arguments[2];
-			bits  = arguments[3];
+			pos  = arguments[1];
+			shrt = arguments[2];
+			bits = arguments[3];
 		}
 		else {
-			typeof arguments[1] === "boolean" ? short = arguments[1] : pos = arguments[1];
+			typeof arguments[1] === "boolean" ? shrt = arguments[1] : pos = arguments[1];
 
 			if ( typeof arguments[2] === "boolean" ) {
 				bits = arguments[2];
@@ -46,14 +48,14 @@
 		}
 
 		if ( isNaN( arg ) || ( pos !== undefined && isNaN( pos ) ) ) {
-			throw Error("Invalid arguments");
+			throw new Error("Invalid arguments");
 		}
 
-		short = ( short === true );
-		bits  = ( bits === true );
-		pos   = short ? 1 : ( pos === undefined ? 2 : parseInt( pos, base ) );
-		num   = Number( arg );
-		neg   = ( num < 0 );
+		shrt = ( shrt === true );
+		bits = ( bits === true );
+		pos  = shrt ? 1 : ( pos === undefined ? 2 : parseInt( pos, base ) );
+		num  = Number( arg );
+		neg  = ( num < 0 );
 
 		// Flipping a negative number to determine the size
 		if ( neg ) {
@@ -62,7 +64,12 @@
 
 		// Zero is now a special case because bytes divide by 1
 		if ( num === 0 ) {
-			result = "0B";
+			if ( shrt ) {
+				result = "0";
+			}
+			else {
+				result = "0 B";
+			}
 		}
 		else {
 			if ( bits ) {
@@ -80,14 +87,14 @@
 
 				if ( num >= size ) {
 					// Treating bytes as cardinal
-					if ( byte.test( suffix ) ) {
+					if ( bite.test( suffix ) ) {
 						skip = true;
 						pos  = 0;
 					}
 
 					result = ( num / size ).toFixed( pos );
 
-					if ( !skip && short ) {
+					if ( !skip && shrt ) {
 						if ( bits && bit.test( suffix ) ) {
 							suffix = suffix.toLowerCase();
 						}
@@ -98,9 +105,12 @@
 						if ( z !== null && z[1] !== undefined && zero.test( z[1] ) ) {
 							result = parseInt( result, base );
 						}
-					}
 
-					result += suffix;
+						result += suffix;
+					}
+					else if ( !shrt ) {
+						result += " " + suffix;
+					}
 					break;
 				}
 			}
@@ -112,7 +122,7 @@
 		}
 
 		return result;
-	};
+	}
 
 	// CommonJS, AMD, script tag
 	if ( typeof exports !== "undefined" ) {
