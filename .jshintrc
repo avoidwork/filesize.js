@@ -1,0 +1,26 @@
+{
+	"smarttabs": true,
+	"latedef": true,
+	"undef": true,
+	"unused": true,
+	"proto": true,
+	"supernew": true,
+	"quotmark": "double",
+	"curly": true,
+	"newcap": true,
+	"noarg": true,
+	"noempty": false,
+	"nonew": true,
+	"quotmark": "double",
+	"regexp": false,
+	"trailing": true,
+	"boss": true,
+	"eqnull": true,
+	"expr": true,
+	"browser": true,
+	"globals": {
+		"require": true,
+		"module": true,
+		"define": true
+	}
+}
