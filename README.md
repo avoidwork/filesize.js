@@ -24,7 +24,7 @@ filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm
 
 If you're having problems with using the project, use the support forum at CodersClan.
 
-<a href="http://codersclan.net/forum/index.php?repo_id=10"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
+<a href="http://codersclan.net/forum/index.php?repo_id=11"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
 
 ## License
 
