@@ -20,12 +20,16 @@ filesize(265318, 2, false)        // "259.10 KB" - disabled `bit` sizes with thi
 
 filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm install filesize), or using a script tag.
 
-## Information
+## Support
 
-#### License
+If you're having problems with using the project, use the support forum at CodersClan.
+
+<a href="http://codersclan.net/forum/index.php?repo_id=10"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
+
+## License
 
 filesize.js is licensed under BSD-3 https://raw.github.com/avoidwork/filesize.js/master/LICENSE
 
-#### Copyright
+## Copyright
 
 Copyright (c) 2013, Jason Mulligan <jason.mulligan@avoidwork.com>
