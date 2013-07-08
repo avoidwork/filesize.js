@@ -14,25 +14,25 @@ exports["filesize"] = {
 	valid: function (test) {
 		test.expect(28);
 
-		test.equal(filesize(this.kb),                "3.91 kb", "Should be '3.91 kb'");
-		test.equal(filesize(this.kb, 1),             "3.9 kb",  "Should be '3.9 kb'");
+		test.equal(filesize(this.kb),                "4.00 kb", "Should be '4.00 kb'");
+		test.equal(filesize(this.kb, 1),             "4.0 kb",  "Should be '4.0 kb'");
 		test.equal(filesize(this.kb, 1, false),      "500 B",   "Should be '500 B'");
-		test.equal(filesize(this.kb, true),          "3.9K",    "Should be '3.9K'");
+		test.equal(filesize(this.kb, true),          "4K",      "Should be '4K'");
 		test.equal(filesize(this.kb, true, false),   "500",     "Should be '500'");
 
-		test.equal(filesize(this.num),               "1.00 kB", "Should be '1.00 kB'");
+		test.equal(filesize(this.num),               "1.02 kB", "Should be '1.02 kB'");
 		test.equal(filesize(this.num, 1),            "1.0 kB",  "Should be '1.0 kB'");
 		test.equal(filesize(this.num, 1, false),     "1.0 kB",  "Should be '1.0 kB'");
 		test.equal(filesize(this.num, true),         "1K",      "Should be '1K'");
 		test.equal(filesize(this.num, true, false),  "1K",      "Should be '1K'");
 
-		test.equal(filesize(this.str),               "1.00 kB",  "Should be '1.00 kB'");
+		test.equal(filesize(this.str),               "1.02 kB",  "Should be '1.02 kB'");
 		test.equal(filesize(this.str, 1),            "1.0 kB",   "Should be '1.0 kB'");
 		test.equal(filesize(this.str, 1, false),     "1.0 kB",   "Should be '1.0 kB'");
 		test.equal(filesize(this.str, true),         "1K",       "Should be '1K'");
 		test.equal(filesize(this.str, true, false),  "1K",       "Should be '1K'");
 
-		test.equal(filesize(this.neg),               "-1.00 kB", "Should be '-1.00 kB'");
+		test.equal(filesize(this.neg),               "-1.02 kB", "Should be '-1.02 kB'");
 		test.equal(filesize(this.neg, 1),            "-1.0 kB",  "Should be '-1.0 kB'");
 		test.equal(filesize(this.neg, 1, false),     "-1.0 kB",  "Should be '-1.0 kB'");
 		test.equal(filesize(this.neg, true),         "-1K",      "Should be '-1K'");
