@@ -5,8 +5,9 @@ filesize.js provides a simple way to get a human readable file size string from 
 
 ## Examples
 
+0.10.0 switched to base 10, all previous versions use base 2.
+
 ```javascript
-// 0.10.0 switched to base 10, all previous versions use base 2
 filesize(500);                    // "4.00 Kb"
 filesize(500, true);              // "4.0k"
 filesize(1500);                   // "1.50 KB"
