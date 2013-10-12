@@ -10,18 +10,18 @@ function filesize ( arg, descriptor ) {
 	var result = "",
 	    skip   = false,
 	    i      = 6,
-	    base, bits, pos, neg, num, size, sizes, shrt, spacer, suffix, z;
+	    base, bits, neg, num, round, size, sizes, unix, spacer, suffix, z;
 
 	if ( isNaN( arg ) ) {
 		throw new Error( "Invalid arguments" );
 	}
 
 	descriptor = descriptor || {};
-	bits       = ( descriptor.bits     === true );
-	shrt       = ( descriptor["short"] === true );
-	base       = descriptor.base   !== undefined ? descriptor.base   : 10;
-	pos        = descriptor.pos    !== undefined ? descriptor.pos    : shrt ? 0  : 2;
-	spacer     = descriptor.spacer !== undefined ? descriptor.spacer : shrt ? "" : " ";
+	bits       = ( descriptor.bits === true );
+	unix       = ( descriptor.unix === true );
+	base       = descriptor.base   !== undefined ? descriptor.base   : unix ? 2  : 10;
+	round      = descriptor.round  !== undefined ? descriptor.round  : unix ? 1  : 2;
+	spacer     = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
 	num        = Number( arg );
 	neg        = ( num < 0 );
 
@@ -32,11 +32,11 @@ function filesize ( arg, descriptor ) {
 
 	// Zero is now a special case because bytes divide by 1
 	if ( num === 0 ) {
-		if ( shrt ) {
+		if ( unix ) {
 			result = "0";
 		}
 		else {
-			result = "0 B";
+			result = "0" + spacer + "B";
 		}
 	}
 	else {
@@ -49,13 +49,13 @@ function filesize ( arg, descriptor ) {
 			if ( num >= size ) {
 				// Treating bytes as cardinal
 				if ( bite.test( suffix ) ) {
-					skip = true;
-					pos  = 0;
+					skip  = true;
+					round = 0;
 				}
 
-				result = ( num / size ).toFixed( pos );
+				result = ( num / size ).toFixed( round );
 
-				if ( !skip && shrt ) {
+				if ( !skip && unix ) {
 					if ( bits && bit.test( suffix ) ) {
 						suffix = suffix.toLowerCase();
 					}
@@ -63,16 +63,20 @@ function filesize ( arg, descriptor ) {
 					suffix = suffix.charAt( 0 );
 					z      = right.exec( result );
 
-					if ( suffix === "k" ) {
+					if ( !bits && suffix === "k" ) {
 						suffix = "K";
 					}
 
 					if ( z !== null && z[1] !== undefined && zero.test( z[1] ) ) {
 						result = parseInt( result, radix );
 					}
+
+					result += spacer + suffix;
+				}
+				else if ( !unix ) {
+					result += spacer + suffix;
 				}
 
-				result += spacer + suffix;
 				break;
 			}
 		}

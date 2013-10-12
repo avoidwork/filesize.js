@@ -5,5 +5,4 @@ var bit   = /b$/,
     bite  = /^B$/,
     radix = 10,
     right = /\.(.*)/,
-    zero  = /^0$/,
-    options;
+    zero  = /^0$/;
