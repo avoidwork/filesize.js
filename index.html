@@ -17,79 +17,59 @@
 	<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
 <![endif]-->
 </head>
-
 <body>
-
 <header>
 	<div class="container">
 		<h1>filesize.js</h1>
 	</div>
 </header>
-
 <article>
 	<section id="demo">
 		<div class="container">
 			<h2><span class="icon-thumbs-up"></span> Try it!</h2>
-
-			<p><span class="icon-check clickable" data-param="bit"></span> Show `bit` sizes <span class="icon-check-empty clickable" data-param="short"></span> Short</p>
-
+			<p><span class="icon-check-empty clickable" data-param="bits"></span> Show `bit` sizes <span class="icon-check-empty clickable" data-param="unix"></span> Unix mode (base 2)</p>
 			<form>
 				<label for="filesize" class="hidden">Enter a number</label>
-				<input id="filesize" name="filesize" placeholder="Enter a number" data-short="false" data-bit="true"></input>
+				<input id="filesize" name="filesize" placeholder="Enter a number" data-unix="false" data-bits="false"></input>
 				<span id="result">&nbsp;</span>
 			</form>
 		</div>
 	</section>
-
 	<section id="download">
 		<div class="container">
 			<h2><span class="icon-cloud-download"></span> Download</h2>
-
 			<p>Latest version is available from Content Delivery Network</p>
-
 			<ul>
-				<li><a href="http://cdn.filesizejs.com/filesize.js" title="Debugging version">Debugging</a><span>3.3kB / 1.9kB gzipped</span></li>
-				<li><a href="http://cdn.filesizejs.com/filesize.min.js" title="Production version">Production</a><span>1.4kB / 1.4kB gzipped</span></li>
+				<li><a href="http://cdn.filesizejs.com/filesize.js" title="Debugging version">Debugging</a><span>3.9kB / 1.9kB gzipped</span></li>
+				<li><a href="http://cdn.filesizejs.com/filesize.min.js" title="Production version">Production</a><span>1.3kB / 1.3kB gzipped</span></li>
 			</ul>
 		</div>
 	</section>
-
 	<section id="about">
 		<div class="container">
 			<h2><span class="icon-comments-alt"></span> What does it do?</h2>
-
 			<p>filesize.js is a tiny JavaScript library that creates a Global function named filesize().</p>
-
 			<p>It provides an easy way to get a human readable file size String.</p>
 		</div>
 	</section>
-
 	<section id="example">
 		<div class="container">
 			<h2><span class="icon-cog"></span> How do I use it?</h2>
-
-			<p>filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string. An optional second parameter is the decimal place to round to (default is 2), or true which triggers Unix style output. An optional third parameter lets you disable bit sizes, e.g. "Mb".</p>
-
 			<p>filesize.js can be loaded from npm, as an AMD module, or as a regular script.</p>
-
 			<section class="gist">
 				<script src="https://gist.github.com/4698968.js"></script>
 			</section>
-
 			<p>
 				<a href="http://codersclan.net/forum/index.php?repo_id=11"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
 			</p>
 		</div>
 	</section>
 </article>
-
 <footer>
 	<div class="container">
 		Copyright &copy <span id="year"></span> <a href="http://avoidwork.com" title="About the author">Jason Mulligan</a> | <a href="https://raw.github.com/avoidwork/filesize.js/master/LICENSE" title="View license">BSD 3 Licensed</a>
 	</div>
 </footer>
-
 <a href="https://github.com/avoidwork/filesize.js"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
-
 </body>
 </html>
