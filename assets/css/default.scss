@@ -45,14 +45,10 @@ header {
 article {
 	color: $white;
 
-	h2,
-	h3 {
-		margin: $zeros;
-		padding: $zeros;
-	}
-
 	h2 {
 		font-size: $fontsize + 16;
+		margin: $zeros;
+		padding: $zeros;
 		margin-bottom: $ten * 2;
 	}
 
