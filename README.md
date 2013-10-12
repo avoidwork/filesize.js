@@ -1,21 +1,35 @@
 [![build status](https://secure.travis-ci.org/avoidwork/filesize.js.png)](http://travis-ci.org/avoidwork/filesize.js)
 # filesize.js
 
-filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.  An optional second parameter is the decimal place to round to (default is 2), or _true_ which triggers Unix style output. An optional third parameter lets you disable `bit` sizes, e.g. "kb".
+filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
+
+## Optional settings
+
+`filesize()` accepts an optional descriptor Object as a second argument, so you can customize the output.
+
+### bits
+_***(boolean)***_ Enables `bit` sizes, default is `false`
+
+### unix
+_***(boolean)***_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
+
+### base
+_***(number)***_ Number base, default is `10`
+
+### round
+_***(number)***_ Decimal place, default is `2`
+
+### spacer
+_***(string)***_ Character between the `result` and `suffix`, default is `" "`
 
 ## Examples
 
-1.10.0 switched to base 10, all previous versions use base 2.
-
 ```javascript
-filesize(500);                    // "4.00 Kb"
-filesize(500, true);              // "4.0k"
-filesize(1500);                   // "1.50 KB"
-filesize("1500000000");           // "1.50 GB"
-filesize("1500000000", 0);        // "2GB"
-filesize(1212312421412412);       // "1.21 PB PB"
-filesize(1212312421412412, true); // "1.1P" - shorthand output, similar to "ls -h"
-filesize(265318, 2, false)        // "265.32 kB" - disabled `bit` sizes with third argument
+filesize(500);                         // "500 B"
+filesize(500, {bits: true});           // "4.00 kb"
+filesize(265318);                      // "265.32 kB"
+filesize(265318, {base: 2});           // "259.10 kB"
+filesize(265318, {base: 2, round: 1}); // "259.1 kB"
 ```
 
 ## How can I load filesize.js?
@@ -24,14 +38,10 @@ filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm
 
 ## Support
 
-If you're having problems with using the project, use the support forum at CodersClan.
+If you're having problems, use the support forum at CodersClan.
 
 <a href="http://codersclan.net/forum/index.php?repo_id=11"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
 
 ## License
-
-filesize.js is licensed under BSD-3 https://raw.github.com/avoidwork/filesize.js/master/LICENSE
-
-## Copyright
-
-Copyright (c) 2013, Jason Mulligan <jason.mulligan@avoidwork.com>
+Copyright (c) 2013 Jason Mulligan  
+Licensed under the BSD-3 license.
