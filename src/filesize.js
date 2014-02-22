@@ -4,9 +4,10 @@
  * @method filesize
  * @param  {Mixed}   arg        String, Int or Float to transform
  * @param  {Object}  descriptor [Optional] Flags
+ * @param  {Object}  options    [Optional] Overrides default size options
  * @return {String}             Readable file size String
  */
-function filesize ( arg, descriptor ) {
+function filesize ( arg, descriptor, options ) {
 	var result = "",
 	    skip   = false,
 	    i      = 6,
@@ -29,6 +30,8 @@ function filesize ( arg, descriptor ) {
 	if ( neg ) {
 		num = -num;
 	}
+
+  options = options || defaultOptions;
 
 	// Zero is now a special case because bytes divide by 1
 	if ( num === 0 ) {
