@@ -104,5 +104,13 @@ exports["filesize"] = {
 		test.expect(1);
 		test.throws(function () { filesize(this.invld) }, Error, "Should match");
 		test.done();
+	},
+	suffixes: function (test) {
+		test.expect(2);
+
+		test.equal(filesize(this.byte,     {suffixes: {B: "Б"}}), "1 Б",     "Should be '1 Б'");
+		test.equal(filesize(this.kilobyte, {suffixes: {B: "Б"}}), "1.02 kB", "Should be '1.02 kB'");
+
+		test.done();
 	}
 };
