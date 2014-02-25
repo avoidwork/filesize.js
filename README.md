@@ -22,6 +22,9 @@ _***(number)***_ Decimal place, default is `2`
 ### spacer
 _***(string)***_ Character between the `result` and `suffix`, default is `" "`
 
+### suffixes
+_***(object)***_ Dictionary of SI suffixes to replace for localization, defaults to english if no match is found
+
 ## Examples
 
 ```javascript
@@ -30,6 +33,7 @@ filesize(500, {bits: true});           // "4.00 kb"
 filesize(265318);                      // "265.32 kB"
 filesize(265318, {base: 2});           // "259.10 kB"
 filesize(265318, {base: 2, round: 1}); // "259.1 kB"
+filesize(1, {suffixes: {B: "Б"}});     // "1 Б"
 ```
 
 ## How can I load filesize.js?

@@ -10,7 +10,7 @@ function filesize ( arg, descriptor ) {
 	var result = "",
 	    skip   = false,
 	    i      = 6,
-	    base, bits, neg, num, round, size, sizes, unix, spacer, suffix, z;
+	    base, bits, neg, num, round, size, sizes, unix, spacer, suffix, z, suffixes;
 
 	if ( isNaN( arg ) ) {
 		throw new Error( "Invalid arguments" );
@@ -19,9 +19,10 @@ function filesize ( arg, descriptor ) {
 	descriptor = descriptor || {};
 	bits       = ( descriptor.bits === true );
 	unix       = ( descriptor.unix === true );
-	base       = descriptor.base   !== undefined ? descriptor.base   : unix ? 2  : 10;
-	round      = descriptor.round  !== undefined ? descriptor.round  : unix ? 1  : 2;
-	spacer     = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
+	base       = descriptor.base     !== undefined ? descriptor.base     : unix ? 2  : 10;
+	round      = descriptor.round    !== undefined ? descriptor.round    : unix ? 1  : 2;
+	spacer     = descriptor.spacer   !== undefined ? descriptor.spacer   : unix ? "" : " ";
+	suffixes   = descriptor.suffixes !== undefined ? descriptor.suffixes : {};
 	num        = Number( arg );
 	neg        = ( num < 0 );
 
@@ -36,7 +37,8 @@ function filesize ( arg, descriptor ) {
 			result = "0";
 		}
 		else {
-			result = "0" + spacer + "B";
+			suffix = "B";
+			result = "0" + spacer + ( suffixes[suffix] || suffix );
 		}
 	}
 	else {
@@ -71,10 +73,10 @@ function filesize ( arg, descriptor ) {
 						result = parseInt( result, radix );
 					}
 
-					result += spacer + suffix;
+					result += spacer + ( suffixes[suffix] || suffix );
 				}
 				else if ( !unix ) {
-					result += spacer + suffix;
+					result += spacer + ( suffixes[suffix] || suffix );
 				}
 
 				break;
