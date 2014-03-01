@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 					"<banner>",
 					"src/intro.js",
 					"src/filesize.js",
-					"src/options.js",
+					"src/si.js",
 					"src/outro.js"
 				],
 				dest : "lib/filesize.js"

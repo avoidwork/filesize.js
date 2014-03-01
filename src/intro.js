@@ -2,7 +2,6 @@
 "use strict";
 
 var bit   = /b$/,
-    bite  = /^B$/,
     radix = 10,
-    right = /\.(.*)/,
+    left  = /.*\./,
     zero  = /^0$/;

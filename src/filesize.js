@@ -9,8 +9,7 @@
 function filesize ( arg, descriptor ) {
 	var result = "",
 	    skip   = false,
-	    i      = 6,
-	    base, bits, neg, num, round, size, sizes, unix, spacer, suffix, z, suffixes;
+	    e, base, bits, ceil, neg, num, round, unix, spacer, suffix, z, suffixes;
 
 	if ( isNaN( arg ) ) {
 		throw new Error( "Invalid arguments" );
@@ -25,6 +24,7 @@ function filesize ( arg, descriptor ) {
 	suffixes   = descriptor.suffixes !== undefined ? descriptor.suffixes : {};
 	num        = Number( arg );
 	neg        = ( num < 0 );
+	ceil       = base > 2 ? 1000 : 1024;
 
 	// Flipping a negative number to determine the size
 	if ( neg ) {
@@ -42,45 +42,50 @@ function filesize ( arg, descriptor ) {
 		}
 	}
 	else {
-		sizes = options[base][bits ? "bits" : "bytes"];
+		e = Math.floor( Math.log( num ) / Math.log( 1000 ) );
 
-		while ( i-- ) {
-			size   = sizes[i][1];
-			suffix = sizes[i][0];
+		if ( base === 2 ) {
+			result = num / Math.pow( 2, ( e * 10 ) );
+		}
+		else {
+			result = num / Math.pow( 1000, e );
+		}
 
-			if ( num >= size ) {
-				// Treating bytes as cardinal
-				if ( bite.test( suffix ) ) {
-					skip  = true;
-					round = 0;
-				}
+		if ( bits ) {
+			result = ( result * 8 );
 
-				result = ( num / size ).toFixed( round );
-
-				if ( !skip && unix ) {
-					if ( bits && bit.test( suffix ) ) {
-						suffix = suffix.toLowerCase();
-					}
-
-					suffix = suffix.charAt( 0 );
-					z      = right.exec( result );
-
-					if ( !bits && suffix === "k" ) {
-						suffix = "K";
-					}
-
-					if ( z !== null && z[1] !== undefined && zero.test( z[1] ) ) {
-						result = parseInt( result, radix );
-					}
-
-					result += spacer + ( suffixes[suffix] || suffix );
-				}
-				else if ( !unix ) {
-					result += spacer + ( suffixes[suffix] || suffix );
-				}
-
-				break;
+			if ( result > ceil ) {
+				result = result / ceil;
+				e++;
 			}
+		}
+
+		result = result.toFixed( e > 0 ? round : 0 );
+		suffix = si[bits ? "bits" : "bytes"][e];
+
+		if ( !skip && unix ) {
+			if ( bits && bit.test( suffix ) ) {
+				suffix = suffix.toLowerCase();
+			}
+
+			suffix = suffix.charAt( 0 );
+			z      = result.replace( left, "" );
+
+			if ( suffix === "B" ) {
+				suffix = "";
+			}
+			else if ( !bits && suffix === "k" ) {
+				suffix = "K";
+			}
+
+			if ( zero.test( z ) ) {
+				result = parseInt( result, radix );
+			}
+
+			result += spacer + ( suffixes[suffix] || suffix );
+		}
+		else if ( !unix ) {
+			result += spacer + ( suffixes[suffix] || suffix );
 		}
 	}
 
