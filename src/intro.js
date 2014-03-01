@@ -3,5 +3,5 @@
 
 var bit   = /b$/,
     radix = 10,
-    right = /\.(.*)/,
+    left  = /.*\./,
     zero  = /^0$/;

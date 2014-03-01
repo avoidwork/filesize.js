@@ -69,7 +69,7 @@ function filesize ( arg, descriptor ) {
 			}
 
 			suffix = suffix.charAt( 0 );
-			z      = right.exec( result );
+			z      = result.replace( left, "" );
 
 			if ( suffix === "B" ) {
 				suffix = "";
@@ -78,7 +78,7 @@ function filesize ( arg, descriptor ) {
 				suffix = "K";
 			}
 
-			if ( z !== null && z[1] !== undefined && zero.test( z[1] ) ) {
+			if ( zero.test( z ) ) {
 				result = parseInt( result, radix );
 			}
 
