@@ -44,6 +44,12 @@ function filesize ( arg, descriptor ) {
 	else {
 		e = Math.floor( Math.log( num ) / Math.log( 1000 ) );
 
+		// Exceeding supported length, time to reduce & multiply
+		if ( e > 8 ) {
+			result = result * ( 1000 * ( e - 8 ) );
+			e      = 8;
+		}
+
 		if ( base === 2 ) {
 			result = num / Math.pow( 2, ( e * 10 ) );
 		}
