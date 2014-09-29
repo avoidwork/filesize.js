@@ -112,5 +112,12 @@ exports["filesize"] = {
 		test.equal(filesize(this.kilobyte, {suffixes: {B: "Б"}}), "1.02 kB", "Should be '1.02 kB'");
 
 		test.done();
+	},
+	object: function (test) {
+		test.expect(3);
+		test.deepEqual(filesize(this.kilobyte, {output: Object}),             {value: "1.02", suffix: "kB"}, "Should be {value: '1.02', suffix: 'kB'}");
+		test.deepEqual(filesize(this.neg,      {output: Object, unix: true}), {value: "-1", suffix: "K"},    "Should be {value: '-1', suffix: 'K'}");
+		test.deepEqual(filesize(this.zero,     {output: Object, unix: true}), {value: "0", suffix: "B"},     "Should be {value: '0', suffix: 'B'}");
+		test.done();
 	}
 };

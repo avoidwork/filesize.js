@@ -25,6 +25,9 @@ _***(string)***_ Character between the `result` and `suffix`, default is `" "`
 ### suffixes
 _***(object)***_ Dictionary of SI suffixes to replace for localization, defaults to english if no match is found
 
+### output
+_***(string|object)***_ Output a string or an object, default is `String`
+
 ## Examples
 
 ```javascript
@@ -34,6 +37,7 @@ filesize(265318);                      // "265.32 kB"
 filesize(265318, {base: 2});           // "259.10 kB"
 filesize(265318, {base: 2, round: 1}); // "259.1 kB"
 filesize(1, {suffixes: {B: "Б"}});     // "1 Б"
+filesize(265318, {output: Object});    // {value: "265.32", suffix: "kB"}
 ```
 
 ## How can I load filesize.js?
@@ -47,5 +51,5 @@ If you're having problems, use the support forum at CodersClan.
 <a href="http://codersclan.net/forum/index.php?repo_id=11"><img src="http://www.codersclan.net/graphics/getSupport_blue_big.png" width="160"></a>
 
 ## License
-Copyright (c) 2013 Jason Mulligan  
+Copyright (c) 2014 Jason Mulligan  
 Licensed under the BSD-3 license.
