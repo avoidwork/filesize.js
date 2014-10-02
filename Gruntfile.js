@@ -24,7 +24,8 @@ module.exports = function(grunt) {
 				],
 				dest : "lib/filesize.js"
 			}
-		},exec : {
+		},
+		exec : {
 			closure : {
 				cmd : "cd lib\nclosure-compiler --js <%= pkg.name %>.js --js_output_file <%= pkg.name %>.min.js --create_source_map ./<%= pkg.name %>.map"
 			},

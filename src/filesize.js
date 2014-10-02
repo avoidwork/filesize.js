@@ -9,6 +9,7 @@
 function filesize ( arg, descriptor ) {
 	var result = "",
 	    skip   = false,
+	    val    = 0,
 	    e, base, bits, ceil, neg, num, round, unix, spacer, suffix, z, suffixes;
 
 	if ( isNaN( arg ) ) {
@@ -46,27 +47,27 @@ function filesize ( arg, descriptor ) {
 
 		// Exceeding supported length, time to reduce & multiply
 		if ( e > 8 ) {
-			result = result * ( 1000 * ( e - 8 ) );
-			e      = 8;
+			val = val * ( 1000 * ( e - 8 ) );
+			e   = 8;
 		}
 
 		if ( base === 2 ) {
-			result = num / Math.pow( 2, ( e * 10 ) );
+			val = num / Math.pow( 2, ( e * 10 ) );
 		}
 		else {
-			result = num / Math.pow( 1000, e );
+			val = num / Math.pow( 1000, e );
 		}
 
 		if ( bits ) {
-			result = ( result * 8 );
+			val = ( val * 8 );
 
-			if ( result > ceil ) {
-				result = result / ceil;
+			if ( val > ceil ) {
+				val = val / ceil;
 				e++;
 			}
 		}
 
-		result = result.toFixed( e > 0 ? round : 0 );
+		result = val.toFixed( e > 0 ? round : 0 );
 		suffix = si[bits ? "bits" : "bytes"][e];
 
 		if ( !skip && unix ) {
@@ -85,7 +86,7 @@ function filesize ( arg, descriptor ) {
 			}
 
 			if ( zero.test( z ) ) {
-				result = parseInt( result, radix );
+				result = parseInt( result, radix ).toString();
 			}
 
 			result += spacer + ( suffixes[suffix] || suffix );
