@@ -25,7 +25,8 @@
     "node": ">= 0.4.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+	    "coverage": "istanbul cover ./node_modules/grunt-contrib-nodeunit/node_modules/nodeunit/bin/nodeunit test"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -35,7 +36,8 @@
     "grunt-contrib-concat": "~0.1.3",
     "grunt-contrib-jshint": "~0.1",
     "grunt-contrib-nodeunit": "~0.1.2",
-    "grunt-contrib-watch": "~0.2"
+    "grunt-contrib-watch": "~0.2",
+    "istanbul": "^0.3.2"
   },
   "keywords": ["file", "filesize", "size", "readable", "file system"]
 }
