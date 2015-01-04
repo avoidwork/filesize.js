@@ -49,6 +49,21 @@ module.exports = function(grunt) {
 				path : ["<%= concat.dist.dest %>"]
 			}
 		},
+		uglify: {
+			options: {
+				banner : "/*\n" +
+				" <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
+				" @version <%= pkg.version %>\n" +
+				" */",
+				sourceMap: true,
+				sourceMapIncludeSources: true
+			},
+			target: {
+				files: {
+					"lib/filesize.min.js" : ["lib/filesize.js"]
+				}
+			}
+		},
 		watch : {
 			js : {
 				files : "<%= concat.dist.src %>",
@@ -63,15 +78,14 @@ module.exports = function(grunt) {
 
 	// tasks
 	grunt.loadNpmTasks("grunt-sed");
-	grunt.loadNpmTasks("grunt-exec");
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-nodeunit");
 	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks('grunt-contrib-watch');
+	grunt.loadNpmTasks("grunt-contrib-uglify");
 
 	// aliases
-	grunt.registerTask("lint", ["jshint"]);
-	grunt.registerTask("test", ["nodeunit"]);
-	grunt.registerTask("build", ["concat", "sed", "exec"]);
-	grunt.registerTask("default", ["build", "test", "lint"]);
+	grunt.registerTask("test", ["jshint", "nodeunit"]);
+	grunt.registerTask("build", ["concat", "sed"]);
+	grunt.registerTask("default", ["build", "test", "uglify"]);
 };

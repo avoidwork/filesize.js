@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "2.0.4",
+  "version": "3.0.0",
   "homepage": "http://filesizejs.com",
   "author": {
     "name": "Jason Mulligan",
@@ -30,12 +30,12 @@
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.6",
-    "grunt-exec": "~0.4",
     "grunt-sed": "~0.1",
     "grunt-contrib-concat": "~0.1.3",
     "grunt-contrib-jshint": "~0.1",
     "grunt-contrib-nodeunit": "~0.1.2",
-    "grunt-contrib-watch": "~0.2"
+    "grunt-contrib-watch": "~0.2",
+    "grunt-contrib-uglify": "~0.6.0"
   },
   "keywords": ["file", "filesize", "size", "readable", "file system"]
 }
