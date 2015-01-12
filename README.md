@@ -14,8 +14,11 @@ _***(number)***_ Number base, default is `2`
 ### bits
 _***(boolean)***_ Enables `bit` sizes, default is `false`
 
+### exponent
+_***(number)***_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
+
 ### output
-_***(string)***_ Output of function (`array`, `object`, or `string`), default is `string`
+_***(string)***_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
 ### round
 _***(number)***_ Decimal place, default is `2`
@@ -40,6 +43,9 @@ filesize(265318, {round: 0});         // "259 kB"
 filesize(265318, {output: "array"});  // [259.1, "kB"]
 filesize(265318, {output: "object"}); // {value: 259.1, suffix: "kB"}
 filesize(1, {suffixes: {B: "Б"}});    // "1 Б"
+filesize(1024);                       // "1 kB"
+filesize(1024, {exponent: 0});        // "1024 B"
+filesize(1024, {output: "exponent"}); // 1
 ```
 
 ## How can I load filesize.js?

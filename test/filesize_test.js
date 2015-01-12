@@ -11,7 +11,7 @@ exports["filesize"] = {
 		done();
 	},
 	base2: function (test) {
-		test.expect(37);
+		test.expect(39);
 
 		test.equal(filesize(this.kilobit),                             "500 B",    "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}),                 "500 B",    "Should be '500 B'");
@@ -30,6 +30,8 @@ exports["filesize"] = {
 		test.equal(filesize(this.kilobyte, {bits :true}),              "8 kb",     "Should be '8 kb'");
 		test.equal(filesize(this.kilobyte, {round: 1, bits: true}),    "8 kb",     "Should be '8 kb'");
 		test.equal(filesize(this.kilobyte, {unix: true, bits: true}),  "8k",       "Should be '8k'");
+		test.equal(filesize(this.kilobyte, {exponent: 0}),             "1024 B",   "Should be '1024 B'");
+		test.equal(filesize(this.kilobyte, {output: "exponent"}),      1,          "Should be '1'");
 
 		test.equal(filesize(this.neg),                                 "-1 kB",    "Should be '-1 kB'");
 		test.equal(filesize(this.neg, {round: 1}),                     "-1 kB",    "Should be '-1 kB'");

@@ -24,6 +24,7 @@ function filesize ( arg, descriptor ) {
 	spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
 	suffixes = descriptor.suffixes !== undefined ? descriptor.suffixes : {};
 	output = descriptor.output !== undefined ? descriptor.output : "string";
+	e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
 	num = Number( arg );
 	neg = ( num < 0 );
 	ceil = base > 2 ? 1000 : 1024;
@@ -45,7 +46,10 @@ function filesize ( arg, descriptor ) {
 		}
 	}
 	else {
-		e = Math.floor( Math.log( num ) / Math.log( 1000 ) );
+		// Determining the exponent
+		if ( e === -1 || isNaN( e ) ) {
+			e = Math.floor( Math.log( num ) / Math.log( 1000 ) );
+		}
 
 		// Exceeding supported length, time to reduce & multiply
 		if ( e > 8 ) {
@@ -100,6 +104,9 @@ function filesize ( arg, descriptor ) {
 	// Returning Array, Object, or String (default)
 	if ( output === "array" ) {
 		return result;
+	}
+	else if ( output === "exponent" ) {
+		return e;
 	}
 	else if ( output === "object" ) {
 		return { value: result[ 0 ], suffix: result[ 1 ] };
