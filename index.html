@@ -58,18 +58,22 @@
 			<p>filesize.js can be loaded from npm, as an AMD module, or as a regular script.</p>
 			<p>filesize() accepts an optional descriptor Object as a second argument, so you can customize the output.</p>
 			<h3>Optional settings</h3>
+			<p><i>base</i> (number)<br />
+				Number base, default is 2</p>
 			<p><i>bits</i> (boolean)<br />
 				Enables bit sizes, default is false</p>
-			<p><i>unix</i> (boolean)<br />
-				Enables unix style human readable output, e.g ls -lh, default is false</p>
-			<p><i>base</i> (number)<br />
-				Number base, default is 10</p>
+			<p><i>exponent</i> (number)<br />
+				Specifies the SI suffix via exponent, e.g. 2 is MB for bytes, default is -1</p>
+			<p><i>output</i> (string)<br />
+				Output of function (array, exponent, object, or string), default is string</p>
 			<p><i>round</i> (number)<br />
 				Decimal place, default is 2</p>
 			<p><i>spacer</i> (string)<br />
 				Character between the result and suffix, default is " "</p>
 			<p><i>suffixes</i> (object)<br />
 				Dictionary of SI suffixes to replace for localization, defaults to english if no match is found</p>
+			<p><i>unix</i> (boolean)<br />
+				Enables unix style human readable output, e.g ls -lh, default is false</p>
 			<h3>Examples</h3>
 			<section class="gist">
 				<script src="https://gist.github.com/4698968.js"></script>
