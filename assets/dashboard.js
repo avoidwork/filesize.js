@@ -70,13 +70,6 @@
 		}, 125, "keyUp" );
 	}, "input" );
 
-	// Halting form submission
-	form_observable.hook( $( "form" )[ 0 ], "submit" );
-	form_observable.on( "submit", function ( e ) {
-		$.stop( e );
-		return false;
-	} );
-
 	// Setting copyright year
 	element.text( $( "#year" )[ 0 ], new Date().getFullYear() );
 })( keigai );
