@@ -2,70 +2,81 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.4.0
+ * @version 1.5.0
  */
-( function ( $ ) {
+(function ( keigai ) {
 	"use strict";
 
-	var result, input, demo;
+	var util = keigai.util,
+		$ = util.$,
+		array = util.array,
+		element = util.element,
+		delay = util.delay,
+		render = util.render,
+		stop = util.stop,
+		string = util.string,
+		observer = util.observer,
+		result = $( "#result" )[ 0 ],
+		input = $( "#filesize" )[ 0 ],
+		demo = $( "#demo" )[ 0 ],
+		input_observable = observer(),
+		form_observable = observer();
 
 	/**
 	 * Input handler
-	 * 
+	 *
 	 * @return {Undefined} undefined
 	 */
 	function handler () {
-		var val = input.val();
+		var val = element.val( input );
 
-		if ( val !== undefined && !val.toString().isEmpty() ) {
+		if ( val !== undefined && !string.isEmpty( val.toString() ) ) {
 			try {
-				result.html( filesize( val, {unix: input.data( "unix" ), bits: input.data( "bits" ) } ) );
+				element.html( result, filesize( val, { unix: element.data( input, "unix" ), bits: element.data( input, "bits" ) } ) );
 			}
 			catch ( e ) {
-				result.html( e );
+				element.html( result, e );
 			}
 		}
 		else {
-			result.html( "&nbsp;" );
+			element.html( result, "&nbsp;" );
 		}
-	};
+	}
 
-	// Setting event handler
-	$.on( "ready", function () {
-		result = $( "#result" );
-		input  = $( "#filesize" );
-		demo   = $( "#demo" );
+	// Demo filters
+	array.each( element.find( demo, ".clickable" ), function ( i ) {
+		var observable = observer();
 
-		$( "#year" ).text( new Date().getFullYear() );
+		observable.hook( i, "click" );
+		observable.on( "click", function ( e ) {
+			var param = element.data( i, "param" );
 
-		// Demo filters
-		demo.find( ".clickable" ).on( "click" , function ( e ) {
-			var obj   = $.target( e ),
-			    param = obj.data( "param" );
-
-			if ( obj.hasClass( "icon-check-empty" ) ) {
-				obj.removeClass( "icon-check-empty" ).addClass( "icon-check" );
-			}
-			else {
-				obj.removeClass( "icon-check" ).addClass( "icon-check-empty" );
-			}
-
-			input.data( param, !input.data( param ) );
-
-			handler();
-		}, "click");
-
-		// Capturing debounced input (125ms)
-		input.on( "input", function ( e ) {
-			$.delay( function () {
+			stop( e );
+			render( function () {
+				element.toggleClass( i, "icon-check-empty" );
+				element.toggleClass( i, "icon-check" );
+				element.data( input, param, !element.data( input, param ) );
 				handler();
-			}, 125, "keyUp" );
-		}, "input" );
+			} );
+		}, "click" );
+	} );
 
-		// Halting form submission
-		$( "form" )[0].on( "submit", function ( e ) {
-			$.stop( e );
-			return false;
-		} );
-	}, "gui" );
-} )( abaaso );
+	// Capturing debounced input (125ms)
+	input_observable.hook( input, "input" );
+	input_observable.on( "input", function ( e ) {
+		stop( e );
+		delay( function () {
+			handler();
+		}, 125, "keyUp" );
+	}, "input" );
+
+	// Halting form submission
+	form_observable.hook( $( "form" )[ 0 ], "submit" );
+	form_observable.on( "submit", function ( e ) {
+		$.stop( e );
+		return false;
+	} );
+
+	// Setting copyright year
+	element.text( $( "#year" )[ 0 ], new Date().getFullYear() );
+})( keigai );
