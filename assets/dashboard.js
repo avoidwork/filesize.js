@@ -2,7 +2,7 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.5.0
+ * @version 1.5.1
  */
 (function ( keigai ) {
 	"use strict";
@@ -19,8 +19,7 @@
 		result = $( "#result" )[ 0 ],
 		input = $( "#filesize" )[ 0 ],
 		demo = $( "#demo" )[ 0 ],
-		input_observable = observer(),
-		form_observable = observer();
+		input_observable = observer();
 
 	/**
 	 * Input handler
@@ -35,7 +34,7 @@
 				element.html( result, filesize( val, { unix: element.data( input, "unix" ), bits: element.data( input, "bits" ) } ) );
 			}
 			catch ( e ) {
-				element.html( result, e );
+				element.html( result, e.message );
 			}
 		}
 		else {
