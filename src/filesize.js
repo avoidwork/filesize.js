@@ -48,7 +48,7 @@ function filesize ( arg, descriptor ) {
 	else {
 		// Determining the exponent
 		if ( e === -1 || isNaN( e ) ) {
-			e = Math.floor( Math.log( num ) / Math.log( 1000 ) );
+			e = Math.floor( Math.log( num ) / Math.log( ceil ) );
 		}
 
 		// Exceeding supported length, time to reduce & multiply

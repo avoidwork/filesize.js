@@ -3,6 +3,7 @@ var filesize = require("../lib/filesize.js");
 exports["filesize"] = {
 	setUp: function (done) {
 		this.kilobit  = 500;
+		this.edgecase = 1023;
 		this.kilobyte = 1024;
 		this.neg      = -1024;
 		this.byte     = 1;
@@ -11,7 +12,7 @@ exports["filesize"] = {
 		done();
 	},
 	base2: function (test) {
-		test.expect(39);
+		test.expect(41);
 
 		test.equal(filesize(this.kilobit),                             "500 B",    "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}),                 "500 B",    "Should be '500 B'");
@@ -22,6 +23,9 @@ exports["filesize"] = {
 		test.equal(filesize(this.kilobit, {unix: true, bits: true}),   "3.9k",     "Should be '3.9k'");
 		test.equal(filesize(this.kilobit, {bits :true, output: "array"})[0], 3.91,       "Should be '3.91'");
 		test.equal(filesize(this.kilobit, {bits :true, output: "object"} ).value, 3.91,  "Should be '3.91'");
+
+		test.equal(filesize(this.edgecase),                            "1023 B",   "Should be '1023 B'");
+		test.equal(filesize(this.edgecase, {round: 1}),                "1023 B",   "Should be '1023 B'");
 
 		test.equal(filesize(this.kilobyte),                            "1 kB",     "Should be '1 kB'");
 		test.equal(filesize(this.kilobyte, {round: 1}),                "1 kB",     "Should be '1 kB'");
