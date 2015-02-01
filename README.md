@@ -1,8 +1,6 @@
 # filesize.js
 
-[![Join the chat at https://gitter.im/avoidwork/filesize.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/avoidwork/filesize.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![build status](https://secure.travis-ci.org/avoidwork/filesize.js.png)](http://travis-ci.org/avoidwork/filesize.js)
+[![build status](https://secure.travis-ci.org/avoidwork/filesize.js.png)](http://travis-ci.org/avoidwork/filesize.js) [![Join the chat at https://gitter.im/avoidwork/filesize.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/avoidwork/filesize.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
 
