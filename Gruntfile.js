@@ -22,7 +22,7 @@ module.exports = function(grunt) {
 					"src/si.js",
 					"src/outro.js"
 				],
-				dest : "lib/filesize.js"
+				dest : "lib/filesize.es6.js"
 			}
 		},
 		exec : {
@@ -33,11 +33,15 @@ module.exports = function(grunt) {
 				cmd : "echo //@ sourceMappingURL=<%= pkg.name %>.map >> lib/<%= pkg.name %>.min.js"
 			}
 		},
-		jshint : {
-			options : {
-				jshintrc : ".jshintrc"
+		"6to5": {
+			options: {
+				sourceMap: false
 			},
-			src : "lib/<%= pkg.name %>.js"
+			dist: {
+				files: {
+					"lib/<%= pkg.name %>.js": "lib/<%= pkg.name %>.es6.js"
+				}
+			}
 		},
 		nodeunit : {
 			all : ["test/*.js"]
@@ -80,12 +84,12 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-sed");
 	grunt.loadNpmTasks("grunt-contrib-concat");
 	grunt.loadNpmTasks("grunt-contrib-nodeunit");
-	grunt.loadNpmTasks("grunt-contrib-jshint");
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks("grunt-contrib-uglify");
+	grunt.loadNpmTasks("grunt-6to5");
 
 	// aliases
-	grunt.registerTask("test", ["jshint", "nodeunit"]);
-	grunt.registerTask("build", ["concat", "sed"]);
+	grunt.registerTask("test", [ "nodeunit"]);
+	grunt.registerTask("build", ["concat", "sed", "6to5"]);
 	grunt.registerTask("default", ["build", "test", "uglify"]);
 };

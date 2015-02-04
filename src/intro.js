@@ -1,4 +1,2 @@
-( function ( global ) {
-"use strict";
-
-var bit = /b$/;
+( global ) => {
+const bit = /b$/;
