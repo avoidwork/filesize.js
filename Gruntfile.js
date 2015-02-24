@@ -19,7 +19,6 @@ module.exports = function(grunt) {
 					"<banner>",
 					"src/intro.js",
 					"src/filesize.js",
-					"src/si.js",
 					"src/outro.js"
 				],
 				dest : "lib/filesize.es6.js"
@@ -33,7 +32,7 @@ module.exports = function(grunt) {
 				cmd : "echo //@ sourceMappingURL=<%= pkg.name %>.map >> lib/<%= pkg.name %>.min.js"
 			}
 		},
-		"6to5": {
+		"babel": {
 			options: {
 				sourceMap: false
 			},
@@ -86,10 +85,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-nodeunit");
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks("grunt-contrib-uglify");
-	grunt.loadNpmTasks("grunt-6to5");
+	grunt.loadNpmTasks("grunt-babel");
 
 	// aliases
 	grunt.registerTask("test", [ "nodeunit"]);
-	grunt.registerTask("build", ["concat", "sed", "6to5"]);
+	grunt.registerTask("build", ["concat", "sed", "babel"]);
 	grunt.registerTask("default", ["build", "test", "uglify"]);
 };

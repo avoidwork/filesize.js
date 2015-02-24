@@ -6,17 +6,16 @@
  * @param  {Object}  descriptor [Optional] Flags
  * @return {String}             Readable file size String
  */
-let filesize = ( arg, descriptor ) => {
-	let result = [],
-		skip = false,
-		val = 0,
-		e, base, bits, ceil, neg, num, output, round, unix, spacer, suffixes;
+let filesize = ( arg, descriptor={} ) => {
+	let result = [];
+	let skip = false;
+	let val = 0;
+	let e, base, bits, ceil, neg, num, output, round, unix, spacer, suffixes;
 
 	if ( isNaN( arg ) ) {
 		throw new Error( "Invalid arguments" );
 	}
 
-	descriptor = descriptor || {};
 	bits = ( descriptor.bits === true );
 	unix = ( descriptor.unix === true );
 	base = descriptor.base !== undefined ? descriptor.base : 2;
@@ -40,10 +39,12 @@ let filesize = ( arg, descriptor ) => {
 
 		if ( unix ) {
 			result[ 1 ] = "";
-		} else {
+		}
+		else {
 			result[ 1 ] = "B";
 		}
-	} else {
+	}
+	else {
 		// Determining the exponent
 		if ( e === -1 || isNaN( e ) ) {
 			e = Math.floor( Math.log( num ) / Math.log( ceil ) );
@@ -57,7 +58,8 @@ let filesize = ( arg, descriptor ) => {
 
 		if ( base === 2 ) {
 			val = num / Math.pow( 2, ( e * 10 ) );
-		} else {
+		}
+		else {
 			val = num / Math.pow( 1000, e );
 		}
 
@@ -83,7 +85,8 @@ let filesize = ( arg, descriptor ) => {
 			if ( result[ 1 ] === "B" ) {
 				result[ 0 ] = Math.floor( result[ 0 ] );
 				result[ 1 ] = "";
-			} else if ( !bits && result[ 1 ] === "k" ) {
+			}
+			else if ( !bits && result[ 1 ] === "k" ) {
 				result[ 1 ] = "K";
 			}
 		}
@@ -100,11 +103,14 @@ let filesize = ( arg, descriptor ) => {
 	// Returning Array, Object, or String (default)
 	if ( output === "array" ) {
 		return result;
-	} else if ( output === "exponent" ) {
+	}
+	else if ( output === "exponent" ) {
 		return e;
-	} else if ( output === "object" ) {
+	}
+	else if ( output === "object" ) {
 		return { value: result[ 0 ], suffix: result[ 1 ] };
-	} else {
+	}
+	else {
 		return result.join( spacer );
 	}
 }
