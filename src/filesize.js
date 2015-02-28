@@ -104,13 +104,14 @@ let filesize = ( arg, descriptor={} ) => {
 	if ( output === "array" ) {
 		return result;
 	}
-	else if ( output === "exponent" ) {
+	
+	if ( output === "exponent" ) {
 		return e;
 	}
-	else if ( output === "object" ) {
+	
+	if ( output === "object" ) {
 		return { value: result[ 0 ], suffix: result[ 1 ] };
 	}
-	else {
-		return result.join( spacer );
-	}
+	
+	return result.join( spacer );
 }
