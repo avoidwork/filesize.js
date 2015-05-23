@@ -14,12 +14,7 @@
   "bugs": {
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
-  "licenses": [
-    {
-      "type": "BSD-3",
-      "url": "https://raw.github.com/avoidwork/filesize.js/master/LICENSE"
-    }
-  ],
+  "license": "BSD-3-Clause",
   "main": "lib/filesize",
   "engines": {
     "node": ">= 0.4.0"
