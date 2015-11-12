@@ -2,7 +2,7 @@
 if ( typeof exports !== "undefined" ) {
 	module.exports = filesize;
 }
-else if ( typeof define === "function" ) {
+else if ( typeof define === "function" && define.amd ) {
 	define( () => {
 		return filesize;
 	} );
