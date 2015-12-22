@@ -1,6 +1,6 @@
-( global ) => {
-const bit = /b$/;
+(function (global) {
+const b = /^(b|B)$/;
 const si = {
-	bits: [ "B", "kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb" ],
-	bytes: [ "B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" ]
+	bits: ["b", "kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+	bytes: ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 };

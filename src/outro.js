@@ -1,13 +1,10 @@
 // CommonJS, AMD, script tag
-if ( typeof exports !== "undefined" ) {
+if (typeof exports !== "undefined") {
 	module.exports = filesize;
-}
-else if ( typeof define === "function" && define.amd ) {
-	define( () => {
+} else if (typeof define === "function" && define.amd) {
+	define(() => {
 		return filesize;
-	} );
-}
-else {
+	});
+} else {
 	global.filesize = filesize;
-}
-}( typeof global !== "undefined" ? global : window );
+}}(typeof window !== "undefined" ? window : global));

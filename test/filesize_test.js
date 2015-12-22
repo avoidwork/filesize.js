@@ -49,16 +49,16 @@ exports["filesize"] = {
 		test.equal(filesize(this.byte, {round: 1}),                    "1 B",      "Should be '1 B'");
 		test.equal(filesize(this.byte, {round: 1, spacer: ""}),        "1B",       "Should be '1B'");
 		test.equal(filesize(this.byte, {unix: true}),                  "1",        "Should be '1'");
-		test.equal(filesize(this.byte, {bits :true}),                  "8 B",      "Should be '8 B'");
-		test.equal(filesize(this.byte, {round: 1, bits: true}),        "8 B",      "Should be '8 B'");
+		test.equal(filesize(this.byte, {bits :true}),                  "8 b",      "Should be '8 b'");
+		test.equal(filesize(this.byte, {round: 1, bits: true}),        "8 b",      "Should be '8 b'");
 		test.equal(filesize(this.byte, {unix: true, bits: true}),      "8",        "Should be '8'");
 
 		test.equal(filesize(this.zero),                                "0 B",      "Should be '0 B'");
 		test.equal(filesize(this.zero, {round: 1}),                    "0 B",      "Should be '0 B'");
 		test.equal(filesize(this.zero, {round: 1, spacer: ""}),        "0B",       "Should be '0B'");
 		test.equal(filesize(this.zero, {unix: true}),                  "0",        "Should be '0'");
-		test.equal(filesize(this.zero, {bits :true}),                  "0 B",      "Should be '0 B'");
-		test.equal(filesize(this.zero, {round: 1, bits: true}),        "0 B",      "Should be '0 B'");
+		test.equal(filesize(this.zero, {bits :true}),                  "0 b",      "Should be '0 b'");
+		test.equal(filesize(this.zero, {round: 1, bits: true}),        "0 b",      "Should be '0 b'");
 		test.equal(filesize(this.zero, {unix: true, bits: true}),      "0",        "Should be '0'");
 
 		test.done();
@@ -94,16 +94,16 @@ exports["filesize"] = {
 		test.equal(filesize(this.byte, {base: 10, round: 1}),                    "1 B",      "Should be '1 B'");
 		test.equal(filesize(this.byte, {base: 10, round: 1, spacer: ""}),        "1B",       "Should be '1B'");
 		test.equal(filesize(this.byte, {base: 10, unix: true}),                  "1",        "Should be '1'");
-		test.equal(filesize(this.byte, {base: 10, bits :true}),                  "8 B",      "Should be '8 B'");
-		test.equal(filesize(this.byte, {base: 10, round: 1, bits: true}),        "8 B",      "Should be '8 B'");
+		test.equal(filesize(this.byte, {base: 10, bits :true}),                  "8 b",      "Should be '8 b'");
+		test.equal(filesize(this.byte, {base: 10, round: 1, bits: true}),        "8 b",      "Should be '8 b'");
 		test.equal(filesize(this.byte, {base: 10, unix: true, bits: true}),      "8",        "Should be '8'");
 
 		test.equal(filesize(this.zero, {base: 10}),                              "0 B",      "Should be '0 B'");
 		test.equal(filesize(this.zero, {base: 10, round: 1}),                    "0 B",      "Should be '0 B'");
 		test.equal(filesize(this.zero, {base: 10, round: 1, spacer: ""}),        "0B",       "Should be '0B'");
 		test.equal(filesize(this.zero, {base: 10, unix: true}),                  "0",        "Should be '0'");
-		test.equal(filesize(this.zero, {base: 10, bits :true}),                  "0 B",      "Should be '0 B'");
-		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true}),        "0 B",      "Should be '0 B'");
+		test.equal(filesize(this.zero, {base: 10, bits :true}),                  "0 b",      "Should be '0 b'");
+		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true}),        "0 b",      "Should be '0 b'");
 		test.equal(filesize(this.zero, {base: 10, unix: true, bits: true}),      "0",        "Should be '0'");
 
 		test.done();

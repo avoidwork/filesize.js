@@ -6,11 +6,8 @@ module.exports = function(grunt) {
 				banner : "/**\n" + 
 				         " * <%= pkg.name %>\n" +
 				         " *\n" +
-				         " * @author <%= pkg.author %>\n" +
 				         " * @copyright <%= grunt.template.today('yyyy') %> <%= pkg.author %>\n" +
 				         " * @license <%= pkg.license %>\n" +
-				         " * @link <%= pkg.homepage %>\n" +
-				         " * @module <%= pkg.name %>\n" +
 				         " * @version <%= pkg.version %>\n" +
 				         " */\n"
 			},
@@ -24,23 +21,19 @@ module.exports = function(grunt) {
 				dest : "lib/filesize.es6.js"
 			}
 		},
-		exec : {
-			closure : {
-				cmd : "cd lib\nclosure-compiler --js <%= pkg.name %>.js --js_output_file <%= pkg.name %>.min.js --create_source_map ./<%= pkg.name %>.map"
-			},
-			sourcemap : {
-				cmd : "echo //@ sourceMappingURL=<%= pkg.name %>.map >> lib/<%= pkg.name %>.min.js"
-			}
-		},
 		"babel": {
 			options: {
-				sourceMap: false
+				sourceMap: false,
+				presets: ["babel-preset-es2015"]
 			},
 			dist: {
 				files: {
 					"lib/<%= pkg.name %>.js": "lib/<%= pkg.name %>.es6.js"
 				}
 			}
+		},
+		eslint: {
+			target: ["lib/<%= pkg.name %>.es6.js"]
 		},
 		nodeunit : {
 			all : ["test/*.js"]
@@ -86,9 +79,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-babel");
+	grunt.loadNpmTasks("grunt-eslint");
 
 	// aliases
-	grunt.registerTask("test", [ "nodeunit"]);
+	grunt.registerTask("test", ["eslint", "nodeunit"]);
 	grunt.registerTask("build", ["concat", "sed", "babel"]);
 	grunt.registerTask("default", ["build", "test", "uglify"]);
 };
