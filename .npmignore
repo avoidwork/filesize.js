@@ -3,6 +3,7 @@
 /lib/filesize.min.js.map
 /src/
 /test/
+.idea
 .eslintrc
 .travis.yml
 Gruntfile.js
