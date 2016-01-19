@@ -60,7 +60,7 @@ function filesize (arg, descriptor = {}) {
 		}
 
 		result[0] = Number(val.toFixed(e > 0 ? round : 0));
-		result[1] = si[bits ? "bits" : "bytes"][e];
+		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : si[bits ? "bits" : "bytes"][e];
 
 		if (!skip && unix) {
 			result[1] = result[1].charAt(0);
@@ -68,8 +68,6 @@ function filesize (arg, descriptor = {}) {
 			if (b.test(result[1])) {
 				result[0] = Math.floor(result[0]);
 				result[1] = "";
-			} else if (!bits && result[1] === "k") {
-				result[1] = "K";
 			}
 		}
 	}
