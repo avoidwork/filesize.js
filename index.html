@@ -67,8 +67,11 @@
 				Decimal place, default is 2</p>
 			<p><i>spacer</i> (string)<br />
 				Character between the result and suffix, default is " "</p>
+			<p><i>symbols</i> (object)<br />
+				Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found</p>
 			<p><i>suffixes</i> (object)<br />
-				Dictionary of SI suffixes to replace for localization, defaults to english if no match is found</p>
+				Deprecated: use 'symbols'<br />
+				Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found</p>
 			<p><i>unix</i> (boolean)<br />
 				Enables unix style human readable output, e.g ls -lh, default is false</p>
 			<h3>Examples</h3>
@@ -86,7 +89,7 @@
 <a href="https://github.com/avoidwork/filesize.js">
 	<img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 </a>
-<script type="text/javascript" src="http://cdn.filesizejs.com/filesize.min.js"></script>
+<script type="text/javascript" src="assets/filesize.min.js"></script>
 <script type="text/javascript" src="assets/keigai.min.js"></script>
 <script type="text/javascript" src="assets/dashboard.js"></script>
 </body>
