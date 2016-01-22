@@ -26,8 +26,11 @@ _***(number)***_ Decimal place, default is `2`
 ### spacer
 _***(string)***_ Character between the `result` and `suffix`, default is `" "`
 
-### suffixes
-_***(object)***_ Dictionary of SI suffixes to replace for localization, defaults to english if no match is found
+### symbols
+_***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
+
+### suffixes (deprecated: use 'symbols')
+_***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
 
 ### unix
 _***(boolean)***_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
@@ -36,14 +39,14 @@ _***(boolean)***_ Enables unix style human readable output, e.g `ls -lh`, defaul
 
 ```javascript
 filesize(500);                        // "500 B"
-filesize(500, {bits: true});          // "4 kb"
+filesize(500, {bits: true});          // "4 Kb"
 filesize(265318, {base: 10});         // "265.32 kB"
-filesize(265318);                     // "259.1 kB"
-filesize(265318, {round: 0});         // "259 kB"
-filesize(265318, {output: "array"});  // [259.1, "kB"]
-filesize(265318, {output: "object"}); // {value: 259.1, suffix: "kB"}
-filesize(1, {suffixes: {B: "Б"}});    // "1 Б"
-filesize(1024);                       // "1 kB"
+filesize(265318);                     // "259.1 KB"
+filesize(265318, {round: 0});         // "259 KB"
+filesize(265318, {output: "array"});  // [259.1, "KB"]
+filesize(265318, {output: "object"}); // {value: 259.1, suffix: "KB", symbol: "KB"}
+filesize(1, {symbols: {B: "Б"}});    // "1 Б"
+filesize(1024);                       // "1 KB"
 filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
 ```
@@ -52,5 +55,5 @@ filesize(1024, {output: "exponent"}); // 1
 filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm install filesize), or using a script tag.
 
 ## License
-Copyright (c) 2015 Jason Mulligan
+Copyright (c) 2016 Jason Mulligan
 Licensed under the BSD-3 license.
