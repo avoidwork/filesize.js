@@ -9,10 +9,11 @@ exports["filesize"] = {
 		this.byte     = 1;
 		this.zero     = 0;
 		this.invld    = "abc";
+		this.huge     = 10e40;
 		done();
 	},
 	base2: function (test) {
-		test.expect(41);
+		test.expect(42);
 
 		test.equal(filesize(this.kilobit),                             "500 B",    "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}),                 "500 B",    "Should be '500 B'");
@@ -60,6 +61,8 @@ exports["filesize"] = {
 		test.equal(filesize(this.zero, {bits :true}),                  "0 b",      "Should be '0 b'");
 		test.equal(filesize(this.zero, {round: 1, bits: true}),        "0 b",      "Should be '0 b'");
 		test.equal(filesize(this.zero, {unix: true, bits: true}),      "0",        "Should be '0'");
+
+		test.equal(filesize(this.huge),                                "82718061255302770 YB", "Should be '82718061255302770 YB'");
 
 		test.done();
 	},
