@@ -10,10 +10,11 @@ exports["filesize"] = {
 		this.zero     = 0;
 		this.invld    = "abc";
 		this.huge     = 10e40;
+		this.small    = 1/8;
 		done();
 	},
 	base2: function (test) {
-		test.expect(42);
+		test.expect(45);
 
 		test.equal(filesize(this.kilobit),                             "500 B",    "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}),                 "500 B",    "Should be '500 B'");
@@ -22,8 +23,8 @@ exports["filesize"] = {
 		test.equal(filesize(this.kilobit, {round: 1, bits: true}),     "3.9 Kb",   "Should be '3.9 Kb'");
 		test.equal(filesize(this.kilobit, {bits :true}),               "3.91 Kb",  "Should be '3.91 Kb'");
 		test.equal(filesize(this.kilobit, {unix: true, bits: true}),   "3.9K",     "Should be '3.9K'");
-		test.equal(filesize(this.kilobit, {bits :true, output: "array"})[0], 3.91,       "Should be '3.91'");
-		test.equal(filesize(this.kilobit, {bits :true, output: "object"} ).value, 3.91,  "Should be '3.91'");
+		test.equal(filesize(this.kilobit, {bits :true, output: "array"})[0], 3.91,    "Should be '3.91'");
+		test.equal(filesize(this.kilobit, {bits :true, output: "object"}).value, 3.91,"Should be '3.91'");
 
 		test.equal(filesize(this.edgecase),                            "1023 B",   "Should be '1023 B'");
 		test.equal(filesize(this.edgecase, {round: 1}),                "1023 B",   "Should be '1023 B'");
@@ -63,6 +64,9 @@ exports["filesize"] = {
 		test.equal(filesize(this.zero, {unix: true, bits: true}),      "0",        "Should be '0'");
 
 		test.equal(filesize(this.huge),                                "82718061255302770 YB", "Should be '82718061255302770 YB'");
+		test.equal(filesize(this.huge, {bits :true}),                  "661744490042422100 Yb", "Should be '661744490042422100 Yb'");
+		test.equal(filesize(this.small),                               "0 B", "Should be '0 B'");
+		test.equal(filesize(this.small, {bits :true}),                 "1 b", "Should be '1 b'");
 
 		test.done();
 	},

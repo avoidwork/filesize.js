@@ -40,6 +40,10 @@ function filesize (arg, descriptor = {}) {
 		// Determining the exponent
 		if (e === -1 || isNaN(e)) {
 			e = Math.floor(Math.log(num) / Math.log(ceil));
+
+			if (e < 0) {
+				e = 0;
+			}
 		}
 
 		// Exceeding supported length, time to reduce & multiply
@@ -52,7 +56,7 @@ function filesize (arg, descriptor = {}) {
 		if (bits) {
 			val = val * 8;
 
-			if (val > ceil) {
+			if (val > ceil && e < 8) {
 				val = val / ceil;
 				e++;
 			}
