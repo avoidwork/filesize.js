@@ -80,7 +80,7 @@ function filesize (arg, descriptor = {}) {
 		result[0] = -result[0];
 	}
 
-	// Applying custom suffix
+	// Applying custom symbol
 	result[1] = symbols[result[1]] || result[1];
 
 	// Returning Array, Object, or String (default)
