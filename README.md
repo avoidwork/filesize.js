@@ -27,7 +27,7 @@ _***(number)***_ Decimal place, default is `2`
 _***(string)***_ Character between the `result` and `suffix`, default is `" "`
 
 ### standard
-_***(string)***_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`
+_***(string)***_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`; can be overruled by `base`
 
 ### symbols
 _***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
