@@ -67,7 +67,7 @@ function filesize (arg, descriptor = {}) {
 		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 		if (unix) {
-			result[1] = standard === "jedec" ? result[1].charAt(0) : result[1].length > 1 ? result[1].replace(/B$/, "") : result[1];
+			result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
 
 			if (b.test(result[1])) {
 				result[0] = Math.floor(result[0]);
