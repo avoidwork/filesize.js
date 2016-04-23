@@ -9,7 +9,7 @@
 function filesize (arg, descriptor = {}) {
 	let result = [],
 		val = 0,
-		e, base, bits, ceil, neg, num, output, round, unix, spacer, symbols;
+		e, base, bits, ceil, neg, num, output, round, unix, spacer, standard, symbols;
 
 	if (isNaN(arg)) {
 		throw new Error("Invalid arguments");
@@ -21,6 +21,7 @@ function filesize (arg, descriptor = {}) {
 	round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
 	spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
 	symbols = descriptor.symbols || descriptor.suffixes || {};
+	standard = descriptor.standard || "jedec";
 	output = descriptor.output || "string";
 	e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
 	num = Number(arg);
@@ -63,10 +64,10 @@ function filesize (arg, descriptor = {}) {
 		}
 
 		result[0] = Number(val.toFixed(e > 0 ? round : 0));
-		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[bits ? "bits" : "bytes"][e];
+		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[bits ? "bits" : "bytes-" + standard][e];
 
 		if (unix) {
-			result[1] = result[1].charAt(0);
+			result[1] = standard === "jedec" ? result[1].charAt(0) : result[1].length > 1 ? result[1].replace(/B$/, "") : result[1];
 
 			if (b.test(result[1])) {
 				result[0] = Math.floor(result[0]);

@@ -26,6 +26,9 @@ _***(number)***_ Decimal place, default is `2`
 ### spacer
 _***(string)***_ Character between the `result` and `suffix`, default is `" "`
 
+### standard
+_***(string)***_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`
+
 ### symbols
 _***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
 
@@ -49,6 +52,7 @@ filesize(1, {symbols: {B: "Б"}});    // "1 Б"
 filesize(1024);                       // "1 KB"
 filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
+filesize(265318, {standard: "iec"});  // "259.1 KiB"
 ```
 
 ## How can I load filesize.js?
