@@ -56,7 +56,7 @@ filesize(265318, {standard: "iec"});  // "259.1 KiB"
 ```
 
 ## How can I load filesize.js?
-filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (npm install filesize), or using a script tag.
+filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```npm install filesize```), or using a script tag.
 
 ## License
 Copyright (c) 2016 Jason Mulligan
