@@ -1,6 +1,6 @@
 # filesize.js
 
-[![build status](https://secure.travis-ci.org/avoidwork/filesize.js.png)](http://travis-ci.org/avoidwork/filesize.js) [![Join the chat at https://gitter.im/avoidwork/filesize.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/avoidwork/filesize.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize)
+[![build status](https://secure.travis-ci.org/avoidwork/filesize.js.png)](http://travis-ci.org/avoidwork/filesize.js)  [![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize)
 
 filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
 
@@ -55,9 +55,20 @@ filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
 ```
 
+## Partial Application
+`filesize.partial()` takes the second parameter of `filesize()` and returns a new function with the configuration applied 
+upon execution. This can be used to reduce `Object` creation if you call `filesize()` without caching the `descriptor` 
+in lexical scope.
+
+```javascript
+const size = filesize.partial({standard: "iec"});
+
+size(265318); // "259.1 KiB"
+```
+
 ## How can I load filesize.js?
 filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```npm install filesize```), or using a script tag.
 
 ## License
-Copyright (c) 2016 Jason Mulligan
+Copyright (c) 2017 Jason Mulligan
 Licensed under the BSD-3 license.
