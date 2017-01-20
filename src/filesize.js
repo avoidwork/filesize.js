@@ -52,7 +52,7 @@
 				e = 8;
 			}
 
-			val = base === 2 ? num / Math.pow(2, e * 10) : num / Math.pow(1000, e);
+			val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
 			if (bits) {
 				val = val * 8;
