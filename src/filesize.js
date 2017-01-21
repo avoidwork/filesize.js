@@ -101,4 +101,4 @@
 	}
 
 	// Partial application for functional programming
-	filesize.partial = (descriptor = {}) => arg => filesize(arg, descriptor);
+	filesize.partial = opt => arg => filesize(arg, opt);

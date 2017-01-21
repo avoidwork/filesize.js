@@ -123,7 +123,7 @@ exports["filesize"] = {
 	suffixes: function (test) {
 		test.expect(2);
 
-		test.equal(filesize(this.byte,     {suffixes: {B: "Б"}}), "1 Б",     "Should be '1 Б'");
+		test.equal(filesize(this.byte,     {suffixes: {B: "Б"}}), "1 Б",  "Should be '1 Б'");
 		test.equal(filesize(this.kilobyte, {suffixes: {B: "Б"}}), "1 KB", "Should be '1 KB'");
 
 		test.done();
@@ -131,8 +131,16 @@ exports["filesize"] = {
 	symbols: function (test) {
 		test.expect(2);
 
-		test.equal(filesize(this.byte,     {symbols: {B: "Б"}}), "1 Б",     "Should be '1 Б'");
+		test.equal(filesize(this.byte,     {symbols: {B: "Б"}}), "1 Б",  "Should be '1 Б'");
 		test.equal(filesize(this.kilobyte, {symbols: {B: "Б"}}), "1 KB", "Should be '1 KB'");
+
+		test.done();
+	},
+	partial: function (test) {
+		test.expect(1);
+		test.size = filesize.partial({exponent: 0});
+
+		test.equal(test.size(this.kilobyte), "1024 B", "Should be '1024 B'");
 
 		test.done();
 	}
