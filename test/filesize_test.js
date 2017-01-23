@@ -143,5 +143,14 @@ exports["filesize"] = {
 		test.equal(test.size(this.kilobyte), "1024 B", "Should be '1024 B'");
 
 		test.done();
+	},
+	bits: function (test) {
+		test.expect(3);
+
+		test.equal(filesize(124, {bits: true, base: 10}), "992 b", "Should be '992 b'");
+		test.equal(filesize(125, {bits: true, base: 10}), "1 kb", "Should be '1 kb'");
+		test.equal(filesize(126, {bits: true, base: 10}), "1.01 kb", "Should be '1.01 kb'");
+
+		test.done();
 	}
 };

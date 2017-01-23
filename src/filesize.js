@@ -57,7 +57,7 @@
 			if (bits) {
 				val = val * 8;
 
-				if (val > ceil && e < 8) {
+				if (val >= ceil && e < 8) {
 					val = val / ceil;
 					e++;
 				}
