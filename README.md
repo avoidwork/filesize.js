@@ -9,34 +9,37 @@ filesize.js provides a simple way to get a human readable file size string from 
 `filesize()` accepts an optional descriptor Object as a second argument, so you can customize the output.
 
 ### base
-_***(number)***_ Number base, default is `2`
+_*(number)*_ Number base, default is `2`
 
 ### bits
-_***(boolean)***_ Enables `bit` sizes, default is `false`
+_*(boolean)*_ Enables `bit` sizes, default is `false`
 
 ### exponent
-_***(number)***_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
+_*(number)*_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
+
+### longform
+_*(boolean)*_ Enables long form of unit of measure, default is `false`
 
 ### output
-_***(string)***_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
+_*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
 ### round
-_***(number)***_ Decimal place, default is `2`
+_*(number)*_ Decimal place, default is `2`
 
 ### spacer
-_***(string)***_ Character between the `result` and `suffix`, default is `" "`
+_*(string)*_ Character between the `result` and `suffix`, default is `" "`
 
 ### standard
-_***(string)***_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`; can be overruled by `base`
+_*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`; can be overruled by `base`
 
 ### symbols
-_***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
 
 ### suffixes (deprecated: use 'symbols')
-_***(object)***_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
 
 ### unix
-_***(boolean)***_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
+_*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
 
 ## Examples
 
@@ -53,6 +56,7 @@ filesize(1024);                       // "1 KB"
 filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
+filesize(265318, {standard: "iec", longform: true}); // "259.1 kibibytes"
 ```
 
 ## Partial Application

@@ -9,4 +9,8 @@
 				bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
 				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 			}
+		},
+		longform = {
+			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
+			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 		};
