@@ -17,7 +17,7 @@ _*(boolean)*_ Enables `bit` sizes, default is `false`
 ### exponent
 _*(number)*_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
 
-### longform
+### fullform
 _*(boolean)*_ Enables long form of unit of measure, default is `false`
 
 ### output
@@ -56,7 +56,7 @@ filesize(1024);                       // "1 KB"
 filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
-filesize(265318, {standard: "iec", longform: true}); // "259.1 kibibytes"
+filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
 ```
 
 ## Partial Application

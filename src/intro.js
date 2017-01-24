@@ -10,7 +10,7 @@
 				bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 			}
 		},
-		longform = {
+		fullform = {
 			iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
 			jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 		};
