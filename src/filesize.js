@@ -36,6 +36,7 @@
 
 		// Zero is now a special case because bytes divide by 1
 		if (num === 0) {
+			e = 0;
 			result[0] = 0;
 			result[1] = unix ? "" : !bits ? "B" : "b";
 		} else {
@@ -99,7 +100,7 @@
 		}
 
 		if (full) {
-			result[1] = fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] > 1 ? "s" : "");
+			result[1] = fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
 		}
 
 		return result.join(spacer);
