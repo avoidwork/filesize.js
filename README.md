@@ -20,6 +20,9 @@ _*(number)*_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, d
 ### fullform
 _*(boolean)*_ Enables full form of unit of measure, default is `false`
 
+### fullforms
+_*(array)*_ Array of full form overrides, default is `[]`
+
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
@@ -57,6 +60,7 @@ filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
 filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
+filesize(0, {fullform: true, fullforms: ["байт"]});  // "0 байт"
 ```
 
 ## Partial Application

@@ -154,7 +154,7 @@ exports["filesize"] = {
 		test.done();
 	},
 	fullform: function (test) {
-		test.expect(6);
+		test.expect(7);
 
 		test.equal(filesize(0, {fullform: true}),                                    "0 bytes",       "Should be '0 bytes'");
 		test.equal(filesize(1, {bits: true, base: 10, fullform: true}),              "8 bits",        "Should be '8 bits'");
@@ -162,6 +162,7 @@ exports["filesize"] = {
 		test.equal(filesize(this.kilobyte, {fullform: true}),                        "1 kilobyte",    "Should be '1 kilobyte'");
 		test.equal(filesize(this.kilobyte, {fullform: true, standard: "iec"}),       "1 kibibyte",    "Should be '1 kibibyte'");
 		test.equal(filesize(this.kilobyte * 1.3, {fullform: true, standard: "iec"}), "1.3 kibibytes", "Should be '1.3 kibibytes'");
+		test.equal(filesize(0, {fullform: true, fullforms: ["байт"]}),               "0 байт",        "Should be '0 байт'");
 
 		test.done();
 	},

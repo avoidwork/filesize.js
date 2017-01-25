@@ -9,7 +9,7 @@
 	function filesize (arg, descriptor = {}) {
 		let result = [],
 			val = 0,
-			e, base, bits, ceil, full, neg, num, output, round, unix, spacer, standard, symbols;
+			e, base, bits, ceil, full, fullforms, neg, num, output, round, unix, spacer, standard, symbols;
 
 		if (isNaN(arg)) {
 			throw new Error("Invalid arguments");
@@ -24,6 +24,7 @@
 		standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
 		output = descriptor.output || "string";
 		full = descriptor.fullform === true;
+		fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
 		e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
 		num = Number(arg);
 		neg = num < 0;
@@ -100,7 +101,7 @@
 		}
 
 		if (full) {
-			result[1] = fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
 		}
 
 		return result.join(spacer);
