@@ -18,7 +18,7 @@ _*(boolean)*_ Enables `bit` sizes, default is `false`
 _*(number)*_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
 
 ### fullform
-_*(boolean)*_ Enables long form of unit of measure, default is `false`
+_*(boolean)*_ Enables full form of unit of measure, default is `false`
 
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
