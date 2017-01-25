@@ -60,7 +60,7 @@ filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
 filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
-filesize(0, {fullform: true, fullforms: ["байтов"]});  // "0 байтов"
+filesize(12, {fullform: true, fullforms: ["байтов"]});  // "12 байтов"
 ```
 
 ## Partial Application
