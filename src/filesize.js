@@ -35,26 +35,25 @@
 			num = -num;
 		}
 
+		// Determining the exponent
+		if (e === -1 || isNaN(e)) {
+			e = Math.floor(Math.log(num) / Math.log(ceil));
+
+			if (e < 0) {
+				e = 0;
+			}
+		}
+
+		// Exceeding supported length, time to reduce & multiply
+		if (e > 8) {
+			e = 8;
+		}
+
 		// Zero is now a special case because bytes divide by 1
 		if (num === 0) {
-			e = 0;
 			result[0] = 0;
-			result[1] = unix ? "" : !bits ? "B" : "b";
+			result[1] = unix ? "" : symbol[standard][bits ? "bits" : "bytes"][e];
 		} else {
-			// Determining the exponent
-			if (e === -1 || isNaN(e)) {
-				e = Math.floor(Math.log(num) / Math.log(ceil));
-
-				if (e < 0) {
-					e = 0;
-				}
-			}
-
-			// Exceeding supported length, time to reduce & multiply
-			if (e > 8) {
-				e = 8;
-			}
-
 			val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
 			if (bits) {
