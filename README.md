@@ -15,7 +15,7 @@ _*(number)*_ Number base, default is `2`
 _*(boolean)*_ Enables `bit` sizes, default is `false`
 
 ### exponent
-_*(number)*_ Specifies the SI suffix via exponent, e.g. `2` is `MB` for bytes, default is `-1`
+_*(number)*_ Specifies the symbol via exponent, e.g. `2` is `MB` for base 2, default is `-1`
 
 ### fullform
 _*(boolean)*_ Enables full form of unit of measure, default is `false`
