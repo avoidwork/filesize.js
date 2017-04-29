@@ -81,9 +81,9 @@ module.exports = function(grunt) {
 			banner = "/*\n " + new Date().getFullYear() + " " + pkg.author + "\n @version " + pkg.version + "\n*/\n\"use strict\";";
 
 		fs.writeFileSync(path.join(__dirname, "lib", "filesize.es6.min.js"), banner + minified.code + "\n//# sourceMappingURL=filesize.es6.min.js.map", "utf8");
-		grunt.log.ok("Created minified es6 file");
+		grunt.log.ok("1 file created.");
 		fs.writeFileSync(path.join(__dirname, "lib", "filesize.es6.min.js.map"), JSON.stringify(minified.map), "utf8");
-		grunt.log.ok("Created minified es6 source map");
+		grunt.log.ok("1 sourcemap created.");
 	});
 
 	// aliases
