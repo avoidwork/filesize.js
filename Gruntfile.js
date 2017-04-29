@@ -1,3 +1,8 @@
+"use strict";
+
+var fs = require("fs"),
+	path = require("path");
+
 module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg : grunt.file.readJSON("package.json"),
@@ -40,10 +45,7 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner : "/*\n" +
-				" <%= grunt.template.today('yyyy') %> <%= pkg.author.name %>\n" +
-				" @version <%= pkg.version %>\n" +
-				" */",
+				banner: "/*\n<%= grunt.template.today('yyyy') %> <%= pkg.author %>\n @version <%= pkg.version %>\n*/",
 				sourceMap: true,
 				sourceMapIncludeSources: true
 			},
@@ -72,9 +74,20 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-babel");
 	grunt.loadNpmTasks("grunt-eslint");
+	grunt.task.registerTask("babili", "Minifies ES2016+ code", function () {
+		var data = fs.readFileSync(path.join(__dirname, "lib", "filesize.es6.js"), "utf8"),
+			minified = require("babel-core").transform(data, {sourceFileName: "filesize.es6.js", sourceMaps: true, presets: ["babili"]}),
+			pkg = require(path.join(__dirname, "package.json")),
+			banner = "/*\n " + new Date().getFullYear() + " " + pkg.author + "\n @version " + pkg.version + "\n*/\n\"use strict\";";
+
+		fs.writeFileSync(path.join(__dirname, "lib", "filesize.es6.min.js"), banner + minified.code + "\n//# sourceMappingURL=filesize.es6.min.js.map", "utf8");
+		grunt.log.ok("Created minified es6 file");
+		fs.writeFileSync(path.join(__dirname, "lib", "filesize.es6.min.js.map"), JSON.stringify(minified.map), "utf8");
+		grunt.log.ok("Created minified es6 source map");
+	});
 
 	// aliases
 	grunt.registerTask("test", ["eslint", "nodeunit"]);
 	grunt.registerTask("build", ["concat", "babel"]);
-	grunt.registerTask("default", ["build", "test", "uglify"]);
+	grunt.registerTask("default", ["build", "test", "babili", "uglify"]);
 };
