@@ -1,4 +1,4 @@
-var filesize = require("../index.js");
+var filesize = require("../lib/filesize.js");
 
 exports["filesize"] = {
 	setUp: function (done) {
