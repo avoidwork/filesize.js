@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 		"babel": {
 			options: {
 				sourceMap: false,
-				presets: ["babel-preset-es2015"]
+				presets: ["babel-preset-env"]
 			},
 			dist: {
 				files: {
@@ -45,7 +45,7 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: "/*\n<%= grunt.template.today('yyyy') %> <%= pkg.author %>\n @version <%= pkg.version %>\n*/",
+				banner: "/*\n <%= grunt.template.today('yyyy') %> <%= pkg.author %>\n @version <%= pkg.version %>\n*/",
 				sourceMap: true,
 				sourceMapIncludeSources: true
 			},
@@ -76,7 +76,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks("grunt-eslint");
 	grunt.task.registerTask("babili", "Minifies ES2016+ code", function () {
 		var data = fs.readFileSync(path.join(__dirname, "lib", "filesize.es6.js"), "utf8"),
-			minified = require("babel-core").transform(data, {sourceFileName: "filesize.es6.js", sourceMaps: true, presets: ["babili"]}),
+			minified = require("babel-core").transform(data, {sourceFileName: "filesize.es6.js", sourceMaps: true, presets: ["minify"]}),
 			pkg = require(path.join(__dirname, "package.json")),
 			banner = "/*\n " + new Date().getFullYear() + " " + pkg.author + "\n @version " + pkg.version + "\n*/\n\"use strict\";";
 
