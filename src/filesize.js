@@ -9,7 +9,7 @@
 	function filesize (arg, descriptor = {}) {
 		let result = [],
 			val = 0,
-			e, base, bits, ceil, full, fullforms, neg, num, output, round, unix, spacer, standard, symbols;
+			e, base, bits, ceil, full, fullforms, neg, num, output, round, unix, separator, spacer, standard, symbols;
 
 		if (isNaN(arg)) {
 			throw new Error("Invalid arguments");
@@ -18,14 +18,15 @@
 		bits = descriptor.bits === true;
 		unix = descriptor.unix === true;
 		base = descriptor.base || 2;
-		round = descriptor.round !== undefined ? descriptor.round : unix ? 1 : 2;
-		spacer = descriptor.spacer !== undefined ? descriptor.spacer : unix ? "" : " ";
+		round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
+		separator = descriptor.separator !== void 0 ? descriptor.separator || "" : "";
+		spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
 		symbols = descriptor.symbols || descriptor.suffixes || {};
 		standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
 		output = descriptor.output || "string";
 		full = descriptor.fullform === true;
 		fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
-		e = descriptor.exponent !== undefined ? descriptor.exponent : -1;
+		e = descriptor.exponent !== void 0 ? descriptor.exponent : -1;
 		num = Number(arg);
 		neg = num < 0;
 		ceil = base > 2 ? 1000 : 1024;
@@ -101,6 +102,10 @@
 
 		if (full) {
 			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+		}
+
+		if (separator.length > 0) {
+			result[0] = result[0].toString().replace(".", separator);
 		}
 
 		return result.join(spacer);

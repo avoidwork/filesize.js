@@ -5,12 +5,6 @@
     "es6": true,
     "amd": true
   },
-  "ecmaFeatures": {
-    "jsx": false,
-    "superInFunctions": false,
-    "classes": false,
-    "modules": [2]
-  },
   "rules": {
     "arrow-parens": [2, "as-needed"],
     "arrow-spacing": [2, {"before": true, "after": true}],

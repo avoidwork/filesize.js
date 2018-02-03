@@ -29,6 +29,9 @@ _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), de
 ### round
 _*(number)*_ Decimal place, default is `2`
 
+### separator
+_*(string)*_ Decimal separator charactor, default is `.`
+
 ### spacer
 _*(string)*_ Character between the `result` and `suffix`, default is `" "`
 
@@ -61,6 +64,7 @@ filesize(1024, {output: "exponent"}); // 1
 filesize(265318, {standard: "iec"});  // "259.1 KiB"
 filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
 filesize(12, {fullform: true, fullforms: ["байтов"]});  // "12 байтов"
+filesize(265318, {separator: ","});   // "259,1 KB"
 ```
 
 ## Partial Application
@@ -78,5 +82,5 @@ size(265318); // "259.1 KiB"
 filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```npm install filesize```), or using a script tag.
 
 ## License
-Copyright (c) 2017 Jason Mulligan
+Copyright (c) 2018 Jason Mulligan
 Licensed under the BSD-3 license.

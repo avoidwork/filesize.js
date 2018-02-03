@@ -173,5 +173,13 @@ exports["filesize"] = {
 		test.equal(filesize(0, {exponent: 2}), "0 MB", "Should be '0 MB'");
 
 		test.done();
+	},
+	separator: function (test) {
+		test.expect(2);
+
+		test.equal(filesize(1040, {separator: ""}), "1.02 KB", "Should be '1.02 KB'");
+		test.equal(filesize(1040, {separator: ","}), "1,02 KB", "Should be '1,02 KB'");
+
+		test.done();
 	}
 };
