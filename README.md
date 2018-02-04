@@ -30,7 +30,7 @@ _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), de
 _*(number)*_ Decimal place, default is `2`
 
 ### separator
-_*(string)*_ Decimal separator charactor, default is `.`
+_*(string)*_ Decimal separator character, default is `.`
 
 ### spacer
 _*(string)*_ Character between the `result` and `suffix`, default is `" "`
