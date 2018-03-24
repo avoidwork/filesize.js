@@ -81,6 +81,8 @@ size(265318); // "259.1 KiB"
 ## How can I load filesize.js?
 filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```npm install filesize```), or using a script tag.
 
+An ES6 version is bundled with an npm install, but requires you load it with the full path, e.g. `require(path.join(__dirname, 'node_modules', 'filesize', 'lib', 'filesize.es6.js'))`.
+
 ## License
 Copyright (c) 2018 Jason Mulligan
 Licensed under the BSD-3 license.
