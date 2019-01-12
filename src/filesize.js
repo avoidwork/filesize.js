@@ -21,7 +21,7 @@
 		round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
 		separator = descriptor.separator !== void 0 ? descriptor.separator || "" : "";
 		spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
-		symbols = descriptor.symbols || descriptor.suffixes || {};
+		symbols = descriptor.symbols || {};
 		standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
 		output = descriptor.output || "string";
 		full = descriptor.fullform === true;
@@ -97,7 +97,7 @@
 		}
 
 		if (output === "object") {
-			return {value: result[0], suffix: result[1], symbol: result[1]};
+			return {value: result[0], symbol: result[1]};
 		}
 
 		if (full) {

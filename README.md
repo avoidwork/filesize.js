@@ -33,16 +33,13 @@ _*(number)*_ Decimal place, default is `2`
 _*(string)*_ Decimal separator character, default is `.`
 
 ### spacer
-_*(string)*_ Character between the `result` and `suffix`, default is `" "`
+_*(string)*_ Character between the `result` and `symbol`, default is `" "`
 
 ### standard
 _*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`; can be overruled by `base`
 
 ### symbols
-_*(object)*_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
-
-### suffixes (deprecated: use 'symbols')
-_*(object)*_ Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of SI/JEDEC/IEC symbols to replace for localization, defaults to english if no match is found
 
 ### unix
 _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
@@ -84,5 +81,5 @@ filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```
 An ES6 version is bundled with an npm install, but requires you load it with the full path, e.g. `require(path.join(__dirname, 'node_modules', 'filesize', 'lib', 'filesize.es6.js'))`.
 
 ## License
-Copyright (c) 2018 Jason Mulligan
+Copyright (c) 2019 Jason Mulligan
 Licensed under the BSD-3 license.

@@ -110,12 +110,6 @@ exports.filesize = {
 		}, Error, "Should match");
 		test.done();
 	},
-	suffixes: function (test) {
-		test.expect(2);
-		test.equal(filesize(this.byte, {suffixes: {B: "Б"}}), "1 Б", "Should be '1 Б'");
-		test.equal(filesize(this.kilobyte, {suffixes: {B: "Б"}}), "1 KB", "Should be '1 KB'");
-		test.done();
-	},
 	symbols: function (test) {
 		test.expect(2);
 		test.equal(filesize(this.byte, {symbols: {B: "Б"}}), "1 Б", "Should be '1 Б'");
