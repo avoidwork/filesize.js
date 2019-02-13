@@ -97,10 +97,6 @@
 			return e;
 		}
 
-		if (output === "object") {
-			return {value: result[0], symbol: result[1]};
-		}
-
 		if (full) {
 			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
 		}
@@ -109,6 +105,10 @@
 			result[0] = result[0].toLocaleString(locale);
 		} else if (separator.length > 0) {
 			result[0] = result[0].toString().replace(".", separator);
+		}
+
+		if (output === "object") {
+			return {value: result[0], symbol: result[1]};
 		}
 
 		return result.join(spacer);
