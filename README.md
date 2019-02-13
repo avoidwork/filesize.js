@@ -23,6 +23,9 @@ _*(boolean)*_ Enables full form of unit of measure, default is `false`
 ### fullforms
 _*(array)*_ Array of full form overrides, default is `[]`
 
+### locale (overrides 'separator')
+_*(string)*_ BCP 47 language tag, default is `""`
+
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
@@ -62,6 +65,7 @@ filesize(265318, {standard: "iec"});  // "259.1 KiB"
 filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
 filesize(12, {fullform: true, fullforms: ["байтов"]});  // "12 байтов"
 filesize(265318, {separator: ","});   // "259,1 KB"
+filesize(265318, {locale: "de"});   // "259,1 KB"
 ```
 
 ## Partial Application

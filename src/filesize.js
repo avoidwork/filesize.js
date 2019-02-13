@@ -9,7 +9,7 @@
 	function filesize (arg, descriptor = {}) {
 		let result = [],
 			val = 0,
-			e, base, bits, ceil, full, fullforms, neg, num, output, round, unix, separator, spacer, standard, symbols;
+			e, base, bits, ceil, full, fullforms, locale, neg, num, output, round, unix, separator, spacer, standard, symbols;
 
 		if (isNaN(arg)) {
 			throw new Error("Invalid arguments");
@@ -19,7 +19,8 @@
 		unix = descriptor.unix === true;
 		base = descriptor.base || 2;
 		round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
-		separator = descriptor.separator !== void 0 ? descriptor.separator || "" : "";
+		locale = descriptor.locale !== void 0 ? descriptor.locale : "";
+		separator = descriptor.separator !== void 0 ? descriptor.separator : "";
 		spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
 		symbols = descriptor.symbols || {};
 		standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
@@ -104,7 +105,9 @@
 			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
 		}
 
-		if (separator.length > 0) {
+		if (locale.length > 0) {
+			result[0] = result[0].toLocaleString(locale);
+		} else if (separator.length > 0) {
 			result[0] = result[0].toString().replace(".", separator);
 		}
 
