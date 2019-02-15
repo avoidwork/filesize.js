@@ -156,8 +156,9 @@ exports.filesize = {
 		test.done();
 	},
 	locale: function (test) {
-		test.expect(2);
+		test.expect(3);
 		test.equal(filesize(1040, {locale: ""}), "1.02 KB", "Should be '1.02 KB'");
+		test.equal(filesize(1040, {locale: true}), Number(1.02).toLocaleString() + " KB", "Should be '" + Number(1.02).toLocaleString() + " KB'");
 		test.equal(filesize(1040, {locale: "de"}), Number(1.02).toLocaleString("de") + " KB", "Should be '" + Number(1.02).toLocaleString("de") + " KB'");
 		test.done();
 	}

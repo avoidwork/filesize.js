@@ -12,7 +12,7 @@
 			e, base, bits, ceil, full, fullforms, locale, neg, num, output, round, unix, separator, spacer, standard, symbols;
 
 		if (isNaN(arg)) {
-			throw new Error("Invalid arguments");
+			throw new TypeError("Invalid number");
 		}
 
 		bits = descriptor.bits === true;
@@ -49,6 +49,10 @@
 		// Exceeding supported length, time to reduce & multiply
 		if (e > 8) {
 			e = 8;
+		}
+
+		if (output === "exponent") {
+			return e;
 		}
 
 		// Zero is now a special case because bytes divide by 1
@@ -88,23 +92,21 @@
 		// Applying custom symbol
 		result[1] = symbols[result[1]] || result[1];
 
+		if (locale === true) {
+			result[0] = result[0].toLocaleString();
+		} else if (locale.length > 0) {
+			result[0] = result[0].toLocaleString(locale);
+		} else if (separator.length > 0) {
+			result[0] = result[0].toString().replace(".", separator);
+		}
+
 		// Returning Array, Object, or String (default)
 		if (output === "array") {
 			return result;
 		}
 
-		if (output === "exponent") {
-			return e;
-		}
-
 		if (full) {
 			result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
-		}
-
-		if (locale.length > 0) {
-			result[0] = result[0].toLocaleString(locale);
-		} else if (separator.length > 0) {
-			result[0] = result[0].toString().replace(".", separator);
 		}
 
 		if (output === "object") {

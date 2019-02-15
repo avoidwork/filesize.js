@@ -24,7 +24,7 @@ _*(boolean)*_ Enables full form of unit of measure, default is `false`
 _*(array)*_ Array of full form overrides, default is `[]`
 
 ### locale (overrides 'separator')
-_*(string)*_ BCP 47 language tag, default is `""`
+_*(string || boolean)*_ BCP 47 language tag to specify a locale, or `true` to use default locale, default is `""`
 
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
