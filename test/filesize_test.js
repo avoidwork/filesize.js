@@ -161,5 +161,19 @@ exports.filesize = {
 		test.equal(filesize(1040, {locale: true}), Number(1.02).toLocaleString() + " KB", "Should be '" + Number(1.02).toLocaleString() + " KB'");
 		test.equal(filesize(1040, {locale: "de"}), Number(1.02).toLocaleString("de") + " KB", "Should be '" + Number(1.02).toLocaleString("de") + " KB'");
 		test.done();
+	},
+	localeOptions: function (test) {
+		test.expect(4);
+		test.equal(filesize(1024, {locale: "de"}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024, {localeOptions: {minimumFractionDigits: 1}}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024, {
+			locale: true,
+			localeOptions: {minimumFractionDigits: 1}
+		}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024, {
+			locale: "de",
+			localeOptions: {minimumFractionDigits: 1}
+		}), Number(1).toLocaleString("de", {minimumFractionDigits: 1}) + " KB", "Should be '" + Number(1).toLocaleString("de", {minimumFractionDigits: 1}) + " KB'");
+		test.done();
 	}
 };

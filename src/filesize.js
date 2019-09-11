@@ -9,7 +9,7 @@
 	function filesize (arg, descriptor = {}) {
 		let result = [],
 			val = 0,
-			e, base, bits, ceil, full, fullforms, locale, neg, num, output, round, unix, separator, spacer, standard, symbols;
+			e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, round, unix, separator, spacer, standard, symbols;
 
 		if (isNaN(arg)) {
 			throw new TypeError("Invalid number");
@@ -20,6 +20,7 @@
 		base = descriptor.base || 2;
 		round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
 		locale = descriptor.locale !== void 0 ? descriptor.locale : "";
+		localeOptions = descriptor.localeOptions || {};
 		separator = descriptor.separator !== void 0 ? descriptor.separator : "";
 		spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
 		symbols = descriptor.symbols || {};
@@ -95,7 +96,7 @@
 		if (locale === true) {
 			result[0] = result[0].toLocaleString();
 		} else if (locale.length > 0) {
-			result[0] = result[0].toLocaleString(locale);
+			result[0] = result[0].toLocaleString(locale, localeOptions);
 		} else if (separator.length > 0) {
 			result[0] = result[0].toString().replace(".", separator);
 		}
