@@ -26,6 +26,9 @@ _*(array)*_ Array of full form overrides, default is `[]`
 ### locale (overrides 'separator')
 _*(string || boolean)*_ BCP 47 language tag to specify a locale, or `true` to use default locale, default is `""`
 
+### localeOptions (overrides 'separator', requires string for 'locale' option)
+_*(object)*_ Dictionary of options defined by ECMA-402 ([Number.prototype.toLocaleString](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString)). Requires locale option to be explicitly passed as a string, otherwise is ignored.
+
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
