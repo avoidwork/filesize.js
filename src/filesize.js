@@ -73,6 +73,12 @@
 			}
 
 			result[0] = Number(val.toFixed(e > 0 ? round : 0));
+
+			if (result[0] === ceil && e < 8 && descriptor.exponent === void 0) {
+				result[0] = 1;
+				e++;
+			}
+
 			result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 			if (unix) {

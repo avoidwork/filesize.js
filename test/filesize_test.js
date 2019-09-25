@@ -6,6 +6,7 @@ exports.filesize = {
 		this.kilobit = 500;
 		this.edgecase = 1023;
 		this.kilobyte = 1024;
+		this.petabyte = 1125899906842620;
 		this.neg = -1024;
 		this.byte = 1;
 		this.zero = 0;
@@ -15,7 +16,7 @@ exports.filesize = {
 		done();
 	},
 	base2: function (test) {
-		test.expect(45);
+		test.expect(46);
 		test.equal(filesize(this.kilobit), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1, spacer: ""}), "500B", "Should be '500B'");
@@ -61,6 +62,7 @@ exports.filesize = {
 		test.equal(filesize(this.huge, {bits: true}), "661744490042422100 Yb", "Should be '661744490042422100 Yb'");
 		test.equal(filesize(this.small), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.small, {bits: true}), "1 b", "Should be '1 b'");
+		test.equal(filesize(this.petabyte), "1 PB", "Should be '1 PB'");
 		test.done();
 	},
 	base10: function (test) {
