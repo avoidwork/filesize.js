@@ -1,4 +1,4 @@
-export function filesize(arg: string, descriptor: object): any;
+export function filesize(arg: any, descriptor: object): any;
 
 export interface filesize {
     partial: any;
