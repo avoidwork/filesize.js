@@ -1,8 +1,4 @@
 /node_modules/
-/lib/filesize.min.js
-/lib/filesize.min.js.map
-/lib/filesize.es6.min.js
-/lib/filesize.es6.min.js.map
 /src/
 /test/
 .idea
@@ -11,4 +7,4 @@
 .travis.yml
 bower.json
 composer.json
-Gruntfile.js
+tsconfig.json

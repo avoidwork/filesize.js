@@ -1,5 +1,6 @@
 const path = require("path"),
-	filesize = require(path.join(__dirname, "..", "lib", "filesize.es6.js"));
+	{main} = require(path.join(__dirname, "..", "package.json")),
+	filesize = require(path.join(__dirname, "..", main));
 
 exports.filesize = {
 	setUp: function (done) {
