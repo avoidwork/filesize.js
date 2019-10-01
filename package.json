@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "4.2.1",
+  "version": "5.0.0",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -12,25 +12,21 @@
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
   "license": "BSD-3-Clause",
-  "main": "lib/filesize",
+  "source": "src/filesize.js",
+  "browser": "lib/filesize.js",
+  "main": "lib/filesize.cjs.js",
+  "module": "lib/filesize.esm.js",
+  "types": "filesize.d.ts",
   "engines": {
     "node": ">= 0.4.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "nodeunit test/filesize_test.js",
+    "build": "tslib build"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babel-minify": "^0.5.1",
-    "grunt": "^1.0.4",
-    "grunt-babel": "^8.0.0",
-    "grunt-cli": "^1.3.2",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-nodeunit": "^2.0.0",
-    "grunt-contrib-uglify": "^4.0.1",
-    "grunt-contrib-watch": "^1.1.0",
-    "grunt-eslint": "^22.0.0"
+    "tslib-cli": "^5.0.22",
+    "nodeunit": "^0.11.3"
   },
   "keywords": [
     "file",
