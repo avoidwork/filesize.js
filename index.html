@@ -37,8 +37,8 @@
 			<h2><span class="icon-cloud-download"></span> Download</h2>
 			<p>Latest version is available from Content Delivery Network</p>
 			<ul>
-				<li><a href="//cdn.filesizejs.com/filesize.js" title="Debugging version">Debugging</a></li>
-				<li><a href="//cdn.filesizejs.com/filesize.min.js" title="Production version">Production</a></li>
+				<li><a href="//cdn.filesizejs.com/filesize.esm.js" title="Debugging version">Debugging</a></li>
+				<li><a href="//cdn.filesizejs.com/filesize.js" title="Production version">Production</a></li>
 			</ul>
 		</div>
 	</section>
@@ -67,6 +67,8 @@
 				Array of full form overrides, default is []</p>
 			<p><i>locale</i> (string || boolean)<br />
 				BCP 47 language tag to specify a locale, or `true` to use default locale, default is ""</p>
+			<p><i>localeOptions</i> (object: overrides 'separator', requires string for 'locale' option)<br />
+				Dictionary of options defined by ECMA-402 (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString">Number.prototype.toLocaleString</a>). Requires locale option to be explicitly passed as a string, otherwise is ignored.</p>
 			<p><i>output</i> (string)<br />
 				Output of function (array, exponent, object, or string), default is string</p>
 			<p><i>round</i> (number)<br />
@@ -94,7 +96,7 @@
 <a href="https://github.com/avoidwork/filesize.js">
 	<img style="position: absolute; top: 0; right: 0; border: 0; z-index: 10;" src="//s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" />
 </a>
-<script type="text/javascript" src="assets/filesize.min.js"></script>
+<script type="text/javascript" src="assets/filesize.js"></script>
 <script type="text/javascript" src="assets/keigai.min.js"></script>
 <script type="text/javascript" src="assets/dashboard.js"></script>
 </body>
