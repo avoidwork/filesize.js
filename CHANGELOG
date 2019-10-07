@@ -1,4 +1,6 @@
-3b09002 (HEAD -> master, tag: 5.0.1, origin/master, origin/HEAD) Fixing the hackish type definition, fixes #105
+2a9e78d (HEAD -> master, tag: 5.0.2) Adding CHANGELOG to `.npmignore` with minor version bump to prep for changes
+d8415f5 (origin/master, origin/HEAD) git-log based CHANGELOG via `npm run changelog`
+3b09002 (tag: 5.0.1) Fixing the hackish type definition, fixes #105
 2e3d1bb (tag: 5.0.0) Updating typescript module definition
 5715622 (origin/modernize, modernize) Updating `.npmignore`
 19b39a7 Modernizing build & outputs
