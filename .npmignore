@@ -5,6 +5,7 @@
 .eslintrc
 .gitignore
 .travis.yml
+CHANGELOG
 bower.json
 composer.json
 tsconfig.json
