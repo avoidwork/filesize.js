@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -11,6 +11,10 @@
   "bugs": {
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
+  "files": [
+    "lib",
+    "*.d.ts"
+  ],
   "license": "BSD-3-Clause",
   "source": "src/filesize.js",
   "browser": "lib/filesize.js",
