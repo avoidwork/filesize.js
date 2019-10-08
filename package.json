@@ -21,7 +21,7 @@
     "node": ">= 0.4.0"
   },
   "scripts": {
-    "changelog": "git log --oneline --no-merges --decorate=short > CHANGELOG",
+    "changelog": "git log --no-merges --date=short --tags --format=\"[%cd] %h%d %s - %cn (%ce)\" > CHANGELOG",
     "test": "nodeunit test/filesize_test.js",
     "build": "tslib build"
   },
