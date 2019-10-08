@@ -1,3 +1,6 @@
+[2019-10-08] 7b15687 (HEAD -> master, tag: 5.0.3, origin/master, origin/HEAD) Removing `.npmignore` - Jason Mulligan (jason.mulligan@avoidwork.com)
+[2019-10-08] fd76462 Reformatting CHANGELOG - Jason Mulligan (jason.mulligan@avoidwork.com)
+[2019-10-07] 72968fa Updating CHANGELOG - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-10-07] 2a9e78d (tag: 5.0.2) Adding CHANGELOG to `.npmignore` with minor version bump to prep for changes - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-10-07] d8415f5 git-log based CHANGELOG via `npm run changelog` - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-09-30] 3b09002 (tag: 5.0.1) Fixing the hackish type definition, fixes #105 - Jason Mulligan (jason.mulligan@avoidwork.com)
