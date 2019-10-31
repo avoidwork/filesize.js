@@ -1,3 +1,2 @@
-node_modules
-.idea
-*.tgz
+node_modules/*
+.idea/*
