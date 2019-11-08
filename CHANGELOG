@@ -1,4 +1,6 @@
-[2019-10-30] 71a9ead (HEAD -> master, tag: 6.0.0, origin/master, origin/HEAD) Reverting modern build as it's too problematic at this time, major version bump to roll forward - Jason Mulligan (jason.mulligan@avoidwork.com)
+[2019-11-08] cb5d673 (HEAD -> master, tag: 6.0.1, origin/master, origin/HEAD) Fixing a regression due to 5.x revert, fixes #111 - Jason Mulligan (jason.mulligan@avoidwork.com)
+[2019-10-30] 48b7e40 Updating CHANGELOG - Jason Mulligan (jason.mulligan@avoidwork.com)
+[2019-10-30] 71a9ead (tag: 6.0.0) Reverting modern build as it's too problematic at this time, major version bump to roll forward - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-10-30] 3909b04 Revert "Merge pull request #104 from avoidwork/modernize" - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-10-30] 74d98cc Revert "Fixing the hackish type definition, fixes #105" - Jason Mulligan (jason.mulligan@avoidwork.com)
 [2019-10-30] ec99f00 Revert "Merge pull request #106 from avoidwork/avoidwork-patch-1" - Jason Mulligan (jason.mulligan@avoidwork.com)
