@@ -23,10 +23,11 @@
     "node": ">= 0.4.0"
   },
   "scripts": {
-    "changelog": "git log --date=short --tags --format=\"[%cd] %h%d %s - %cn (%ce)\" > CHANGELOG",
+    "changelog": "auto-changelog -p",
     "test": "grunt test"
   },
   "devDependencies": {
+    "auto-changelog": "^1.16.2",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-minify": "^0.5.1",
