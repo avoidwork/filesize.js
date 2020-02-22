@@ -117,7 +117,7 @@
 		}
 
 		if (output === "object") {
-			return {value: result[0], symbol: result[1]};
+			return {value: result[0], symbol: result[1], exponent: e};
 		}
 
 		return result.join(spacer);

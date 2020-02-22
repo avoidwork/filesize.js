@@ -59,7 +59,7 @@ filesize(265318, {base: 10});         // "265.32 kB"
 filesize(265318);                     // "259.1 KB"
 filesize(265318, {round: 0});         // "259 KB"
 filesize(265318, {output: "array"});  // [259.1, "KB"]
-filesize(265318, {output: "object"}); // {value: 259.1, symbol: "KB"}
+filesize(265318, {output: "object"}); // {value: 259.1, symbol: "KB", exponent: 1}
 filesize(1, {symbols: {B: "Б"}});     // "1 Б"
 filesize(1024);                       // "1 KB"
 filesize(1024, {exponent: 0});        // "1024 B"
