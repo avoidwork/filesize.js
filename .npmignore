@@ -12,3 +12,4 @@
 bower.json
 composer.json
 Gruntfile.js
+rollup.config.js
