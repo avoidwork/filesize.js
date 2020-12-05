@@ -27,9 +27,9 @@
     "test": "grunt test"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
     "auto-changelog": "^1.16.2",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
     "babel-minify": "^0.5.1",
     "grunt": "^1.0.4",
     "grunt-babel": "^8.0.0",
