@@ -16,7 +16,7 @@ exports.filesize = {
 		done();
 	},
 	base2: function (test) {
-		test.expect(46);
+		test.expect(48);
 		test.equal(filesize(this.kilobit), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1, spacer: ""}), "500B", "Should be '500B'");
@@ -36,7 +36,9 @@ exports.filesize = {
 		test.equal(filesize(this.kilobyte, {round: 1, bits: true}), "8 Kb", "Should be '8 Kb'");
 		test.equal(filesize(this.kilobyte, {unix: true, bits: true}), "8K", "Should be '8K'");
 		test.equal(filesize(this.kilobyte, {exponent: 0}), "1024 B", "Should be '1024 B'");
+		test.equal(filesize(this.kilobyte, {exponent: 0, output: "object"}).unit, "B", "Should be 'B'");
 		test.equal(filesize(this.kilobyte, {output: "exponent"}), 1, "Should be '1'");
+		test.equal(filesize(this.kilobyte, {output: "object"}).unit, "KB", "Should be 'KB'");
 		test.equal(filesize(this.neg), "-1 KB", "Should be '-1 KB'");
 		test.equal(filesize(this.neg, {round: 1}), "-1 KB", "Should be '-1 KB'");
 		test.equal(filesize(this.neg, {round: 1, spacer: ""}), "-1KB", "Should be '-1KB'");
@@ -132,12 +134,13 @@ exports.filesize = {
 		test.done();
 	},
 	fullform: function (test) {
-		test.expect(7);
+		test.expect(8);
 		test.equal(filesize(0, {fullform: true}), "0 bytes", "Should be '0 bytes'");
 		test.equal(filesize(1, {bits: true, base: 10, fullform: true}), "8 bits", "Should be '8 bits'");
 		test.equal(filesize(1, {base: 10, fullform: true}), "1 byte", "Should be '1 byte'");
 		test.equal(filesize(this.kilobyte, {fullform: true}), "1 kilobyte", "Should be '1 kilobyte'");
 		test.equal(filesize(this.kilobyte, {fullform: true, standard: "iec"}), "1 kibibyte", "Should be '1 kibibyte'");
+		test.equal(filesize(this.kilobyte, {fullform: true, standard: "iec", output: "object"}).unit, "KiB", "Should be 'KiB'");
 		test.equal(filesize(this.kilobyte * 1.3, {
 			fullform: true,
 			standard: "iec"

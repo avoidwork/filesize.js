@@ -25,7 +25,7 @@ const b = /^(b|B)$/,
 function filesize (arg, descriptor = {}) {
 	let result = [],
 		val = 0,
-		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, pad, round, unix, separator, spacer, standard, symbols;
+		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, pad, round, u, unix, separator, spacer, standard, symbols;
 
 	if (isNaN(arg)) {
 		throw new TypeError("Invalid number");
@@ -96,7 +96,7 @@ function filesize (arg, descriptor = {}) {
 			e++;
 		}
 
-		result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 		if (unix) {
 			result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
@@ -134,7 +134,7 @@ function filesize (arg, descriptor = {}) {
 	}
 
 	if (output === "object") {
-		return {value: result[0], symbol: result[1], exponent: e};
+		return {value: result[0], symbol: result[1], exponent: e, unit: u};
 	}
 
 	if (pad && Number.isInteger(result[0]) === false && round > 0) {
