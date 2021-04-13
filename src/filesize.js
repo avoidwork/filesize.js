@@ -25,7 +25,7 @@ const b = /^(b|B)$/,
 function filesize (arg, descriptor = {}) {
 	let result = [],
 		val = 0,
-		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, round, unix, separator, spacer, standard, symbols;
+		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, pad, round, unix, separator, spacer, standard, symbols;
 
 	if (isNaN(arg)) {
 		throw new TypeError("Invalid number");
@@ -33,6 +33,7 @@ function filesize (arg, descriptor = {}) {
 
 	bits = descriptor.bits === true;
 	unix = descriptor.unix === true;
+	pad = descriptor.pad === true;
 	base = descriptor.base || 2;
 	round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
 	locale = descriptor.locale !== void 0 ? descriptor.locale : "";
@@ -134,6 +135,16 @@ function filesize (arg, descriptor = {}) {
 
 	if (output === "object") {
 		return {value: result[0], symbol: result[1], exponent: e};
+	}
+
+	if (pad && Number.isInteger(result[0]) === false && round > 0) {
+		const x = separator || ".",
+			tmp = result[0].toString().split(x),
+			s = tmp[1] || "",
+			l = s.length,
+			n = round - l;
+
+		result[0] = `${tmp[0]}${x}${s.padEnd(l + n, "0")}`;
 	}
 
 	return result.join(spacer);
