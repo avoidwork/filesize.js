@@ -35,6 +35,9 @@ _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), de
 ### round
 _*(number)*_ Decimal place, default is `2`
 
+### pad
+_*(boolean)*_ Decimal place end padding, default is `false`
+
 ### separator
 _*(string)*_ Decimal separator character, default is `.`
 

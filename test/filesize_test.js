@@ -152,9 +152,10 @@ exports.filesize = {
 		test.done();
 	},
 	separator: function (test) {
-		test.expect(2);
+		test.expect(3);
 		test.equal(filesize(1040, {separator: ""}), "1.02 KB", "Should be '1.02 KB'");
 		test.equal(filesize(1040, {separator: ","}), "1,02 KB", "Should be '1,02 KB'");
+		test.equal(filesize(1040, {separator: ",", round: 1, pad: true}), "1,0 KB", "Should be '1,0 KB'");
 		test.done();
 	},
 	locale: function (test) {
