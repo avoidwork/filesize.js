@@ -9,5 +9,4 @@
 .eslintrc
 .gitignore
 .travis.yml
-composer.json
 rollup.config.js
