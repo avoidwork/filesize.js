@@ -124,13 +124,13 @@ function filesize (arg, descriptor = {}) {
 		result[0] = result[0].toString().replace(".", separator);
 	}
 
+	if (full) {
+		result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+	}
+
 	// Returning Array, Object, or String (default)
 	if (output === "array") {
 		return result;
-	}
-
-	if (full) {
-		result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
 	}
 
 	if (output === "object") {
