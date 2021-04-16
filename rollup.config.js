@@ -12,7 +12,7 @@ const bannerLong = `/**
 
 const bannerShort = `/*!
  2020 Jason Mulligan <jason.mulligan@avoidwork.com>
- @version 6.1.0
+ @version ${pkg.version}
 */`;
 
 const umdOutBase = { format: 'umd', name: 'filesize' };
