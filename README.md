@@ -32,11 +32,11 @@ _*(object)*_ Dictionary of options defined by ECMA-402 ([Number.prototype.toLoca
 ### output
 _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), default is `string`
 
-### round
-_*(number)*_ Decimal place, default is `2`
-
 ### pad
 _*(boolean)*_ Decimal place end padding, default is `false`
+
+### round
+_*(number)*_ Decimal place, default is `2`
 
 ### separator
 _*(string)*_ Decimal separator character, default is `.`
