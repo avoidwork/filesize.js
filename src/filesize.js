@@ -124,10 +124,6 @@ function filesize (arg, descriptor = {}) {
 		result[0] = result[0].toString().replace(".", separator);
 	}
 
-	if (full) {
-		result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
-	}
-
 	if (pad && Number.isInteger(result[0]) === false && round > 0) {
 		const x = separator || ".",
 			tmp = result[0].toString().split(x),
@@ -138,16 +134,12 @@ function filesize (arg, descriptor = {}) {
 		result[0] = `${tmp[0]}${x}${s.padEnd(l + n, "0")}`;
 	}
 
+	if (full) {
+		result[1] = fullforms[e] ? fullforms[e] : fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+	}
+
 	// Returning Array, Object, or String (default)
-	if (output === "array") {
-		return result;
-	}
-
-	if (output === "object") {
-		return {value: result[0], symbol: result[1], exponent: e, unit: u};
-	}
-
-	return result.join(spacer);
+	return output === "array" ? result : output === "object" ? {value: result[0], symbol: result[1], exponent: e, unit: u} : result.join(spacer);
 }
 
 // Partial application for functional programming
