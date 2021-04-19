@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "6.2.5",
+  "version": "6.2.6",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -28,7 +28,8 @@
     "changelog": "auto-changelog -p",
     "test": "npm run build && npm run lint && npm run test:unit",
     "test:unit": "nodeunit test/*.js",
-    "lint": "eslint test/*.js src/*.js"
+    "lint": "eslint test/*.js src/*.js",
+    "types": "npx typescript src/filesize.js --declaration --allowJs --emitDeclarationOnly --outDir ./"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",

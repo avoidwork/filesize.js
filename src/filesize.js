@@ -76,7 +76,7 @@ function filesize (arg, descriptor = {}) {
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
-		result[1] = unix ? "" : symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = unix ? "" : symbol[standard][bits ? "bits" : "bytes"][e];
 	} else {
 		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
