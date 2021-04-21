@@ -182,5 +182,18 @@ exports.filesize = {
 			localeOptions: {minimumFractionDigits: 1}
 		}), Number(1).toLocaleString("de", {minimumFractionDigits: 1}) + " KB", "Should be '" + Number(1).toLocaleString("de", {minimumFractionDigits: 1}) + " KB'");
 		test.done();
+	},
+	roundingMethod: function (test) {
+		test.expect(9);
+		test.equal(filesize(1024, {roundingMethod: "round"}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024, {roundingMethod: "floor"}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024, {roundingMethod: "ceil"}), "1 KB", "Should be '1 KB'");
+		test.equal(filesize(1024 * 1.333, {roundingMethod: "round"}), "1.33 KB", "Should be '1.33 KB'");
+		test.equal(filesize(1024 * 1.333, {roundingMethod: "floor"}), "1.33 KB", "Should be '1.33 KB'");
+		test.equal(filesize(1024 * 1.333, {roundingMethod: "ceil"}), "1.34 KB", "Should be '1.34 KB'");
+		test.equal(filesize(1024 * 1.666, {round: 1, roundingMethod: "round"}), "1.7 KB", "Should be '1.7 KB'");
+		test.equal(filesize(1024 * 1.666, {round: 1, roundingMethod: "floor"}), "1.6 KB", "Should be '1.6 KB'");
+		test.equal(filesize(1024 * 1.666, {round: 1, roundingMethod: "ceil"}), "1.7 KB", "Should be '1.7 KB'");
+		test.done();
 	}
 };
