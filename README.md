@@ -53,6 +53,9 @@ _*(object)*_ Dictionary of SI/JEDEC/IEC symbols to replace for localization, def
 ### unix
 _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
 
+### roundingMethod
+_*(string)*_ Rounding method, can be `round`, `floor`, or `ceil`, default is `round`
+
 ## Examples
 
 ```javascript
