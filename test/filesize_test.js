@@ -195,5 +195,14 @@ exports.filesize = {
 		test.equal(filesize(1024 * 1.666, {round: 1, roundingMethod: "floor"}), "1.6 KB", "Should be '1.6 KB'");
 		test.equal(filesize(1024 * 1.666, {round: 1, roundingMethod: "ceil"}), "1.7 KB", "Should be '1.7 KB'");
 		test.done();
+	},
+	precision: function (test) {
+		test.expect(5);
+		test.equal(filesize(1024 * 1, {precision: 3}), "1.00 KB", "Should be '1.00 KB'");
+		test.equal(filesize(1024 * 1024 * 10.25, {precision: 3}), "10.3 MB", "Should be '10.3 MB'");
+		test.equal(filesize(1024 * 1024 * 10.25, {precision: "x"}), "10.25 MB", "Should be '10.25 MB'");
+		test.equal(filesize(1024 * 1024 * 1024, {precision: 3}), "1.00 GB", "Should be '1.00 GB'");
+		test.equal(filesize(Math.pow(1024, 10), {precision: 3}), "1e+6 YB", "Should be '1e+6 YB'");
+		test.done();
 	}
 };

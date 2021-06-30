@@ -32,12 +32,12 @@
     "types": "npx typescript src/filesize.js --declaration --allowJs --emitDeclarationOnly --outDir ./"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.15",
-    "@babel/preset-env": "^7.13.15",
-    "auto-changelog": "^2.2.1",
-    "eslint": "^7.24.0",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "auto-changelog": "^2.3.0",
+    "eslint": "^7.29.0",
     "nodeunit-x": "^0.14.0",
-    "rollup": "^2.45.2",
+    "rollup": "^2.52.3",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^7.0.2"
   },
