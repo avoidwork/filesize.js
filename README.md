@@ -35,8 +35,14 @@ _*(string)*_ Output of function (`array`, `exponent`, `object`, or `string`), de
 ### pad
 _*(boolean)*_ Decimal place end padding, default is `false`
 
+### precision
+_*(number)*_ Sets precision of numerical output, default is `0`
+
 ### round
 _*(number)*_ Decimal place, default is `2`
+
+### roundingMethod
+_*(string)*_ Rounding method, can be `round`, `floor`, or `ceil`, default is `round`
 
 ### separator
 _*(string)*_ Decimal separator character, default is `.`
@@ -52,9 +58,6 @@ _*(object)*_ Dictionary of SI/JEDEC/IEC symbols to replace for localization, def
 
 ### unix
 _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
-
-### roundingMethod
-_*(string)*_ Rounding method, can be `round`, `floor`, or `ceil`, default is `round`
 
 ## Examples
 
