@@ -16,6 +16,7 @@ const bannerShort = `/*!
 */`;
 
 const umdOutBase = { format: 'umd', name: 'filesize' };
+const esmOutBase = { format: 'esm', name: 'filesize' };
 
 export default [
   {
@@ -23,6 +24,13 @@ export default [
     output: [
       { ...umdOutBase, file: 'lib/filesize.es6.js', banner: bannerLong },
       { ...umdOutBase, file: 'lib/filesize.es6.min.js', banner: bannerShort, plugins: [ terser() ], sourcemap: true },
+    ]
+  },
+  {
+    input: 'src/filesize.js',
+    output: [
+      { ...esmOutBase, file: 'lib/filesize.esm.js', banner: bannerLong },
+      { ...esmOutBase, file: 'lib/filesize.esm.min.js', banner: bannerShort, plugins: [ terser() ], sourcemap: true },
     ]
   },
   {
