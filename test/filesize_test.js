@@ -21,8 +21,8 @@ exports.filesize = {
 		test.equal(filesize(this.kilobit, {round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {round: 1, spacer: ""}), "500B", "Should be '500B'");
 		test.equal(filesize(this.kilobit, {unix: true}), "500", "Should be '500'");
-		test.equal(filesize(this.kilobit, {round: 1, bits: true}), "3.9 Kb", "Should be '3.9 Kb'");
-		test.equal(filesize(this.kilobit, {bits: true}), "3.91 Kb", "Should be '3.91 Kb'");
+		test.equal(filesize(this.kilobit, {round: 1, bits: true}), "3.9 Kbit", "Should be '3.9 Kbit'");
+		test.equal(filesize(this.kilobit, {bits: true}), "3.91 Kbit", "Should be '3.91 Kbit'");
 		test.equal(filesize(this.kilobit, {unix: true, bits: true}), "3.9K", "Should be '3.9K'");
 		test.equal(filesize(this.kilobit, {bits: true, output: "array"})[0], 3.91, "Should be '3.91'");
 		test.equal(filesize(this.kilobit, {bits: true, output: "object"}).value, 3.91, "Should be '3.91'");
@@ -32,8 +32,8 @@ exports.filesize = {
 		test.equal(filesize(this.kilobyte, {round: 1}), "1 KB", "Should be '1 KB'");
 		test.equal(filesize(this.kilobyte, {round: 1, spacer: ""}), "1KB", "Should be '1KB'");
 		test.equal(filesize(this.kilobyte, {unix: true}), "1K", "Should be '1K'");
-		test.equal(filesize(this.kilobyte, {bits: true}), "8 Kb", "Should be '8 Kb'");
-		test.equal(filesize(this.kilobyte, {round: 1, bits: true}), "8 Kb", "Should be '8 Kb'");
+		test.equal(filesize(this.kilobyte, {bits: true}), "8 Kbit", "Should be '8 Kbit'");
+		test.equal(filesize(this.kilobyte, {round: 1, bits: true}), "8 Kbit", "Should be '8 Kbit'");
 		test.equal(filesize(this.kilobyte, {unix: true, bits: true}), "8K", "Should be '8K'");
 		test.equal(filesize(this.kilobyte, {exponent: 0}), "1024 B", "Should be '1024 B'");
 		test.equal(filesize(this.kilobyte, {exponent: 0, output: "object"}).unit, "B", "Should be 'B'");
@@ -43,27 +43,27 @@ exports.filesize = {
 		test.equal(filesize(this.neg, {round: 1}), "-1 KB", "Should be '-1 KB'");
 		test.equal(filesize(this.neg, {round: 1, spacer: ""}), "-1KB", "Should be '-1KB'");
 		test.equal(filesize(this.neg, {unix: true}), "-1K", "Should be '-1K'");
-		test.equal(filesize(this.neg, {bits: true}), "-8 Kb", "Should be '-8 Kb'");
-		test.equal(filesize(this.neg, {round: 1, bits: true}), "-8 Kb", "Should be '-8 Kb'");
+		test.equal(filesize(this.neg, {bits: true}), "-8 Kbit", "Should be '-8 Kbit'");
+		test.equal(filesize(this.neg, {round: 1, bits: true}), "-8 Kbit", "Should be '-8 Kbit'");
 		test.equal(filesize(this.neg, {unix: true, bits: true}), "-8K", "Should be '-8K'");
 		test.equal(filesize(this.byte), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {round: 1}), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {round: 1, spacer: ""}), "1B", "Should be '1B'");
 		test.equal(filesize(this.byte, {unix: true}), "1", "Should be '1'");
-		test.equal(filesize(this.byte, {bits: true}), "8 b", "Should be '8 b'");
-		test.equal(filesize(this.byte, {round: 1, bits: true}), "8 b", "Should be '8 b'");
+		test.equal(filesize(this.byte, {bits: true}), "8 bit", "Should be '8 bit'");
+		test.equal(filesize(this.byte, {round: 1, bits: true}), "8 bit", "Should be '8 bit'");
 		test.equal(filesize(this.byte, {unix: true, bits: true}), "8", "Should be '8'");
 		test.equal(filesize(this.zero), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.zero, {round: 1}), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.zero, {round: 1, spacer: ""}), "0B", "Should be '0B'");
 		test.equal(filesize(this.zero, {unix: true}), "0", "Should be '0'");
-		test.equal(filesize(this.zero, {bits: true}), "0 b", "Should be '0 b'");
-		test.equal(filesize(this.zero, {round: 1, bits: true}), "0 b", "Should be '0 b'");
+		test.equal(filesize(this.zero, {bits: true}), "0 bit", "Should be '0 bit'");
+		test.equal(filesize(this.zero, {round: 1, bits: true}), "0 bit", "Should be '0 bit'");
 		test.equal(filesize(this.zero, {unix: true, bits: true}), "0", "Should be '0'");
 		test.equal(filesize(this.huge), "82718061255302770 YB", "Should be '82718061255302770 YB'");
-		test.equal(filesize(this.huge, {bits: true}), "661744490042422100 Yb", "Should be '661744490042422100 Yb'");
+		test.equal(filesize(this.huge, {bits: true}), "661744490042422100 Ybit", "Should be '661744490042422100 Ybit'");
 		test.equal(filesize(this.small), "0 B", "Should be '0 B'");
-		test.equal(filesize(this.small, {bits: true}), "1 b", "Should be '1 b'");
+		test.equal(filesize(this.small, {bits: true}), "1 bit", "Should be '1 bit'");
 		test.equal(filesize(this.petabyte), "1 PB", "Should be '1 PB'");
 		test.done();
 	},
@@ -74,36 +74,36 @@ exports.filesize = {
 		test.equal(filesize(this.kilobit, {base: 10, round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {base: 10, round: 1, spacer: ""}), "500B", "Should be '500B'");
 		test.equal(filesize(this.kilobit, {base: 10, unix: true}), "500", "Should be '500'");
-		test.equal(filesize(this.kilobit, {base: 10, bits: true}), "4 kb", "Should be '4 kb'");
-		test.equal(filesize(this.kilobit, {base: 10, round: 1, bits: true}), "4 kb", "Should be '4 kb'");
+		test.equal(filesize(this.kilobit, {base: 10, bits: true}), "4 kbit", "Should be '4 kbit'");
+		test.equal(filesize(this.kilobit, {base: 10, round: 1, bits: true}), "4 kbit", "Should be '4 kbit'");
 		test.equal(filesize(this.kilobit, {base: 10, unix: true, bits: true}), "4k", "Should be '4k'");
 		test.equal(filesize(this.kilobyte, {base: 10}), "1.02 kB", "Should be '1.02 kB'");
 		test.equal(filesize(this.kilobyte, {base: 10, round: 1}), "1 kB", "Should be '1 kB'");
 		test.equal(filesize(this.kilobyte, {base: 10, round: 1, spacer: ""}), "1kB", "Should be '1kB'");
 		test.equal(filesize(this.kilobyte, {base: 10, unix: true}), "1k", "Should be '1k'");
-		test.equal(filesize(this.kilobyte, {base: 10, bits: true}), "8.19 kb", "Should be '8.19 kb'");
-		test.equal(filesize(this.kilobyte, {base: 10, round: 1, bits: true}), "8.2 kb", "Should be '8.2 kb'");
+		test.equal(filesize(this.kilobyte, {base: 10, bits: true}), "8.19 kbit", "Should be '8.19 kbit'");
+		test.equal(filesize(this.kilobyte, {base: 10, round: 1, bits: true}), "8.2 kbit", "Should be '8.2 kbit'");
 		test.equal(filesize(this.kilobyte, {base: 10, unix: true, bits: true}), "8.2k", "Should be '8.2k'");
 		test.equal(filesize(this.neg, {base: 10}), "-1.02 kB", "Should be '-1.02 kB'");
 		test.equal(filesize(this.neg, {base: 10, round: 1}), "-1 kB", "Should be '-1 kB'");
 		test.equal(filesize(this.neg, {base: 10, round: 1, spacer: ""}), "-1kB", "Should be '-1kB'");
 		test.equal(filesize(this.neg, {base: 10, unix: true}), "-1k", "Should be '-1k'");
-		test.equal(filesize(this.neg, {base: 10, bits: true}), "-8.19 kb", "Should be '-8.19 kb'");
-		test.equal(filesize(this.neg, {base: 10, round: 1, bits: true}), "-8.2 kb", "Should be '-8.2 kb'");
+		test.equal(filesize(this.neg, {base: 10, bits: true}), "-8.19 kbit", "Should be '-8.19 kbit'");
+		test.equal(filesize(this.neg, {base: 10, round: 1, bits: true}), "-8.2 kbit", "Should be '-8.2 kbit'");
 		test.equal(filesize(this.neg, {base: 10, unix: true, bits: true}), "-8.2k", "Should be '-8.2k'");
 		test.equal(filesize(this.byte, {base: 10}), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {base: 10, round: 1}), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {base: 10, round: 1, spacer: ""}), "1B", "Should be '1B'");
 		test.equal(filesize(this.byte, {base: 10, unix: true}), "1", "Should be '1'");
-		test.equal(filesize(this.byte, {base: 10, bits: true}), "8 b", "Should be '8 b'");
-		test.equal(filesize(this.byte, {base: 10, round: 1, bits: true}), "8 b", "Should be '8 b'");
+		test.equal(filesize(this.byte, {base: 10, bits: true}), "8 bit", "Should be '8 bit'");
+		test.equal(filesize(this.byte, {base: 10, round: 1, bits: true}), "8 bit", "Should be '8 bit'");
 		test.equal(filesize(this.byte, {base: 10, unix: true, bits: true}), "8", "Should be '8'");
 		test.equal(filesize(this.zero, {base: 10}), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.zero, {base: 10, round: 1}), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.zero, {base: 10, round: 1, spacer: ""}), "0B", "Should be '0B'");
 		test.equal(filesize(this.zero, {base: 10, unix: true}), "0", "Should be '0'");
-		test.equal(filesize(this.zero, {base: 10, bits: true}), "0 b", "Should be '0 b'");
-		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true}), "0 b", "Should be '0 b'");
+		test.equal(filesize(this.zero, {base: 10, bits: true}), "0 bit", "Should be '0 bit'");
+		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true}), "0 bit", "Should be '0 bit'");
 		test.equal(filesize(this.zero, {base: 10, unix: true, bits: true}), "0", "Should be '0'");
 		test.done();
 	},
@@ -128,9 +128,9 @@ exports.filesize = {
 	},
 	bits: function (test) {
 		test.expect(3);
-		test.equal(filesize(124, {bits: true, base: 10}), "992 b", "Should be '992 b'");
-		test.equal(filesize(125, {bits: true, base: 10}), "1 kb", "Should be '1 kb'");
-		test.equal(filesize(126, {bits: true, base: 10}), "1.01 kb", "Should be '1.01 kb'");
+		test.equal(filesize(124, {bits: true, base: 10}), "992 bit", "Should be '992 bit'");
+		test.equal(filesize(125, {bits: true, base: 10}), "1 kbit", "Should be '1 kbit'");
+		test.equal(filesize(126, {bits: true, base: 10}), "1.01 kbit", "Should be '1.01 kbit'");
 		test.done();
 	},
 	fullform: function (test) {

@@ -1,11 +1,11 @@
 const b = /^(b|B)$/,
 	symbol = {
 		iec: {
-			bits: ["b", "Kib", "Mib", "Gib", "Tib", "Pib", "Eib", "Zib", "Yib"],
+			bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"],
 			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
 		},
 		jedec: {
-			bits: ["b", "Kb", "Mb", "Gb", "Tb", "Pb", "Eb", "Zb", "Yb"],
+			bits: ["bit", "Kbit", "Mbit", "Gbit", "Tbit", "Pbit", "Ebit", "Zbit", "Ybit"],
 			bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
 		}
 	},
@@ -107,7 +107,7 @@ function filesize (arg, descriptor = {}) {
 			e++;
 		}
 
-		u = result[1] = base === 10 && e === 1 ? bits ? "kb" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = base === 10 && e === 1 ? bits ? "kbit" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 		if (unix) {
 			result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
