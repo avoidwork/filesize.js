@@ -38,14 +38,14 @@ function filesize (arg, descriptor = {}) {
 	bits = descriptor.bits === true;
 	unix = descriptor.unix === true;
 	pad = descriptor.pad === true;
-	base = descriptor.base || 2;
+	base = descriptor.base || 10;
 	round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
 	locale = descriptor.locale !== void 0 ? descriptor.locale : "";
 	localeOptions = descriptor.localeOptions || {};
 	separator = descriptor.separator !== void 0 ? descriptor.separator : "";
 	spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
 	symbols = descriptor.symbols || {};
-	standard = base === 2 ? descriptor.standard || "jedec" : "jedec";
+	standard = base === 2 ? descriptor.standard || "iec" : "jedec";
 	output = descriptor.output || "string";
 	full = descriptor.fullform === true;
 	fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
@@ -110,7 +110,7 @@ function filesize (arg, descriptor = {}) {
 		u = result[1] = base === 10 && e === 1 ? bits ? "kbit" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
 
 		if (unix) {
-			result[1] = standard === "jedec" ? result[1].charAt(0) : e > 0 ? result[1].replace(/B$/, "") : result[1];
+			result[1] = result[1].charAt(0);
 
 			if (b.test(result[1])) {
 				result[0] = Math.floor(result[0]);

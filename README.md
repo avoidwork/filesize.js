@@ -9,7 +9,7 @@ filesize.js provides a simple way to get a human readable file size string from 
 `filesize()` accepts an optional descriptor Object as a second argument, so you can customize the output.
 
 ### base
-_*(number)*_ Number base, default is `2`
+_*(number)*_ Number base, default is `10`
 
 ### bits
 _*(boolean)*_ Enables `bit` sizes, default is `false`
@@ -51,10 +51,10 @@ _*(string)*_ Decimal separator character, default is `.`
 _*(string)*_ Character between the `result` and `symbol`, default is `" "`
 
 ### standard
-_*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `jedec`; can be overruled by `base`
+_*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `iec`; can be overruled by `base`
 
 ### symbols
-_*(object)*_ Dictionary of SI/JEDEC/IEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of SI/IEC/JEDEC symbols to replace for localization, defaults to english if no match is found
 
 ### unix
 _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
@@ -63,21 +63,21 @@ _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is
 
 ```javascript
 filesize(500);                        // "500 B"
-filesize(500, {bits: true});          // "4 Kb"
-filesize(265318, {base: 10});         // "265.32 kB"
-filesize(265318);                     // "259.1 KB"
-filesize(265318, {round: 0});         // "259 KB"
-filesize(265318, {output: "array"});  // [259.1, "KB"]
-filesize(265318, {output: "object"}); // {value: 259.1, symbol: "KB", exponent: 1, unit: "KB"}
+filesize(500, {bits: true});          // "4 kbit"
+filesize(265318, {base: 2});          // "259.1 KiB"
+filesize(265318);                     // "265.32 kB"
+filesize(265318, {round: 0});         // "265 kB"
+filesize(265318, {output: "array"});  // [265.32, "kB"]
+filesize(265318, {output: "object"}); // {value: 265.32, symbol: "kB", exponent: 1, unit: "kB"}
 filesize(1, {symbols: {B: "Б"}});     // "1 Б"
-filesize(1024);                       // "1 KB"
+filesize(1024);                       // "1.02 kB"
 filesize(1024, {exponent: 0});        // "1024 B"
 filesize(1024, {output: "exponent"}); // 1
-filesize(265318, {standard: "iec"});  // "259.1 KiB"
-filesize(265318, {standard: "iec", fullform: true}); // "259.1 kibibytes"
+filesize(265318, {standard: "jedec"});  // "259.1 KB"
+filesize(265318, {base: 2, fullform: true}); // "259.1 kibibytes"
 filesize(12, {fullform: true, fullforms: ["байтов"]});  // "12 байтов"
-filesize(265318, {separator: ","});   // "259,1 KB"
-filesize(265318, {locale: "de"});   // "259,1 KB"
+filesize(265318, {separator: ","});   // "265,32 kB"
+filesize(265318, {locale: "de"});   // "265,32 kB"
 ```
 
 ## Partial Application
@@ -86,9 +86,9 @@ upon execution. This can be used to reduce `Object` creation if you call `filesi
 in lexical scope.
 
 ```javascript
-const size = filesize.partial({standard: "iec"});
+const size = filesize.partial({base: 2, standard: "jedec"});
 
-size(265318); // "259.1 KiB"
+size(265318); // "259.1 KB"
 ```
 
 ## How can I load filesize.js?
