@@ -45,7 +45,7 @@ function filesize (arg, descriptor = {}) {
 	separator = descriptor.separator !== void 0 ? descriptor.separator : "";
 	spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
 	symbols = descriptor.symbols || {};
-	standard = base === 2 ? descriptor.standard || "iec" : "jedec";
+	standard = descriptor.standard in symbol ? descriptor.standard : "iec";
 	output = descriptor.output || "string";
 	full = descriptor.fullform === true;
 	fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];

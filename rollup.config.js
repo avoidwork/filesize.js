@@ -2,16 +2,18 @@ import babel from 'rollup-plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import pkg from './package.json';
 
+const year = new Date().getFullYear();
+
 const bannerLong = `/**
  * ${pkg.name}
  *
- * @copyright ${new Date().getFullYear()} ${pkg.author}
+ * @copyright ${year} ${pkg.author}
  * @license ${pkg.license}
  * @version ${pkg.version}
  */`;
 
 const bannerShort = `/*!
- 2020 Jason Mulligan <jason.mulligan@avoidwork.com>
+ ${year} Jason Mulligan <jason.mulligan@avoidwork.com>
  @version ${pkg.version}
 */`;
 
