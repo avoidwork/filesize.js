@@ -54,7 +54,7 @@ _*(string)*_ Character between the `result` and `symbol`, default is `" "`
 _*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `iec`; can be overruled by `base`
 
 ### symbols
-_*(object)*_ Dictionary of SI/IEC/JEDEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found
 
 ### unix
 _*(boolean)*_ Enables unix style human readable output, e.g `ls -lh`, default is `false`
