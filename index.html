@@ -59,11 +59,11 @@
 			<p>filesize() accepts an optional descriptor Object as a second argument, so you can customize the output.</p>
 			<h3>Optional settings</h3>
 			<p><i>base</i> (number)<br />
-				Number base, default is 2</p>
+				Number base, default is 10</p>
 			<p><i>bits</i> (boolean)<br />
 				Enables bit sizes, default is false</p>
 			<p><i>exponent</i> (number)<br />
-				Specifies the SI suffix via exponent, e.g. 2 is MB for bytes, default is -1</p>
+				Specifies the symbol via exponent, e.g. 2 is MiB for bytes, default is -1</p>
 			<p><i>fullform</i> (boolean)<br />
 				Enables full form of unit of measure, default is false</p>
 			<p><i>fullforms</i> (array)<br />
@@ -74,18 +74,22 @@
 				Dictionary of options defined by ECMA-402 (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString">Number.prototype.toLocaleString</a>). Requires locale option to be explicitly passed as a string, otherwise is ignored.</p>
 			<p><i>output</i> (string)<br />
 				Output of function (array, exponent, object, or string), default is string</p>
+			<p><i>pad</i> (boolean)<br />
+				Decimal place end padding, default is false</p>
 			<p><i>precision</i> (number)<br />
 				Sets precision of numerical output, default is 0</p>
 			<p><i>round</i> (number)<br />
 				Decimal place, default is 2</p>
 			<p><i>roundingMethod</i> (string)<br />
 				Rounding method, can be "round", "floor", or "ceil"; default is "round"</p>
+			<p><i>separator</i> (string)<br />
+				Decimal separator character, default is "."</p>
 			<p><i>spacer</i> (string)<br />
 				Character between the result and suffix, default is " "</p>
 			<p><i>standard</i> (string)<br />
 				Standard unit of measure, can be "iec" or "jedec", default is "jedec"; can be overruled by "base"</p>
 			<p><i>symbols</i> (object)<br />
-				Dictionary of SI/JEDEC symbols to replace for localization, defaults to english if no match is found</p>
+				Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found</p>
 			<p><i>unix</i> (boolean)<br />
 				Enables unix style human readable output, e.g ls -lh, default is false</p>
 			<h3>Examples</h3>
