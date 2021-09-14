@@ -139,9 +139,9 @@ exports.filesize = {
 		test.equal(filesize(0, {base: 10, fullform: true, output: "object"}).unit, "B", "Should be 'B'");
 		test.equal(filesize(1, {base: 10, bits: true, fullform: true}), "8 bits", "Should be '8 bits'");
 		test.equal(filesize(1, {base: 10, fullform: true}), "1 byte", "Should be '1 byte'");
-		test.equal(filesize(this.kibibyte, {base: 10, fullform: true}), "1.02 kibibytes", "Should be '1.02 kibibytes'");
-		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", fullform: true }), "1 kilobyte", "Should be '1 kilobyte'");
-		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", fullform: true, output: "object"}).unit, "KB", "Should be 'KB'");
+		test.equal(filesize(this.kibibyte, {base: 10, fullform: true}), "1.02 kilobytes", "Should be '1.02 kilobytes'");
+		test.equal(filesize(this.kibibyte, {base: 2, standard: "iec", fullform: true }), "1 kibibyte", "Should be '1 kibibyte'");
+		test.equal(filesize(this.kibibyte, {base: 2, standard: "iec", fullform: true, output: "object"}).unit, "KiB", "Should be 'KiB'");
 		test.equal(filesize(this.kibibyte * 1.3, {
 			base: 2,
 			standard: "iec",
@@ -153,7 +153,7 @@ exports.filesize = {
 	exponent: function (test) {
 		test.expect(2);
 		test.equal(filesize(0, {base: 10, exponent: 0}), "0 B", "Should be '0 B'");
-		test.equal(filesize(0, {base: 10, exponent: 2}), "0 MiB", "Should be '0 MiB'");
+		test.equal(filesize(0, {base: 10, exponent: 2}), "0 MB", "Should be '0 MB'");
 		test.done();
 	},
 	separator: function (test) {
@@ -202,10 +202,10 @@ exports.filesize = {
 	precision: function (test) {
 		test.expect(5);
 		test.equal(filesize(this.kibibyte * 1, {base: 10, precision: 3}), "1.02 kB", "Should be '1.02 kB'");
-		test.equal(filesize(this.kibibyte * this.kibibyte * 10.25, {base: 10, precision: 3}), "10.8 MiB", "Should be '10.8 MiB'");
-		test.equal(filesize(this.kibibyte * this.kibibyte * 10.25, {base: 10, precision: "x"}), "10.75 MiB", "Should be '10.75 MiB'");
-		test.equal(filesize(this.kibibyte * this.kibibyte * this.kibibyte, {base: 10, precision: 3}), "1.07 GiB", "Should be '1.07 GiB'");
-		test.equal(filesize(Math.pow(this.kibibyte, 10), {base: 10, precision: 3}), "1e+6 YiB", "Should be '1e+6 YiB'");
+		test.equal(filesize(this.kibibyte * this.kibibyte * 10.25, {base: 10, precision: 3}), "10.8 MB", "Should be '10.8 MB'");
+		test.equal(filesize(this.kibibyte * this.kibibyte * 10.25, {base: 10, precision: "x"}), "10.75 MB", "Should be '10.75 MB'");
+		test.equal(filesize(this.kibibyte * this.kibibyte * this.kibibyte, {base: 10, precision: 3}), "1.07 GB", "Should be '1.07 GB'");
+		test.equal(filesize(Math.pow(this.kibibyte, 10), {base: 10, precision: 3}), "1e+6 YB", "Should be '1e+6 YB'");
 		test.done();
 	},
 	defaults: function (test) {
