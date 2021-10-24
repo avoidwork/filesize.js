@@ -1,10 +1,10 @@
-// Type definitions for filesize 8.0.3
+// Type definitions for filesize 6.0.1
 // Project: https://github.com/avoidwork/filesize.js, https://filesizejs.com
 // Definitions by: Giedrius Grabauskas <https://github.com/GiedriusGrabauskas>
 //                 Renaud Chaput <https://github.com/renchap>
 //                 Roman Nuritdinov <https://github.com/Ky6uk>
 //                 Sam Hulick <https://github.com/ffxsam>
-//                 Tomoto S. Washio <https://github.com/tomoto>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 declare var fileSize: Filesize.Filesize;
 export = fileSize;
@@ -100,24 +100,8 @@ declare namespace Filesize {
         roundingMethod?: "round" | "floor" | "ceil";
     }
 
-    // Result type inference from the output option
-    interface ResultTypeMap {
-        array: [number, string];
-        exponent: number;
-        object: {
-            value: number,
-            symbol: string,
-            exponent: number,
-            unit: string,
-        };
-        string: string;
-    }
-    type DefaultOutput<O extends Options> = Exclude<O["output"], keyof ResultTypeMap> extends never ? never : "string"
-    type CanonicalOutput<O extends Options> = Extract<O["output"], keyof ResultTypeMap> | DefaultOutput<O>
-
     interface Filesize {
-        (bytes: number): string;
-        <O extends Options>(bytes: number, options: O): ResultTypeMap[CanonicalOutput<O>];
-        partial: <O extends Options>(options: O) => ((bytes: number) => ResultTypeMap[CanonicalOutput<O>]);
+        (bytes: number, options?: Options): string;
+        partial: (options: Options) => ((bytes: number) => string);
     }
 }
