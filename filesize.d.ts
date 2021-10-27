@@ -39,7 +39,7 @@ declare namespace Filesize {
 
     interface Options {
         /**
-         * Number base, default is 2
+         * Number base, default is 10
          */
         base?: number;
         /**
@@ -83,7 +83,7 @@ declare namespace Filesize {
          */
         spacer?: string;
         /**
-         * Standard unit of measure, can be iec or jedec, default is jedec; can be overruled by base
+         * Standard unit of measure, can be iec or jedec, default is iec; can be overruled by base
          */
         standard?: "iec" | "jedec";
         /**
