@@ -31,7 +31,7 @@
 
 		if ( val !== undefined && !string.isEmpty( val.toString() ) ) {
 			try {
-				element.html( result, filesize( val, { base: 2, unix: element.data( input, "unix" ), bits: element.data( input, "bits" ) } ) );
+				element.html( result, filesize( val, { unix: element.data( input, "unix" ), bits: element.data( input, "bits" ) } ) );
 			}
 			catch ( e ) {
 				element.html( result, e.message );
