@@ -71,9 +71,21 @@ declare namespace Filesize {
          */
         output?: "array" | "exponent" | "object" | "string";
         /**
+         * Decimal place end padding, default is false
+         */
+        pad?: boolean;
+        /**
+         * Sets precision of numerical output, default is 0
+         */
+        precision?: number;
+        /**
          * Decimal place, default is 2
          */
         round?: number;
+        /**
+         * 
+         */
+        roundingMethod?: "round" | "floor" | "ceil";
         /**
          * Decimal separator character, default is `.`
          */
