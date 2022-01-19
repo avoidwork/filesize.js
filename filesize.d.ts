@@ -83,7 +83,7 @@ declare namespace Filesize {
          */
         round?: number;
         /**
-         * 
+         * Rounding method, can be round, floor, or ceil, default is round
          */
         roundingMethod?: "round" | "floor" | "ceil";
         /**
@@ -106,10 +106,6 @@ declare namespace Filesize {
          *  Enables unix style human readable output, e.g ls -lh, default is false
          */
         unix?: boolean;
-        /**
-         * Rounding method, can be round, floor, or ceil, default is round
-         */
-        roundingMethod?: "round" | "floor" | "ceil";
     }
 
     // Result type inference from the output option
