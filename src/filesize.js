@@ -1,5 +1,4 @@
-const b = /^(b|B)$/,
-	symbol = {
+const symbol = {
 		iec: {
 			bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"],
 			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
@@ -29,23 +28,22 @@ const b = /^(b|B)$/,
 function filesize (arg, descriptor = {}) {
 	let result = [],
 		val = 0,
-		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, pad, round, u, unix, separator, spacer, standard, symbols, roundingFunc, precision;
+		e, base, bits, ceil, full, fullforms, locale, localeOptions, neg, num, output, pad, round, u, separator, spacer, standard, symbols, roundingFunc, precision;
 
 	if (isNaN(arg)) {
 		throw new TypeError("Invalid number");
 	}
 
 	bits = descriptor.bits === true;
-	unix = descriptor.unix === true;
 	pad = descriptor.pad === true;
 	base = descriptor.base || 10;
-	round = descriptor.round !== void 0 ? descriptor.round : unix ? 1 : 2;
+	round = descriptor.round !== void 0 ? descriptor.round : 2;
 	locale = descriptor.locale !== void 0 ? descriptor.locale : "";
 	localeOptions = descriptor.localeOptions || {};
 	separator = descriptor.separator !== void 0 ? descriptor.separator : "";
-	spacer = descriptor.spacer !== void 0 ? descriptor.spacer : unix ? "" : " ";
+	spacer = descriptor.spacer !== void 0 ? descriptor.spacer : " ";
 	symbols = descriptor.symbols || {};
-	standard = base === 2 ? descriptor.standard || "iec" : "jedec";
+	standard = descriptor.standard in symbol ? descriptor.standard : "iec";
 	output = descriptor.output || "string";
 	full = descriptor.fullform === true;
 	fullforms = descriptor.fullforms instanceof Array ? descriptor.fullforms : [];
@@ -86,7 +84,7 @@ function filesize (arg, descriptor = {}) {
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
-		u = result[1] = unix ? "" : symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = symbol[standard][bits ? "bits" : "bytes"][e];
 	} else {
 		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
@@ -107,16 +105,7 @@ function filesize (arg, descriptor = {}) {
 			e++;
 		}
 
-		u = result[1] = base === 10 && e === 1 ? bits ? "kbit" : "kB" : symbol[standard][bits ? "bits" : "bytes"][e];
-
-		if (unix) {
-			result[1] = result[1].charAt(0);
-
-			if (b.test(result[1])) {
-				result[0] = Math.floor(result[0]);
-				result[1] = "";
-			}
-		}
+		u = result[1] = symbol[standard][bits ? "bits" : "bytes"][e];
 	}
 
 	// Decorating a 'diff'
