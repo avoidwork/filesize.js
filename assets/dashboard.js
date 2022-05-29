@@ -2,73 +2,58 @@
  * filesize.js dashboard
  *
  * @author Jason Mulligan <jason.mulligan@avoidwork.com>
- * @version 1.5.1
+ * @version 2.0.0
  */
-(function ( keigai ) {
+(function () {
 	"use strict";
 
-	var util = keigai.util,
-		$ = util.$,
-		array = util.array,
-		element = util.element,
-		delay = util.delay,
-		render = util.render,
-		stop = util.stop,
-		string = util.string,
-		observer = util.observer,
-		result = $( "#result" )[ 0 ],
-		input = $( "#filesize" )[ 0 ],
-		demo = $( "#demo" )[ 0 ],
-		input_observable = observer();
+	const render = window.requestAnimationFrame,
+		result = document.querySelector("#result"),
+		input = document.querySelector("#filesize"),
+		debounced = new Map(),
+		space = "&nbsp;";
 
-	/**
-	 * Input handler
-	 *
-	 * @return {Undefined} undefined
-	 */
-	function handler () {
-		var val = element.val( input );
-
-		if ( val !== undefined && !string.isEmpty( val.toString() ) ) {
-			try {
-				element.html( result, filesize( val, { base: 2, unix: element.data( input, "unix" ), bits: element.data( input, "bits" ) } ) );
-			}
-			catch ( e ) {
-				element.html( result, e.message );
-			}
+	function debounce (id = '', fn = () => void 0, ms = 125) {
+		if (debounced.has(id)) {
+			clearTimeout(debounced.get(id));
 		}
-		else {
-			element.html( result, "&nbsp;" );
+
+		debounced.set(id, setTimeout(fn, ms));
+	}
+
+	function handler () {
+		const val = input?.value ?? '';
+
+		if (val !== void 0 && val.length > 0) {
+			try {
+				result.innerText = filesize(val, {base: input.dataset.base10 === 'true' ? 10 : 2, bits: input.dataset.bits === 'true'});
+			} catch (err) {
+				result.innerText = err.message;
+			}
+		} else {
+			result.innerHTML = space;
 		}
 	}
 
 	// Demo filters
-	array.each( element.find( demo, ".clickable" ), function ( i ) {
-		var observable = observer();
+	Array.from(document.querySelectorAll(".clickable")).forEach(i => i.addEventListener('click', ev => {
+		ev.preventDefault();
+		render(() => {
+			const param = i.dataset.param;
 
-		observable.hook( i, "click" );
-		observable.on( "click", function ( e ) {
-			var param = element.data( i, "param" );
-
-			stop( e );
-			render( function () {
-				element.toggleClass( i, "icon-check-empty" );
-				element.toggleClass( i, "icon-check" );
-				element.data( input, param, !element.data( input, param ) );
-				handler();
-			} );
-		}, "click" );
-	} );
+			i.classList.toggle("icon-check-empty");
+			i.classList.toggle("icon-check");
+			input.dataset[param] = input.dataset[param] === 'true' ? 'false' : 'true';
+			handler();
+		});
+	}, {capture: false, once: false}));
 
 	// Capturing debounced input (125ms)
-	input_observable.hook( input, "input" );
-	input_observable.on( "input", function ( e ) {
-		stop( e );
-		delay( function () {
-			handler();
-		}, 125, "keyUp" );
-	}, "input" );
+	input.addEventListener("input", ev => {
+		ev.preventDefault();
+		debounce("input", handler, 125);
+	}, {capture: false, once: false});
 
 	// Setting copyright year
-	element.text( $( "#year" )[ 0 ], new Date().getFullYear() );
-})( keigai );
+	document.querySelector("#year").innerText = new Date().getFullYear();
+})();

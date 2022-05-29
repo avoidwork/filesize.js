@@ -10,7 +10,6 @@
 <link rel="stylesheet" type="text/css" href="assets/css/default.css" media="print,screen" />
 <link rel="stylesheet" type="text/css" href="assets/font-awesome/css/font-awesome.min.css" media="print,screen" />
 <script type="text/javascript" src="//cdn.filesizejs.com/filesize.min.js" defer></script>
-<script type="text/javascript" src="assets/keigai.min.js" defer></script>
 <script type="text/javascript" src="assets/dashboard.js" defer></script>
 <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js" defer></script>
@@ -27,10 +26,10 @@
 	<section id="demo">
 		<div class="container">
 			<h2><span class="icon-thumbs-up"></span> Try it!</h2>
-			<p><span class="icon-check-empty clickable" data-param="bits"></span> Show `bit` sizes <span class="icon-check-empty clickable" data-param="unix"></span> Unix mode (base 2)</p>
+			<p><span class="icon-check-empty clickable" data-param="bits"></span> Show `bit` sizes <span class="icon-check clickable" data-param="base10"></span> Base 10</p>
 			<formset>
 				<label for="filesize" class="hidden">Enter a number</label>
-				<input id="filesize" name="filesize" placeholder="Enter a number" data-unix="false" data-bits="false"></input>
+				<input id="filesize" name="filesize" placeholder="Enter a number" data-base10="true" data-bits="false"></input>
 				<span id="result">&nbsp;</span>
 			</formset>
 		</div>
@@ -87,11 +86,9 @@
 			<p><i>spacer</i> (string)<br />
 				Character between the result and suffix, default is " "</p>
 			<p><i>standard</i> (string)<br />
-				Standard unit of measure, can be "iec" or "jedec", default is "iec"; can be overruled by "base"</p>
+				Standard unit of measure, can be "iec" or "jedec", default is "iec"</p>
 			<p><i>symbols</i> (object)<br />
 				Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found</p>
-			<p><i>unix</i> (boolean)<br />
-				Enables unix style human readable output, e.g ls -lh, default is false</p>
 			<h3>Examples</h3>
 			<section class="gist">
 				<script src="https://gist.github.com/4698968.js"></script>
