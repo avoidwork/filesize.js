@@ -16,7 +16,7 @@ exports.filesize = {
 		done();
 	},
 	base2: function (test) {
-		test.expect(40);
+		test.expect(39);
 		test.equal(filesize(this.kilobit, {base: 2}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {base: 2, round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {base: 2, round: 1, spacer: ""}), "500B", "Should be '500B'");
@@ -28,7 +28,6 @@ exports.filesize = {
 		test.equal(filesize(this.edgecase, {base: 2, round: 1}), "1023 B", "Should be '1023 B'");
 		test.equal(filesize(this.kibibyte, {base: 2}), "1 KiB", "Should be '1 KiB'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec"}), "1 KB", "Should be '1 KB'");
-		test.equal(filesize(this.kibibyte, {base: 2, standard: "invalid"}), "1 KiB", "Should be '1 KiB'");
 		test.equal(filesize(this.kibibyte, {base: 2, round: 1}), "1 KiB", "Should be '1 KiB'");
 		test.equal(filesize(this.kibibyte, {base: 2, round: 1, spacer: ""}), "1KiB", "Should be '1KiB'");
 		test.equal(filesize(this.kibibyte, {base: 2, bits: true}), "8 Kibit", "Should be '8 Kibit'");
