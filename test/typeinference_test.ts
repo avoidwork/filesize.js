@@ -8,6 +8,7 @@ import filesize from "../filesize";
 
 function shouldBeString(x: string) {}
 function shouldBeNumberUnitPair(x: [number, string]) {}
+function shouldBeStringUnitPair(x: [string, string]) {}
 function shouldBeNumber(x: number) {}
 
 type FilesizeObject = {
@@ -28,6 +29,7 @@ shouldBeString(filesize(123, {}));
 shouldBeString(filesize(123, { output: undefined }));
 shouldBeString(filesize(123, { output: "string" }));
 shouldBeNumberUnitPair(filesize(123, { output: "array" }));
+shouldBeStringUnitPair(filesize(123, { precision: 2, output: "array" }));
 shouldBeNumber(filesize(123, { output: "exponent" }));
 shouldBeObject(filesize(123, { output: "object" }));
 
