@@ -109,8 +109,8 @@ declare namespace Filesize {
     }
 
     // Result type inference from the output option
-    interface ResultTypeMap {
-        array: [number, string];
+    interface ResultTypeMap<O> {
+        array: [O extends {precision: number} ? string : number, string];
         exponent: number;
         object: {
             value: number,
@@ -120,12 +120,12 @@ declare namespace Filesize {
         };
         string: string;
     }
-    type DefaultOutput<O extends Options> = Exclude<O["output"], keyof ResultTypeMap> extends never ? never : "string"
-    type CanonicalOutput<O extends Options> = Extract<O["output"], keyof ResultTypeMap> | DefaultOutput<O>
+    type DefaultOutput<O extends Options> = Exclude<O["output"], keyof ResultTypeMap<O>> extends never ? never : "string"
+    type CanonicalOutput<O extends Options> = Extract<O["output"], keyof ResultTypeMap<O>> | DefaultOutput<O>
 
     interface Filesize {
         (bytes: number): string;
-        <O extends Options>(bytes: number, options: O): ResultTypeMap[CanonicalOutput<O>];
-        partial: <O extends Options>(options: O) => ((bytes: number) => ResultTypeMap[CanonicalOutput<O>]);
+        <O extends Options>(bytes: number, options: O): ResultTypeMap<O>[CanonicalOutput<O>];
+        partial: <O extends Options>(options: O) => ((bytes: number) => ResultTypeMap<O>[CanonicalOutput<O>]);
     }
 }
