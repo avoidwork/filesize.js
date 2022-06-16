@@ -34,6 +34,10 @@ function filesize (arg, {bits = false, pad = false, base = 10, round = 2, locale
 		result = [],
 		val = 0,
 		u = "";
+
+	// Sync base & standard
+	base = standard === "iec" ? 10 : 2;
+
 	const ceil = base === 10 ? 1000 : 1024,
 		full = fullform === true,
 		neg = num < 0,
@@ -42,9 +46,6 @@ function filesize (arg, {bits = false, pad = false, base = 10, round = 2, locale
 	if (isNaN(arg)) {
 		throw new TypeError("Invalid number");
 	}
-
-	// Sync base & standard
-	base = standard === "iec" ? 10 : 2;
 
 	// Flipping a negative number to determine the size
 	if (neg) {
