@@ -56,26 +56,6 @@ _*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `iec`
 ### symbols
 _*(object)*_ Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found
 
-## Examples
-
-```javascript
-filesize(500);                        // "500 B"
-filesize(500, {bits: true});          // "4 kbit"
-filesize(265318, {base: 2});          // "259.1 KiB"
-filesize(265318);                     // "265.32 kB"
-filesize(265318, {round: 0});         // "265 kB"
-filesize(265318, {output: "array"});  // [265.32, "kB"]
-filesize(265318, {output: "object"}); // {value: 265.32, symbol: "kB", exponent: 1, unit: "kB"}
-filesize(1, {symbols: {B: "Б"}});     // "1 Б"
-filesize(1024);                       // "1.02 kB"
-filesize(1024, {exponent: 0});        // "1024 B"
-filesize(1024, {output: "exponent"}); // 1
-filesize(265318, {standard: "jedec"});  // "259.1 KB"
-filesize(265318, {base: 2, fullform: true}); // "259.1 kibibytes"
-filesize(12, {fullform: true, fullforms: ["байтов"]});  // "12 байтов"
-filesize(265318, {separator: ","});   // "265,32 kB"
-filesize(265318, {locale: "de"});   // "265,32 kB"
-```
 
 ## Partial Application
 `filesize.partial()` takes the second parameter of `filesize()` and returns a new function with the configuration applied 
