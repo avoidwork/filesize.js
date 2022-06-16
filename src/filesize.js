@@ -1,3 +1,5 @@
+"use strict";
+
 import {strings} from "./strings";
 
 /**
