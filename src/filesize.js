@@ -20,13 +20,13 @@ function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale
 	// Sync base & standard
 	if (base === -1 && standard.length === 0) {
 		base = 10;
-		standard = "iec";
+		standard = "jedec";
 	} else if (base === -1 && standard.length > 0) {
 		standard = standard === "iec" ? "iec" : "jedec";
-		base = standard === "iec" ? 10 : 2;
+		base = standard === "iec" ? 2 : 10;
 	} else {
 		base = base === 2 ? 2 : 10;
-		standard = base === 10 ? "iec" : "jedec";
+		standard = base === 10 ? "jedec" : "iec";
 	}
 
 	const ceil = base === 10 ? 1000 : 1024,
