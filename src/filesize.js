@@ -1,5 +1,28 @@
 "use strict";
 
+import {
+	ARRAY,
+	BIT,
+	BITS,
+	BYTE,
+	BYTES,
+	EMPTY,
+	EXPONENT,
+	FUNCTION,
+	IEC,
+	INVALID_NUMBER,
+	INVALID_ROUND,
+	JEDEC,
+	OBJECT,
+	PERIOD,
+	ROUND,
+	S,
+	SI_KBIT,
+	SI_KBYTE,
+	SPACE,
+	STRING,
+	ZERO
+} from "./constants";
 import {strings} from "./strings";
 
 /**
@@ -10,23 +33,40 @@ import {strings} from "./strings";
  * @param  {Object}  descriptor [Optional] Flags
  * @return {String}             Readable file size String
  */
-function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale = "", localeOptions = {}, separator = "", spacer = " ", symbols = {}, standard = "", output = "string", fullform = false, fullforms = [], exponent = -1, roundingMethod = "round", precision = 0} = {}) {
+function filesize (arg, {
+	bits = false,
+	pad = false,
+	base = -1,
+	round = 2,
+	locale = EMPTY,
+	localeOptions = {},
+	separator = EMPTY,
+	spacer = SPACE,
+	symbols = {},
+	standard = EMPTY,
+	output = STRING,
+	fullform = false,
+	fullforms = [],
+	exponent = -1,
+	roundingMethod = ROUND,
+	precision = 0
+} = {}) {
 	let e = exponent,
 		num = Number(arg),
 		result = [],
 		val = 0,
-		u = "";
+		u = EMPTY;
 
 	// Sync base & standard
 	if (base === -1 && standard.length === 0) {
 		base = 10;
-		standard = "iec";
+		standard = JEDEC;
 	} else if (base === -1 && standard.length > 0) {
-		standard = standard === "iec" ? "iec" : "jedec";
-		base = standard === "iec" ? 10 : 2;
+		standard = standard === IEC ? IEC : JEDEC;
+		base = standard === IEC ? 2 : 10;
 	} else {
 		base = base === 2 ? 2 : 10;
-		standard = base === 10 ? "iec" : "jedec";
+		standard = base === 10 ? JEDEC : IEC;
 	}
 
 	const ceil = base === 10 ? 1000 : 1024,
@@ -35,11 +75,11 @@ function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale
 		roundingFunc = Math[roundingMethod];
 
 	if (isNaN(arg)) {
-		throw new TypeError("Invalid number");
+		throw new TypeError(INVALID_NUMBER);
 	}
 
-	if (typeof roundingFunc !== "function") {
-		throw new TypeError("Invalid rounding method");
+	if (typeof roundingFunc !== FUNCTION) {
+		throw new TypeError(INVALID_ROUND);
 	}
 
 	// Flipping a negative number to determine the size
@@ -65,14 +105,14 @@ function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale
 		e = 8;
 	}
 
-	if (output === "exponent") {
+	if (output === EXPONENT) {
 		return e;
 	}
 
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
-		u = result[1] = strings.symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = strings.symbol[standard][bits ? BITS : BYTES][e];
 	} else {
 		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
@@ -93,7 +133,7 @@ function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale
 			e++;
 		}
 
-		u = result[1] = strings.symbol[standard][bits ? "bits" : "bytes"][e];
+		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : strings.symbol[standard][bits ? BITS : BYTES][e];
 	}
 
 	// Decorating a 'diff'
@@ -114,25 +154,30 @@ function filesize (arg, {bits = false, pad = false, base = -1, round = 2, locale
 	} else if (locale.length > 0) {
 		result[0] = result[0].toLocaleString(locale, localeOptions);
 	} else if (separator.length > 0) {
-		result[0] = result[0].toString().replace(".", separator);
+		result[0] = result[0].toString().replace(PERIOD, separator);
 	}
 
 	if (pad && Number.isInteger(result[0]) === false && round > 0) {
-		const x = separator || ".",
+		const x = separator || PERIOD,
 			tmp = result[0].toString().split(x),
-			s = tmp[1] || "",
+			s = tmp[1] || EMPTY,
 			l = s.length,
 			n = round - l;
 
-		result[0] = `${tmp[0]}${x}${s.padEnd(l + n, "0")}`;
+		result[0] = `${tmp[0]}${x}${s.padEnd(l + n, ZERO)}`;
 	}
 
 	if (full) {
-		result[1] = fullforms[e] ? fullforms[e] : strings.fullform[standard][e] + (bits ? "bit" : "byte") + (result[0] === 1 ? "" : "s");
+		result[1] = fullforms[e] ? fullforms[e] : strings.fullform[standard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
 	}
 
 	// Returning Array, Object, or String (default)
-	return output === "array" ? result : output === "object" ? {value: result[0], symbol: result[1], exponent: e, unit: u} : result.join(spacer);
+	return output === ARRAY ? result : output === OBJECT ? {
+		value: result[0],
+		symbol: result[1],
+		exponent: e,
+		unit: u
+	} : result.join(spacer);
 }
 
 // Partial application for functional programming
