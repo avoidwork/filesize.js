@@ -62,8 +62,8 @@ exports.filesize = {
 		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec"}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", round: 1}), "500 B", "Should be '500 B'");
 		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", round: 1, spacer: ""}), "500B", "Should be '500B'");
-		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", round: 1, bits: true}), "3.9 Kibit", "Should be '3.9 Kibit'");
-		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", bits: true}), "3.91 Kibit", "Should be '3.91 Kibit'");
+		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", round: 1, bits: true}), "3.9 Kbit", "Should be '3.9 Kbit'");
+		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", bits: true}), "3.91 Kbit", "Should be '3.91 Kbit'");
 		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", bits: true, output: "array"})[0], 3.91, "Should be '3.91'");
 		test.equal(filesize(this.kilobit, {base: 2, standard: "jedec", bits: true, output: "object"}).value, 3.91, "Should be '3.91'");
 		test.equal(filesize(this.edgecase, {base: 2, standard: "jedec"}), "1023 B", "Should be '1023 B'");
@@ -71,8 +71,8 @@ exports.filesize = {
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec"}), "1 KB", "Should be '1 KB'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", round: 1}), "1 KB", "Should be '1 KB'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", round: 1, spacer: ""}), "1KB", "Should be '1KB'");
-		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", bits: true}), "8 Kibit", "Should be '8 Kibit'");
-		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", round: 1, bits: true}), "8 Kibit", "Should be '8 Kibit'");
+		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", bits: true}), "8 Kbit", "Should be '8 Kbit'");
+		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", round: 1, bits: true}), "8 Kbit", "Should be '8 Kbit'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", exponent: 0}), "1024 B", "Should be '1024 B'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", exponent: 0, output: "object"}).unit, "B", "Should be 'B'");
 		test.equal(filesize(this.kibibyte, {base: 2, standard: "jedec", output: "exponent"}), 1, "Should be '1'");
@@ -80,8 +80,8 @@ exports.filesize = {
 		test.equal(filesize(this.neg, {base: 2, standard: "jedec"}), "-1 KB", "Should be '-1 KB'");
 		test.equal(filesize(this.neg, {base: 2, standard: "jedec", round: 1}), "-1 KB", "Should be '-1 KB'");
 		test.equal(filesize(this.neg, {base: 2, standard: "jedec", round: 1, spacer: ""}), "-1KB", "Should be '-1KB'");
-		test.equal(filesize(this.neg, {base: 2, standard: "jedec", bits: true}), "-8 Kibit", "Should be '-8 Kibit'");
-		test.equal(filesize(this.neg, {base: 2, standard: "jedec", round: 1, bits: true}), "-8 Kibit", "Should be '-8 Kibit'");
+		test.equal(filesize(this.neg, {base: 2, standard: "jedec", bits: true}), "-8 Kbit", "Should be '-8 Kbit'");
+		test.equal(filesize(this.neg, {base: 2, standard: "jedec", round: 1, bits: true}), "-8 Kbit", "Should be '-8 Kbit'");
 		test.equal(filesize(this.byte, {base: 2, standard: "jedec"}), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {base: 2, standard: "jedec", round: 1}), "1 B", "Should be '1 B'");
 		test.equal(filesize(this.byte, {base: 2, standard: "jedec", round: 1, spacer: ""}), "1B", "Should be '1B'");
@@ -93,7 +93,7 @@ exports.filesize = {
 		test.equal(filesize(this.zero, {base: 2, standard: "jedec", bits: true}), "0 bit", "Should be '0 bit'");
 		test.equal(filesize(this.zero, {base: 2, standard: "jedec", round: 1, bits: true}), "0 bit", "Should be '0 bit'");
 		test.equal(filesize(this.huge, {base: 2, standard: "jedec"}), "82718061255302770 YB", "Should be '82718061255302770 YB'");
-		test.equal(filesize(this.huge, {base: 2, standard: "jedec", bits: true}), "661744490042422100 Yibit", "Should be '661744490042422100 Yibit'");
+		test.equal(filesize(this.huge, {base: 2, standard: "jedec", bits: true}), "661744490042422100 Ybit", "Should be '661744490042422100 Ybit'");
 		test.equal(filesize(this.small, {base: 2, standard: "jedec"}), "0 B", "Should be '0 B'");
 		test.equal(filesize(this.small, {base: 2, standard: "jedec", bits: true}), "1 bit", "Should be '1 bit'");
 		test.equal(filesize(this.petabyte, {base: 2, standard: "jedec"}), "1 PB", "Should be '1 PB'");
