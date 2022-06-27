@@ -129,6 +129,35 @@ exports.filesize = {
 		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true}), "0 bit", "Should be '0 bit'");
 		test.done();
 	},
+	base10Iec: function (test) {
+		test.expect(25);
+		test.equal(filesize(this.kilobit, {base: 10, standard: "iec"}), "500 B", "Should be '500 B'");
+		test.equal(filesize(this.kilobit, {base: 10, round: 1, standard: "iec"}), "500 B", "Should be '500 B'");
+		test.equal(filesize(this.kilobit, {base: 10, round: 1, spacer: "", standard: "iec"}), "500B", "Should be '500B'");
+		test.equal(filesize(this.kilobit, {base: 10, bits: true, standard: "iec"}), "4 kbit", "Should be '4 kbit'");
+		test.equal(filesize(this.kilobit, {base: 10, round: 1, bits: true, standard: "iec"}), "4 kbit", "Should be '4 kbit'");
+		test.equal(filesize(this.kibibyte, {base: 10, standard: "iec"}), "1.02 kB", "Should be '1.02 kB'");
+		test.equal(filesize(this.kibibyte, {base: 10, round: 1, standard: "iec"}), "1 kB", "Should be '1 kB'");
+		test.equal(filesize(this.kibibyte, {base: 10, round: 1, spacer: "", standard: "iec"}), "1kB", "Should be '1kB'");
+		test.equal(filesize(this.kibibyte, {base: 10, bits: true, standard: "iec"}), "8.19 kbit", "Should be '8.19 kbit'");
+		test.equal(filesize(this.kibibyte, {base: 10, round: 1, bits: true, standard: "iec"}), "8.2 kbit", "Should be '8.2 kbit'");
+		test.equal(filesize(this.neg, {base: 10, standard: "iec"}), "-1.02 kB", "Should be '-1.02 kB'");
+		test.equal(filesize(this.neg, {base: 10, round: 1, standard: "iec"}), "-1 kB", "Should be '-1 kB'");
+		test.equal(filesize(this.neg, {base: 10, round: 1, spacer: "", standard: "iec"}), "-1kB", "Should be '-1kB'");
+		test.equal(filesize(this.neg, {base: 10, bits: true, standard: "iec"}), "-8.19 kbit", "Should be '-8.19 kbit'");
+		test.equal(filesize(this.neg, {base: 10, round: 1, bits: true, standard: "iec"}), "-8.2 kbit", "Should be '-8.2 kbit'");
+		test.equal(filesize(this.byte, {base: 10, standard: "iec"}), "1 B", "Should be '1 B'");
+		test.equal(filesize(this.byte, {base: 10, round: 1, standard: "iec"}), "1 B", "Should be '1 B'");
+		test.equal(filesize(this.byte, {base: 10, round: 1, spacer: "", standard: "iec"}), "1B", "Should be '1B'");
+		test.equal(filesize(this.byte, {base: 10, bits: true, standard: "iec"}), "8 bit", "Should be '8 bit'");
+		test.equal(filesize(this.byte, {base: 10, round: 1, bits: true, standard: "iec"}), "8 bit", "Should be '8 bit'");
+		test.equal(filesize(this.zero, {base: 10, standard: "iec"}), "0 B", "Should be '0 B'");
+		test.equal(filesize(this.zero, {base: 10, round: 1, standard: "iec"}), "0 B", "Should be '0 B'");
+		test.equal(filesize(this.zero, {base: 10, round: 1, spacer: "", standard: "iec"}), "0B", "Should be '0B'");
+		test.equal(filesize(this.zero, {base: 10, bits: true, standard: "iec"}), "0 bit", "Should be '0 bit'");
+		test.equal(filesize(this.zero, {base: 10, round: 1, bits: true, standard: "iec"}), "0 bit", "Should be '0 bit'");
+		test.done();
+	},
 	invalid: function (test) {
 		test.expect(1);
 		test.throws(function () {
