@@ -171,6 +171,40 @@ export function filesize (arg, {
 }
 
 // Partial application for functional programming
-export function partial (opt) {
-	return arg => filesize(arg, opt);
+export function partial ({
+	bits = false,
+	pad = false,
+	base = -1,
+	round = 2,
+	locale = EMPTY,
+	localeOptions = {},
+	separator = EMPTY,
+	spacer = SPACE,
+	symbols = {},
+	standard = EMPTY,
+	output = STRING,
+	fullform = false,
+	fullforms = [],
+	exponent = -1,
+	roundingMethod = ROUND,
+	precision = 0
+} = {}) {
+	return arg => filesize(arg, {
+		bits,
+		pad,
+		base,
+		round,
+		locale,
+		localeOptions,
+		separator,
+		spacer,
+		symbols,
+		standard,
+		output,
+		fullform,
+		fullforms,
+		exponent,
+		roundingMethod,
+		precision
+	});
 }
