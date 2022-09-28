@@ -1,9 +1,7 @@
-import babel from 'rollup-plugin-babel';
-import { terser } from 'rollup-plugin-terser';
-import pkg from './package.json';
+import pkg from "./package.json";
 
+const {terser} = require("rollup-plugin-terser");
 const year = new Date().getFullYear();
-
 const bannerLong = `/**
  * ${pkg.name}
  *
@@ -11,36 +9,45 @@ const bannerLong = `/**
  * @license ${pkg.license}
  * @version ${pkg.version}
  */`;
-
 const bannerShort = `/*!
- ${year} Jason Mulligan <jason.mulligan@avoidwork.com>
+ ${year} ${pkg.author}
  @version ${pkg.version}
 */`;
+const defaultOutBase = {compact: true, banner: bannerLong, name: pkg.name};
+const cjOutBase = {...defaultOutBase, compact: false, format: "cjs", exports: "named"};
+const esmOutBase = {...defaultOutBase, format: "esm"};
+const umdOutBase = {...defaultOutBase, format: "umd"};
+const minOutBase = {banner: bannerShort, name: pkg.name, plugins: [terser()], sourcemap: true};
 
-const umdOutBase = { format: 'umd', name: 'filesize' };
-const esmOutBase = { format: 'esm', name: 'filesize' };
 
 export default [
-  {
-    input: 'src/filesize.js',
-    output: [
-      { ...umdOutBase, file: 'lib/filesize.es6.js', banner: bannerLong },
-      { ...umdOutBase, file: 'lib/filesize.es6.min.js', banner: bannerShort, plugins: [ terser() ], sourcemap: true },
-    ]
-  },
-  {
-    input: 'src/filesize.js',
-    output: [
-      { ...esmOutBase, file: 'lib/filesize.esm.js', banner: bannerLong },
-      { ...esmOutBase, file: 'lib/filesize.esm.min.js', banner: bannerShort, plugins: [ terser() ], sourcemap: true },
-    ]
-  },
-  {
-    input: 'src/filesize.js',
-    output: [
-      { ...umdOutBase, file: 'lib/filesize.js', banner: bannerLong },
-      { ...umdOutBase, file: 'lib/filesize.min.js', banner: bannerShort, plugins: [ terser() ], sourcemap: true },
-    ],
-    plugins: [ babel({presets: [['@babel/preset-env', { modules: false }]]}) ]
-  }
-]
+	{
+		input: "./src/filesize.js",
+		output: [
+			{
+				...cjOutBase,
+				file: `dist/${pkg.name}.cjs`
+			},
+			{
+				...esmOutBase,
+				file: `dist/${pkg.name}.esm.js`
+			},
+			{
+				...esmOutBase,
+				...minOutBase,
+				file: `dist/${pkg.name}.esm.min.js`
+			},
+			{
+				...umdOutBase,
+				file: `dist/${pkg.name}.js`,
+				name: "lru"
+			},
+			{
+				...umdOutBase,
+				...minOutBase,
+				file: `dist/${pkg.name}.min.js`,
+				name: "lru"
+			}
+		]
+	}
+];

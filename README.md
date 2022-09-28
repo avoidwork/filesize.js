@@ -1,8 +1,11 @@
 # filesize.js
 
-[![build status](https://secure.travis-ci.org/avoidwork/filesize.js.svg)](http://travis-ci.org/avoidwork/filesize.js)  [![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize) [![CDNJS version](https://img.shields.io/cdnjs/v/filesize.svg)](https://cdnjs.com/libraries/filesize)
-
 filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
+
+```javascript
+import {filesize} from "filesize";
+filesize(265318, {base: 2, standard: "jedec"}); // "259.1 KB"
+```
 
 ## Optional settings
 
@@ -58,20 +61,16 @@ _*(object)*_ Dictionary of IEC/JEDEC symbols to replace for localization, defaul
 
 
 ## Partial Application
-`filesize.partial()` takes the second parameter of `filesize()` and returns a new function with the configuration applied 
+`partial()` takes the second parameter of `filesize()` and returns a new function with the configuration applied 
 upon execution. This can be used to reduce `Object` creation if you call `filesize()` without caching the `descriptor` 
 in lexical scope.
 
 ```javascript
-const size = filesize.partial({base: 2, standard: "jedec"});
+import {partial} from "filesize";
+const size = partial({base: 2, standard: "jedec"});
 
 size(265318); // "259.1 KB"
 ```
-
-## How can I load filesize.js?
-filesize.js supports AMD loaders (require.js, curl.js, etc.), node.js & npm (```npm install filesize```), or using a script tag.
-
-An ES6 version is bundled with an npm install, but requires you load it with the full path, e.g. `require(path.join(__dirname, 'node_modules', 'filesize', 'lib', 'filesize.es6.js'))`.
 
 ## License
 Copyright (c) 2022 Jason Mulligan
