@@ -13,6 +13,8 @@ describe("Testing functionality", function () {
 		this.invld = "abc";
 		this.huge = 10e40;
 		this.small = 1 / 8;
+		this.bigint = BigInt(this.kibibyte);
+		this.bigintBig = BigInt("123422222222222222222222222222222222222");
 	});
 
 	it("It should pass base2 tests", function () {
@@ -247,5 +249,12 @@ describe("Testing functionality", function () {
 	it("It should pass defaults tests", function () {
 		assert.equal(filesize(this.kibibyte), "1.02 kB", "Should be '1.02 kB'");
 		assert.equal(filesize(this.kibibyte, {base: 2}), "1 KiB", "Should be '1 KiB'");
+	});
+
+	it("It should pass BigInt tests", function () {
+		assert.equal(filesize(this.bigint), "1.02 kB", "Should be '1.02 kB'");
+		assert.equal(filesize(this.bigint, {base: 2}), "1 KiB", "Should be '1 KiB'");
+		assert.equal(filesize(this.bigintBig), "123422222222222.23 YB", "Should be '123422222222222.23 YB'");
+		assert.equal(filesize(this.bigintBig, {base: 2}), "102092469380433.69 YiB", "Should be '102092469380433.69 YiB'");
 	});
 });

@@ -82,7 +82,7 @@ const STRINGS = {
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
-	if (isNaN(arg)) {
+	if (typeof arg !== "bigint" && isNaN(arg)) {
 		throw new TypeError(INVALID_NUMBER);
 	}
 
