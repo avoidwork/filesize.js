@@ -3,7 +3,7 @@
  *
  * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.0.0
+ * @version 10.0.1
  */
 'use strict';
 
