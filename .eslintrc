@@ -11,7 +11,8 @@
   },
   "globals": {
     "describe": "readonly",
-    "it": "readonly"
+    "it": "readonly",
+    "beforeEach": "readonly"
   },
   "rules": {
     "arrow-parens": [2, "as-needed"],
