@@ -3,9 +3,9 @@
  *
  * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 9.0.11
+ * @version 10.0.0
  */
-const ARRAY = "array";
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.lru={}));})(this,(function(exports){'use strict';const ARRAY = "array";
 const BIT = "bit";
 const BITS = "bits";
 const BYTE = "byte";
@@ -26,8 +26,7 @@ const SI_KBYTE = "kB";
 const SPACE = " ";
 const STRING = "string";
 const ZERO = "0";
-
-const strings = {
+const STRINGS = {
 	symbol: {
 		iec: {
 			bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"],
@@ -42,17 +41,7 @@ const strings = {
 		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
 		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 	}
-};
-
-/**
- * filesize
- *
- * @method filesize
- * @param  {Mixed}   arg        String, Int or Float to transform
- * @param  {Object}  descriptor [Optional] Flags
- * @return {String}             Readable file size String
- */
-function filesize (arg, {
+};function filesize (arg, {
 	bits = false,
 	pad = false,
 	base = -1,
@@ -93,7 +82,7 @@ function filesize (arg, {
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
-	if (isNaN(arg)) {
+	if (typeof arg !== "bigint" && isNaN(arg)) {
 		throw new TypeError(INVALID_NUMBER);
 	}
 
@@ -131,7 +120,7 @@ function filesize (arg, {
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
-		u = result[1] = strings.symbol[standard][bits ? BITS : BYTES][e];
+		u = result[1] = STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	} else {
 		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
 
@@ -152,7 +141,7 @@ function filesize (arg, {
 			e++;
 		}
 
-		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : strings.symbol[standard][bits ? BITS : BYTES][e];
+		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	}
 
 	// Decorating a 'diff'
@@ -187,7 +176,7 @@ function filesize (arg, {
 	}
 
 	if (full) {
-		result[1] = fullforms[e] ? fullforms[e] : strings.fullform[standard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+		result[1] = fullforms[e] ? fullforms[e] : STRINGS.fullform[standard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
 	}
 
 	// Returning Array, Object, or String (default)
@@ -200,6 +189,40 @@ function filesize (arg, {
 }
 
 // Partial application for functional programming
-filesize.partial = opt => arg => filesize(arg, opt);
-
-export { filesize as default };
+function partial ({
+	bits = false,
+	pad = false,
+	base = -1,
+	round = 2,
+	locale = EMPTY,
+	localeOptions = {},
+	separator = EMPTY,
+	spacer = SPACE,
+	symbols = {},
+	standard = EMPTY,
+	output = STRING,
+	fullform = false,
+	fullforms = [],
+	exponent = -1,
+	roundingMethod = ROUND,
+	precision = 0
+} = {}) {
+	return arg => filesize(arg, {
+		bits,
+		pad,
+		base,
+		round,
+		locale,
+		localeOptions,
+		separator,
+		spacer,
+		symbols,
+		standard,
+		output,
+		fullform,
+		fullforms,
+		exponent,
+		roundingMethod,
+		precision
+	});
+}exports.filesize=filesize;exports.partial=partial;Object.defineProperty(exports,'__esModule',{value:true});}));

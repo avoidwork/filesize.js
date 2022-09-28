@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "9.0.11",
+  "version": "10.0.0",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -12,36 +12,36 @@
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
   "files": [
-    "lib",
-    "*.d.ts"
+    "dist",
+    "types"
   ],
   "license": "BSD-3-Clause",
-  "browser": "lib/filesize.min.js",
-  "main": "lib/filesize.js",
-  "module": "lib/filesize.esm.js",
-  "types": "filesize.d.ts",
+  "browser": "dist/filesize.min.js",
+  "main": "dist/filesize.cjs",
+  "module": "dist/filesize.esm.js",
+  "types": "types/filesize.d.ts",
+  "type": "module",
+  "sourceType": "module",
   "engines": {
-    "node": ">= 0.4.0"
+    "node": ">= 16.0.0"
   },
   "scripts": {
-    "build": "rollup -c",
-    "watch": "rollup -c -w",
+    "build": "mkdir -p dist && rm -rf dist/* && npm run rollup",
     "changelog": "auto-changelog -p",
-    "test": "npm run build && npm run lint && npm run test:unit && npm run test:type",
-    "test:unit": "nodeunit test/filesize_test.js",
-    "test:type": "tsc -p test",
-    "lint": "eslint test/*.js src/*.js"
+    "coverage": "nyc npm run test",
+    "lint": "eslint *.js src/*.js test/*.js",
+    "mocha": "mocha test/*.js",
+    "rollup": "rollup --config",
+    "test": "npm run lint && npm run mocha",
+    "types": "npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.5",
-    "@babel/preset-env": "^7.18.2",
     "auto-changelog": "^2.4.0",
-    "eslint": "^8.17.0",
-    "nodeunit-x": "^0.15.0",
-    "rollup": "^2.75.6",
-    "rollup-plugin-babel": "^4.4.0",
+    "eslint": "^8.24.0",
+    "mocha": "^10.0.0",
+    "rollup": "^2.79.1",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.7.3"
+    "typescript": "^4.8.4"
   },
   "keywords": [
     "file",

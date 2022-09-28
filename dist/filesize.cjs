@@ -1,29 +1,53 @@
-import {
-	ARRAY,
-	BIT,
-	BITS,
-	BYTE,
-	BYTES,
-	EMPTY,
-	EXPONENT,
-	FUNCTION,
-	IEC,
-	INVALID_NUMBER,
-	INVALID_ROUND,
-	JEDEC,
-	OBJECT,
-	PERIOD,
-	ROUND,
-	S,
-	SI_KBIT,
-	SI_KBYTE,
-	SPACE,
-	STRING,
-	STRINGS,
-	ZERO
-} from "./constants";
+/**
+ * filesize
+ *
+ * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @license BSD-3-Clause
+ * @version 10.0.0
+ */
+'use strict';
 
-export function filesize (arg, {
+Object.defineProperty(exports, '__esModule', { value: true });
+
+const ARRAY = "array";
+const BIT = "bit";
+const BITS = "bits";
+const BYTE = "byte";
+const BYTES = "bytes";
+const EMPTY = "";
+const EXPONENT = "exponent";
+const FUNCTION = "function";
+const IEC = "iec";
+const INVALID_NUMBER = "Invalid number";
+const INVALID_ROUND = "Invalid rounding method";
+const JEDEC = "jedec";
+const OBJECT = "object";
+const PERIOD = ".";
+const ROUND = "round";
+const S = "s";
+const SI_KBIT = "kbit";
+const SI_KBYTE = "kB";
+const SPACE = " ";
+const STRING = "string";
+const ZERO = "0";
+const STRINGS = {
+	symbol: {
+		iec: {
+			bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"],
+			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+		},
+		jedec: {
+			bits: ["bit", "Kbit", "Mbit", "Gbit", "Tbit", "Pbit", "Ebit", "Zbit", "Ybit"],
+			bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+		}
+	},
+	fullform: {
+		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
+		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
+	}
+};
+
+function filesize (arg, {
 	bits = false,
 	pad = false,
 	base = -1,
@@ -171,7 +195,7 @@ export function filesize (arg, {
 }
 
 // Partial application for functional programming
-export function partial ({
+function partial ({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -208,3 +232,6 @@ export function partial ({
 		precision
 	});
 }
+
+exports.filesize = filesize;
+exports.partial = partial;
