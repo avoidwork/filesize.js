@@ -1,5 +1,7 @@
 # filesize.js
 
+[![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize) [![CDNJS version](https://img.shields.io/cdnjs/v/filesize.svg)](https://cdnjs.com/libraries/filesize)
+
 filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
 
 ```javascript
