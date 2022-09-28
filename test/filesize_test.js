@@ -178,7 +178,7 @@ describe("Testing functionality", function () {
 		assert.equal(filesize(126, {bits: true, base: 10}), "1.01 kbit", "Should be '1.01 kbit'");
 	});
 
-	it("It should pass fullforms tests", function () {
+	it("It should pass full forms tests", function () {
 		assert.equal(filesize(0, {base: 10, fullform: true}), "0 bytes", "Should be '0 bytes'");
 		assert.equal(filesize(0, {base: 10, fullform: true, output: "object"}).unit, "B", "Should be 'B'");
 		assert.equal(filesize(1, {base: 10, bits: true, fullform: true}), "8 bits", "Should be '8 bits'");
@@ -194,7 +194,7 @@ describe("Testing functionality", function () {
 		assert.equal(filesize(0, {base: 10, fullform: true, fullforms: ["байт"]}), "0 байт", "Should be '0 байт'");
 	});
 
-	it("It should pass expontent tests", function () {
+	it("It should pass exponent tests", function () {
 		assert.equal(filesize(0, {base: 10, exponent: 0}), "0 B", "Should be '0 B'");
 		assert.equal(filesize(0, {base: 10, exponent: 2}), "0 MB", "Should be '0 MB'");
 	});
