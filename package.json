@@ -12,8 +12,8 @@
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
   "files": [
-    "lib",
-    "*.d.ts"
+    "dist",
+    "types"
   ],
   "license": "BSD-3-Clause",
   "browser": "dist/filesize.min.js",
