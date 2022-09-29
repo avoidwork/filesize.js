@@ -5,7 +5,7 @@
 filesize.js provides a simple way to get a human readable file size string from a number (float or integer) or string.
 
 ```javascript
-import filesize from "filesize";
+import {filesize} from "filesize";
 filesize(265318, {base: 2, standard: "jedec"}); // "259.1 KB"
 ```
 
@@ -68,8 +68,8 @@ upon execution. This can be used to reduce `Object` creation if you call `filesi
 in lexical scope.
 
 ```javascript
-import filesize from "filesize";
-const size = filesize.partial({base: 2, standard: "jedec"});
+import {partial} from "filesize";
+const size = partial({base: 2, standard: "jedec"});
 
 size(265318); // "259.1 KB"
 ```
