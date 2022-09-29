@@ -189,7 +189,7 @@ const STRINGS = {
 }
 
 // Partial application for functional programming
-filesize.partial = function partial ({
+function partial ({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -225,4 +225,4 @@ filesize.partial = function partial ({
 		roundingMethod,
 		precision
 	});
-};export{filesize as default};
+}export{filesize,partial};
