@@ -16,7 +16,6 @@
     "types"
   ],
   "license": "BSD-3-Clause",
-  "browser": "dist/filesize.min.js",
   "main": "dist/filesize.cjs",
   "module": "dist/filesize.esm.js",
   "types": "types/filesize.d.ts",

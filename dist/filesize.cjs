@@ -195,7 +195,7 @@ function filesize (arg, {
 }
 
 // Partial application for functional programming
-filesize.partial = function partial ({
+function partial ({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -231,6 +231,7 @@ filesize.partial = function partial ({
 		roundingMethod,
 		precision
 	});
-};
+}
 
-exports["default"] = filesize;
+exports.filesize = filesize;
+exports.partial = partial;
