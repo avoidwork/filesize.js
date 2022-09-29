@@ -1,7 +1,5 @@
 import assert from "node:assert";
-import filesize from "../dist/filesize.esm.js";
-
-const partial = filesize.partial;
+import {filesize, partial} from "../dist/filesize.esm.js";
 
 describe("Testing functionality", function () {
 	beforeEach(function () {

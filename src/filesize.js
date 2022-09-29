@@ -207,4 +207,4 @@ export function partial ({
 		roundingMethod,
 		precision
 	});
-};
+}
