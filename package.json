@@ -32,7 +32,7 @@
     "mocha": "mocha test/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
-    "test-webpack": "mkdir -p test/webpack && rm -rf test/webpack && git clone git@github.com:rabelais88/typescript-webpack.git test/webpack && echo \"import { filesize } from 'filesize';console.log(filesize(1234));\" >> test/webpack/src/index.ts && cd test/webpack && npm install && mkdir -p node_modules/filesize/dist && cp ../../package.json node_modules/filesize/ && cp ../../dist/* node_modules/filesize/dist/ && npm run build",
+    "test-webpack": "mkdir -p test/webpack && rm -rf test/webpack/* && git clone git@github.com:rabelais88/typescript-webpack.git test/webpack && echo \"import { filesize } from 'filesize';console.log(filesize(1234));\" >> test/webpack/src/index.ts && cd test/webpack && npm install && mkdir -p node_modules/filesize/dist && cp ../../package.json node_modules/filesize/ && cp ../../dist/* node_modules/filesize/dist/ && npm run build",
     "types": "npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "devDependencies": {
