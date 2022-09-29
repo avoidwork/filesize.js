@@ -40,13 +40,13 @@ export default [
 			{
 				...umdOutBase,
 				file: `dist/${pkg.name}.js`,
-				name: "lru"
+				name: "filesize"
 			},
 			{
 				...umdOutBase,
 				...minOutBase,
 				file: `dist/${pkg.name}.min.js`,
-				name: "lru"
+				name: "filesize"
 			}
 		]
 	}
