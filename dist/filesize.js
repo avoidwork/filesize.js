@@ -5,7 +5,7 @@
  * @license BSD-3-Clause
  * @version 10.0.2
  */
-(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';const ARRAY = "array";
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?module.exports=f():typeof define==='function'&&define.amd?define(f):(g=typeof globalThis!=='undefined'?globalThis:g||self,g.filesize=f());})(this,(function(){'use strict';const ARRAY = "array";
 const BIT = "bit";
 const BITS = "bits";
 const BYTE = "byte";
@@ -189,7 +189,7 @@ const STRINGS = {
 }
 
 // Partial application for functional programming
-function partial ({
+filesize.partial = function partial ({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -225,4 +225,4 @@ function partial ({
 		roundingMethod,
 		precision
 	});
-}exports.filesize=filesize;exports.partial=partial;Object.defineProperty(exports,'__esModule',{value:true});}));
+};return filesize;}));

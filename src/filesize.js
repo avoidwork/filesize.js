@@ -23,7 +23,7 @@ import {
 	ZERO
 } from "./constants";
 
-export function filesize (arg, {
+export default function filesize (arg, {
 	bits = false,
 	pad = false,
 	base = -1,
@@ -171,7 +171,7 @@ export function filesize (arg, {
 }
 
 // Partial application for functional programming
-export function partial ({
+filesize.partial = function partial ({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -207,4 +207,4 @@ export function partial ({
 		roundingMethod,
 		precision
 	});
-}
+};
