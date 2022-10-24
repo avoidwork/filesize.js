@@ -16,16 +16,25 @@
     "types"
   ],
   "license": "BSD-3-Clause",
-  "main": "dist/filesize.cjs",
-  "module": "dist/filesize.esm.js",
+  "exports": {
+    ".": {
+      "types": "./types/filesize.d.ts",
+      "import": "./dist/filesize.esm.mjs",
+      "require": "./dist/filesize.cjs.production.min.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/filesize.cjs.production.min.cjs",
+  "module": "dist/filesize.esm.mjs",
   "types": "types/filesize.d.ts",
+  "unpkg": "dist/filesize.umd.production.min.cjs",
   "type": "module",
   "sourceType": "module",
   "engines": {
     "node": ">= 14.0.0"
   },
   "scripts": {
-    "build": "mkdir -p dist && rm -rf dist/* && npm run rollup",
+    "build": "npx @bluelovers/tsdx build -i ./src/filesize --outputName filesize",
     "changelog": "auto-changelog -p",
     "coverage": "nyc npm run test",
     "lint": "eslint *.js src/*.js test/*.js",
@@ -36,6 +45,7 @@
     "types": "npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir types"
   },
   "devDependencies": {
+    "@bluelovers/tsconfig": "^1.0.31",
     "auto-changelog": "^2.4.0",
     "eslint": "^8.24.0",
     "mocha": "^10.0.0",

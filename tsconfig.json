@@ -1,0 +1,11 @@
+{
+  "extends": "@bluelovers/tsconfig/tsdx/index.json",
+  "compilerOptions": {
+    "importHelpers": false,
+    "noImplicitAny": false,
+    "allowJs": true
+  },
+  "include": [
+    "src/filesize.js",
+  ]
+}

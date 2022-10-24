@@ -208,3 +208,15 @@ export function partial ({
 		precision
 	});
 }
+
+// @ts-ignore
+if (process.env.TSDX_FORMAT !== "esm") {
+	Object.defineProperty(filesize, "__esModule", { value: true });
+
+	Object.defineProperty(filesize, "filesize", { value: filesize });
+	Object.defineProperty(filesize, "default", { value: filesize });
+
+	Object.defineProperty(filesize, "partial", { value: partial });
+}
+
+export default filesize;
