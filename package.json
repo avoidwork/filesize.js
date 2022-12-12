@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "10.0.5",
+  "version": "10.0.6",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -22,10 +22,10 @@
   "type": "module",
   "sourceType": "module",
   "engines": {
-    "node": ">= 14.0.0"
+    "node": ">= 10.4.0"
   },
   "scripts": {
-    "build": "mkdir -p dist && rm -rf dist/* && npm run rollup",
+    "build": "mkdir -p dist && rm -rf dist/* || rm dist/* || echo 'nothing in ./dist' && npm run rollup",
     "changelog": "auto-changelog -p",
     "coverage": "nyc npm run test",
     "lint": "eslint *.js src/*.js test/*.js",
