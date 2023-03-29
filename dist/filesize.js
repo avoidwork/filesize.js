@@ -1,9 +1,9 @@
 /**
  * filesize
  *
- * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2023 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.0.6
+ * @version 10.0.7
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';const ARRAY = "array";
 const BIT = "bit";
@@ -225,4 +225,4 @@ function partial ({
 		roundingMethod,
 		precision
 	});
-}exports.filesize=filesize;exports.partial=partial;Object.defineProperty(exports,'__esModule',{value:true});}));
+}exports.filesize=filesize;exports.partial=partial;}));

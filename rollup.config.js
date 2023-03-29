@@ -1,6 +1,7 @@
-import pkg from "./package.json";
-
-const {terser} = require("rollup-plugin-terser");
+import terser from "@rollup/plugin-terser";
+import {createRequire} from "node:module";
+const require = createRequire(import.meta.url);
+const pkg = require("./package.json");
 const year = new Date().getFullYear();
 const bannerLong = `/**
  * ${pkg.name}

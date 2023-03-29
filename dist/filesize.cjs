@@ -1,13 +1,11 @@
 /**
  * filesize
  *
- * @copyright 2022 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2023 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.0.6
+ * @version 10.0.7
  */
 'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
 
 const ARRAY = "array";
 const BIT = "bit";
