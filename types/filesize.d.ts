@@ -1,32 +1,63 @@
-export interface FileSizeOptions {
-    bits?: boolean;
-    pad?: boolean;
+interface FileSizeOptionsBase {
     base?: number;
+    bits?: boolean;
+    exponent?: number;
+    fullform?: boolean;
+    fullforms?: string[];
+    locale?: string | boolean;
+    localeOptions?: Intl.DateTimeFormatOptions;
+    pad?: boolean;
+    precision?: number;
     round?: number;
-    locale?: string;
-    localeOptions?: {};
+    roundingMethod?: 'round' | 'floor' | 'ceil';
     separator?: string;
     spacer?: string;
-    symbols?: {};
     standard?: 'iec' | 'jedec';
-    output?: 'array' | 'exponent' | 'object' | 'string';
-    fullform?: boolean;
-    fullforms?: any[];
-    exponent?: number;
-    roundingMethod?: 'round' | 'floor' | 'ceil';
-    precision?: number;
+    symbols?: {
+        iec: {
+            bits: string[],
+            bytes: string[]
+        },
+        jedec: {
+            bits: string[],
+            bytes: string[]
+        }
+    };
 }
 
-export function filesize(arg: any, { bits, pad, base, round, locale, localeOptions, separator, spacer, symbols, standard, output, fullform, fullforms, exponent, roundingMethod, precision }?: FileSizeOptions): string | number | any[] | {
-    value: any;
-    symbol: any;
-    exponent: number;
-    unit: string;
-};
+interface FileSizeOptionsArray extends FileSizeOptionsBase {
+    output: 'array'
+}
 
-export function partial({ bits, pad, base, round, locale, localeOptions, separator, spacer, symbols, standard, output, fullform, fullforms, exponent, roundingMethod, precision }?: FileSizeOptions): (arg: any) => string | number | any[] | {
-    value: any;
-    symbol: any;
-    exponent: number;
-    unit: string;
-};
+interface FileSizeOptionsExponent extends FileSizeOptionsBase {
+    output: 'exponent'
+}
+
+interface FileSizeOptionsObject extends FileSizeOptionsBase {
+    output: 'object'
+}
+
+interface FileSizeOptionsString extends FileSizeOptionsBase {
+    output: 'string'
+}
+
+interface FileSizeReturnObject {
+    value: string,
+    symbol: string,
+    exponent: number,
+    unit: string,
+}
+
+type FileSizeReturnArray = [ number, string ]
+
+export function filesize(byteCount: number, options: FileSizeOptionsString): string
+export function filesize(byteCount: number, options: FileSizeOptionsArray): FileSizeReturnArray
+export function filesize(byteCount: number, options: FileSizeOptionsExponent): number
+export function filesize(byteCount: number, options: FileSizeOptionsObject): FileSizeReturnObject
+export function filesize(byteCount: number): string
+
+export function partial(options: FileSizeOptionsString): (byteCount: number) => string
+export function partial(options: FileSizeOptionsArray): (byteCount: number) => FileSizeReturnArray
+export function partial(options: FileSizeOptionsExponent): (byteCount: number) => number
+export function partial(options: FileSizeOptionsObject): (byteCount: number) => FileSizeReturnObject
+export function partial(): (byteCount: number) => string
