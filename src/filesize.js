@@ -137,7 +137,7 @@ export function filesize (arg, {
 	}
 
 	// Applying custom symbol
-	result[1] = symbols[result[1]] || result[1];
+	result[1] = symbols[standard][bits ? BITS : BYTES][e] || result[1];
 
 	if (locale === true) {
 		result[0] = result[0].toLocaleString();
