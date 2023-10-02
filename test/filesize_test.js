@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import {filesize, partial} from "../dist/filesize.esm.js";
+import {filesize, partial} from "../dist/filesize.cjs";
 
 describe("Testing functionality", function () {
 	beforeEach(function () {
@@ -36,6 +36,7 @@ describe("Testing functionality", function () {
 		assert.equal(filesize(this.kibibyte, {base: 2, standard: "iec", exponent: 0, output: "object"}).unit, "B", "Should be 'B'");
 		assert.equal(filesize(this.kibibyte, {base: 2, standard: "iec", output: "exponent"}), 1, "Should be '1'");
 		assert.equal(filesize(this.kibibyte, {base: 2, standard: "iec", output: "object"}).unit, "KiB", "Should be 'KiB'");
+		assert.equal(filesize(this.kibibyte, {standard: "iec", output: "object"}).unit, "KiB", "Should be 'KiB'");
 		assert.equal(filesize(this.neg, {base: 2, standard: "iec"}), "-1 KiB", "Should be '-1 KiB'");
 		assert.equal(filesize(this.neg, {base: 2, standard: "iec", round: 1}), "-1 KiB", "Should be '-1 KiB'");
 		assert.equal(filesize(this.neg, {base: 2, standard: "iec", round: 1, spacer: ""}), "-1KiB", "Should be '-1KiB'");
@@ -156,8 +157,9 @@ describe("Testing functionality", function () {
 	});
 
 	it("It should pass invalid input tests", function () {
+		const input = this.invld;
 		assert.throws(function () {
-			filesize(this.invld);
+			filesize(input);
 		}, Error, "Should match");
 	});
 
@@ -236,6 +238,10 @@ describe("Testing functionality", function () {
 		assert.equal(filesize(this.kibibyte * 1.456, {base: 10, round: 1, roundingMethod: "round"}), "1.5 kB", "Should be '1.5 kB'");
 		assert.equal(filesize(this.kibibyte * 1.456, {base: 10, round: 1, roundingMethod: "floor"}), "1.4 kB", "Should be '1.4 kB'");
 		assert.equal(filesize(this.kibibyte * 1.456, {base: 10, round: 1, roundingMethod: "ceil"}), "1.5 kB", "Should be '1.5 kB'");
+		const input = this.kibibyte * 1.456;
+		assert.throws(function () {
+			filesize(filesize(input, {base: 10, round: 1, roundingMethod: "invalid"}));
+		}, Error, "Should match");
 	});
 
 	it("It should pass precision tests", function () {

@@ -29,7 +29,7 @@
     "changelog": "auto-changelog -p",
     "coverage": "nyc npm run test",
     "lint": "eslint *.js src/*.js test/*.js",
-    "mocha": "mocha test/*.js",
+    "mocha": "nyc mocha test/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
     "test-webpack": "mkdir -p test/webpack && rm -rf test/webpack/* && git clone git@github.com:rabelais88/typescript-webpack.git test/webpack && echo \"import { filesize } from 'filesize';console.log(filesize(1234));\" >> test/webpack/src/index.ts && cd test/webpack && npm install && mkdir -p node_modules/filesize/dist && cp ../../package.json node_modules/filesize/ && cp ../../dist/* node_modules/filesize/dist/ && npm run build",
@@ -42,6 +42,7 @@
     "eslint": "^8.37.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
+    "nyc": "^15.1.0",
     "rollup": "^3.20.2",
     "typescript": "^5.0.2"
   },

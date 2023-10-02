@@ -9,6 +9,19 @@ import {filesize} from "filesize";
 filesize(265318, {base: 2, standard: "jedec"}); // "259.1 KB"
 ```
 
+## Testing
+
+filesize has 100% code coverage with its tests.
+
+```console
+--------------|---------|----------|---------|---------|-----------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+--------------|---------|----------|---------|---------|-----------------------
+All files     |     100 |    95.52 |     100 |     100 |                      
+ filesize.cjs |     100 |    95.52 |     100 |     100 | 77-78,173,196,199,210
+--------------|---------|----------|---------|---------|-----------------------
+```
+
 ## Optional settings
 
 `filesize()` accepts an optional descriptor Object as a second argument, so you can customize the output.
