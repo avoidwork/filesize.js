@@ -1,5 +1,5 @@
 interface FileSizeOptionsBase {
-    base?: number;
+    base?: 10 | 2;
     bits?: boolean;
     exponent?: number;
     fullform?: boolean;
@@ -12,7 +12,7 @@ interface FileSizeOptionsBase {
     roundingMethod?: 'round' | 'floor' | 'ceil';
     separator?: string;
     spacer?: string;
-    standard?: 'iec' | 'jedec';
+    standard?: 'si' | 'iec' | 'jedec';
     symbols?: {};
 }
 

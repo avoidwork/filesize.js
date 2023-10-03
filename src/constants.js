@@ -14,6 +14,7 @@ export const OBJECT = "object";
 export const PERIOD = ".";
 export const ROUND = "round";
 export const S = "s";
+export const SI = "si";
 export const SI_KBIT = "kbit";
 export const SI_KBYTE = "kB";
 export const SPACE = " ";

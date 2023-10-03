@@ -15,6 +15,7 @@ import {
 	PERIOD,
 	ROUND,
 	S,
+	SI,
 	SI_KBIT,
 	SI_KBYTE,
 	SPACE,
@@ -48,15 +49,16 @@ export function filesize (arg, {
 		u = EMPTY;
 
 	// Sync base & standard
-	if (base === -1 && standard.length === 0) {
+	if (standard === SI) {
 		base = 10;
 		standard = JEDEC;
-	} else if (base === -1 && standard.length > 0) {
-		standard = standard === IEC ? IEC : JEDEC;
-		base = standard === IEC ? 2 : 10;
+	} else if (standard === IEC || standard === JEDEC) {
+		base = 2;
+	} else if (base === 2) {
+		standard = IEC;
 	} else {
-		base = base === 2 ? 2 : 10;
-		standard = base === 10 ? JEDEC : standard === JEDEC ? JEDEC : IEC;
+		base = 10;
+		standard = JEDEC;
 	}
 
 	const ceil = base === 10 ? 1000 : 1024,

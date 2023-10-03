@@ -69,10 +69,10 @@ _*(string)*_ Decimal separator character, default is `.`
 _*(string)*_ Character between the `result` and `symbol`, default is `" "`
 
 ### standard
-_*(string)*_ Standard unit of measure, can be `iec` or `jedec`, default is `iec`; can be overruled by `base`
+_*(string)*_ Standard unit of measure, can be `iec`, `jedec`, or `si`. Default is `si` (base 10). The `si` option is an alias of `jedec`, such that it is not valid for other configuration options.
 
 ### symbols
-_*(object)*_ Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found
+_*(object)*_ Dictionary of IEC/JEDEC symbols to replace for localization, defaults to english if no match is found; SI is handled automatically with JEDEC values.
 
 ## Examples
 
@@ -103,7 +103,7 @@ in lexical scope.
 
 ```javascript
 import {partial} from "filesize";
-const size = partial({base: 2, standard: "jedec"});
+const size = partial({standard: "jedec"});
 
 size(265318); // "259.1 KB"
 ```
