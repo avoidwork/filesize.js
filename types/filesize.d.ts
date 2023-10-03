@@ -13,16 +13,7 @@ interface FileSizeOptionsBase {
     separator?: string;
     spacer?: string;
     standard?: 'iec' | 'jedec';
-    symbols?: {
-        iec: {
-            bits: string[],
-            bytes: string[]
-        },
-        jedec: {
-            bits: string[],
-            bytes: string[]
-        }
-    };
+    symbols?: {};
 }
 
 interface FileSizeOptionsArray extends FileSizeOptionsBase {
