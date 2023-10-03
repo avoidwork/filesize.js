@@ -6,7 +6,7 @@ filesize.js provides a simple way to get a human readable file size string from 
 
 ```javascript
 import {filesize} from "filesize";
-filesize(265318, {base: 2, standard: "jedec"}); // "259.1 KB"
+filesize(265318, {standard: "jedec"}); // "259.1 KB"
 ```
 
 ## Testing
