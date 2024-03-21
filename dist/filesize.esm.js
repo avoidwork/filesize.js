@@ -1,9 +1,9 @@
 /**
  * filesize
  *
- * @copyright 2023 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2024 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.1.0
+ * @version 10.1.1
  */
 const ARRAY = "array";
 const BIT = "bit";
