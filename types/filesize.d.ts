@@ -41,14 +41,16 @@ interface FileSizeReturnObject {
 
 type FileSizeReturnArray = [ number, string ]
 
-export function filesize(byteCount: number, options: FileSizeOptionsString | FileSizeOptionsBase): string
-export function filesize(byteCount: number, options: FileSizeOptionsArray): FileSizeReturnArray
-export function filesize(byteCount: number, options: FileSizeOptionsExponent): number
-export function filesize(byteCount: number, options: FileSizeOptionsObject): FileSizeReturnObject
-export function filesize(byteCount: number): string
+type FileSizeOptionStringOrBase = FileSizeOptionsString | FileSizeOptionsBase;
+type FileSizeOptions = FileSizeOptionsArray | FileSizeOptionsExponent | FileSizeOptionsObject | FileSizeOptionStringOrBase | undefined
+type FileSizeReturnType<Options extends FileSizeOptions> =
+    Options extends FileSizeOptionsArray
+        ? FileSizeReturnArray
+        : Options extends FileSizeOptionsExponent
+        ? number
+        : Options extends FileSizeOptionsObject
+        ? FileSizeReturnObject
+        : string;
 
-export function partial(options: FileSizeOptionsString | FileSizeOptionsBase): (byteCount: number) => string
-export function partial(options: FileSizeOptionsArray): (byteCount: number) => FileSizeReturnArray
-export function partial(options: FileSizeOptionsExponent): (byteCount: number) => number
-export function partial(options: FileSizeOptionsObject): (byteCount: number) => FileSizeReturnObject
-export function partial(): (byteCount: number) => string
+export function filesize<Options extends FileSizeOptions = undefined>(byteCount: number, options?: Options): FileSizeReturnType<Options> 
+export function partial<Options extends FileSizeOptions = undefined>(options?: Options): (byteCount: number) => FileSizeReturnType<Options> 
