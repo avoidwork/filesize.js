@@ -52,5 +52,5 @@ type FileSizeReturnType<Options extends FileSizeOptions> =
         ? FileSizeReturnObject
         : string;
 
-export function filesize<Options extends FileSizeOptions = undefined>(byteCount: number | string, options?: Options): FileSizeReturnType<Options> 
+export function filesize<Options extends FileSizeOptions = undefined>(byteCount: number | string | bigint, options?: Options): FileSizeReturnType<Options> 
 export function partial<Options extends FileSizeOptions = undefined>(options?: Options): (byteCount: number) => FileSizeReturnType<Options> 
