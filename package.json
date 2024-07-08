@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "10.1.2",
+  "version": "10.1.3",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -12,8 +12,9 @@
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
   "files": [
-    "dist",
-    "types"
+    "dist/filesize.cjs",
+    "dist/filesize.esm.js",
+    "types/filesize.d.ts"
   ],
   "license": "BSD-3-Clause",
   "main": "dist/filesize.cjs",
@@ -29,6 +30,7 @@
     "changelog": "auto-changelog -p",
     "coverage": "nyc npm run test",
     "lint": "eslint *.js src/*.js test/*.js",
+    "fix": "eslint --fix *.js src/*.js test/*.js",
     "mocha": "nyc mocha test/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
@@ -37,14 +39,14 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.0",
+    "@rollup/plugin-terser": "^0.4.4",
     "auto-changelog": "^2.4.0",
-    "eslint": "^8.37.0",
-    "husky": "^8.0.3",
-    "mocha": "^10.2.0",
-    "nyc": "^15.1.0",
-    "rollup": "^3.20.2",
-    "typescript": "^5.0.2"
+    "eslint": "^9.6.0",
+    "husky": "^9.0.11",
+    "mocha": "^10.6.0",
+    "nyc": "^17.0.0",
+    "rollup": "^4.18.1",
+    "typescript": "^5.5.3"
   },
   "keywords": [
     "file",
