@@ -3,7 +3,7 @@
  *
  * @copyright 2024 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.1.4
+ * @version 10.1.5
  */
 const ARRAY = "array";
 const BIT = "bit";
@@ -167,9 +167,10 @@ const STRINGS = {
 		result[0] = result[0].toString().replace(PERIOD, separator);
 	}
 
-	if (pad && Number.isInteger(result[0]) === false && round > 0) {
-		const x = separator || PERIOD,
-			tmp = result[0].toString().split(x),
+	if (pad && round > 0) {
+		const i =  result[0].toString(),
+			x = separator || (i.match(/(\D)/g)?.pop() ?? PERIOD),
+			tmp = i.toString().split(x),
 			s = tmp[1] || EMPTY,
 			l = s.length,
 			n = round - l;

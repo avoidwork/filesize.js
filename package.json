@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "10.1.4",
+  "version": "10.1.5",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -36,7 +36,7 @@
     "test": "npm run lint && npm run mocha",
     "test-webpack": "mkdir -p test/webpack && rm -rf test/webpack/* && git clone git@github.com:rabelais88/typescript-webpack.git test/webpack && echo \"import { filesize } from 'filesize';console.log(filesize(1234));\" >> test/webpack/src/index.ts && cd test/webpack && npm install && mkdir -p node_modules/filesize/dist && cp ../../package.json node_modules/filesize/ && cp ../../dist/* node_modules/filesize/dist/ && npm run build",
     "types": "npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir types",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",

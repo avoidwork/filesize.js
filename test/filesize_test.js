@@ -249,6 +249,10 @@ describe("Testing functionality", function () {
 		assert.strictEqual(filesize(1040, {base: 10, separator: ",", round: 1, pad: true}), "1,0 kB", "Should be '1,0 kB'");
 	});
 
+	it("It should pass separator tests", function () {
+		assert.strictEqual(filesize(1000, {base: 10, pad: true}), "1.00 kB", "Should be '1.00 kB'");
+	});
+
 	it("It should pass locale tests", function () {
 		assert.strictEqual(filesize(1040, {base: 10, locale: ""}), "1.04 kB", "Should be '1.04 kB'");
 		assert.strictEqual(filesize(1040, {base: 10, locale: true}), Number(1.04).toLocaleString() + " kB", "Should be '" + Number(1.04).toLocaleString() + " kB'");

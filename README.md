@@ -63,7 +63,7 @@ _*(number)*_ Decimal place, default is `2`
 _*(string)*_ Rounding method, can be `round`, `floor`, or `ceil`, default is `round`
 
 ### separator
-_*(string)*_ Decimal separator character, default is `.`
+_*(string)*_ Decimal separator character, default is an empty string.
 
 ### spacer
 _*(string)*_ Character between the `result` and `symbol`, default is `" "`
