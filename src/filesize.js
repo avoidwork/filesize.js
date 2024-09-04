@@ -151,7 +151,7 @@ export function filesize (arg, {
 
 	if (pad && round > 0) {
 		const i =  result[0].toString(),
-			x = separator || (i.match(/(\D)/g)?.pop() ?? PERIOD),
+			x = separator || ((i.match(/(\D)/g) || []).pop() ?? PERIOD),
 			tmp = i.toString().split(x),
 			s = tmp[1] || EMPTY,
 			l = s.length,
