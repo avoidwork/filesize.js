@@ -26,6 +26,7 @@
     "require": "./dist/filesize.cjs"
   },
   "type": "module",
+  "sourceType": "module",
   "types": "types/filesize.d.ts",
   "engines": {
     "node": ">= 10.4.0"
