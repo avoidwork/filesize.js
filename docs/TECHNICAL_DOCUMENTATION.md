@@ -227,18 +227,35 @@ Creates a partially applied function with preset options.
 
 ```mermaid
 graph TD
-    Input[filesize(1536, options)] --> Format{Output Format}
+    Input["filesize(1536, options)"] --> Format{Output Format}
     
-    Format -->|string| String["1.5 KB"]
-    Format -->|array| Array["[1.5, 'KB']"]
-    Format -->|object| Object["{value: 1.5, symbol: 'KB', exponent: 1, unit: 'KB'}"]
-    Format -->|exponent| Exp["1"]
+    Format -->|string| String["String: '1.5 KB'"]
+    Format -->|array| Array["Array: 1.5, 'KB'"]
+    Format -->|object| Object["Object: value, symbol, exponent, unit"]
+    Format -->|exponent| Exp["Number: 1"]
     
     style Input fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
     style String fill:#d97706,stroke:#b45309,stroke-width:2px,color:#ffffff
     style Array fill:#7c2d12,stroke:#92400e,stroke-width:2px,color:#ffffff
     style Object fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
     style Exp fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
+```
+
+#### Output Format Examples
+
+```javascript
+// String output (default)
+filesize(1536) // "1.5 KB"
+
+// Array output
+filesize(1536, { output: "array" }) // [1.5, "KB"]
+
+// Object output
+filesize(1536, { output: "object" })
+// { value: 1.5, symbol: "KB", exponent: 1, unit: "KB" }
+
+// Exponent output
+filesize(1536, { output: "exponent" }) // 1
 ```
 
 ## Usage Patterns
@@ -560,19 +577,19 @@ export function SystemMetrics() {
 ```mermaid
 graph TB
     subgraph "Locale Processing"
-        A[Input Locale] --> B{Locale Type}
-        B -->|true| C[System Locale]
-        B -->|string| D[Specific Locale]
-        B -->|empty| E[No Localization]
+        A["Input Locale"] --> B{"Locale Type"}
+        B -->|"true"| C["System Locale"]
+        B -->|"string"| D["Specific Locale"]
+        B -->|"empty"| E["No Localization"]
         
-        C --> F[navigator.language]
-        D --> G[Custom Locale]
-        F --> H[toLocaleString()]
+        C --> F["navigator.language"]
+        D --> G["Custom Locale"]
+        F --> H["toLocaleString()"]
         G --> H
         
-        H --> I[Formatted Number]
-        E --> J[toString()]
-        J --> K[Apply Custom Separator]
+        H --> I["Formatted Number"]
+        E --> J["toString()"]
+        J --> K["Apply Custom Separator"]
     end
     
     style A fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
