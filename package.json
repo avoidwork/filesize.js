@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "JavaScript library to generate a human readable String describing the file size",
-  "version": "10.1.6",
+  "version": "11.0.0",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
@@ -12,41 +12,40 @@
     "url": "https://github.com/avoidwork/filesize.js/issues"
   },
   "files": [
+    "dist/filesize.js",
     "dist/filesize.cjs",
-    "dist/filesize.esm.js",
-    "types/filesize.d.ts"
+    "types"
   ],
   "license": "BSD-3-Clause",
+  "source": "src/filesize.js",
   "main": "dist/filesize.cjs",
-  "module": "dist/filesize.esm.js",
-  "types": "types/filesize.d.ts",
+  "exports": {
+    "types": "./types/filesize.d.ts",
+    "import": "./dist/filesize.js",
+    "require": "./dist/filesize.cjs"
+  },
   "type": "module",
-  "sourceType": "module",
+  "types": "types/filesize.d.ts",
   "engines": {
     "node": ">= 10.4.0"
   },
   "scripts": {
     "build": "npm run rollup",
     "changelog": "auto-changelog -p",
-    "coverage": "nyc npm run test",
-    "lint": "eslint *.js src/*.js test/*.js",
-    "fix": "eslint --fix *.js src/*.js test/*.js",
-    "mocha": "nyc mocha test/*.js",
+    "lint": "eslint *.js src/*.js tests/**/*.js",
+    "fix": "eslint --fix *.js src/*.js tests/**/*.js",
+    "mocha": "mocha tests/**/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
-    "test-webpack": "mkdir -p test/webpack && rm -rf test/webpack/* && git clone git@github.com:rabelais88/typescript-webpack.git test/webpack && echo \"import { filesize } from 'filesize';console.log(filesize(1234));\" >> test/webpack/src/index.ts && cd test/webpack && npm install && mkdir -p node_modules/filesize/dist && cp ../../package.json node_modules/filesize/ && cp ../../dist/* node_modules/filesize/dist/ && npm run build",
-    "types": "npx -p typescript tsc src/*.js --declaration --allowJs --emitDeclarationOnly --outDir types",
     "prepare": "husky"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
-    "auto-changelog": "^2.4.0",
-    "eslint": "^9.6.0",
-    "husky": "^9.0.11",
-    "mocha": "^10.6.0",
-    "nyc": "^17.0.0",
-    "rollup": "^4.18.1",
-    "typescript": "^5.5.3"
+    "auto-changelog": "^2.5.0",
+    "eslint": "^9.30.1",
+    "husky": "^9.1.7",
+    "mocha": "^11.7.1",
+    "rollup": "^4.44.2"
   },
   "keywords": [
     "file",

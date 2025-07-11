@@ -5,9 +5,7 @@
  * @license BSD-3-Clause
  * @version 11.0.0
  */
-'use strict';
-
-// Error Messages
+(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';// Error Messages
 const INVALID_NUMBER = "Invalid number";
 const INVALID_ROUND = "Invalid rounding method";
 
@@ -57,9 +55,7 @@ const STRINGS = {
 		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
 		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 	}
-};
-
-/**
+};/**
  * Converts a file size in bytes to a human-readable string with appropriate units
  * @param {number|bigint} arg - The file size in bytes to convert
  * @param {Object} [options={}] - Configuration options for formatting
@@ -297,7 +293,4 @@ function partial ({
 		roundingMethod,
 		precision
 	});
-}
-
-exports.filesize = filesize;
-exports.partial = partial;
+}exports.filesize=filesize;exports.partial=partial;}));
