@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout Repository
@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 1
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           always-auth: false
           node-version: ${{ matrix.node-version }}
@@ -30,10 +30,10 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run rollup
+        run: npm run build
 
       - name: Run Tests
-        run: npm run test
+        run: npm test
 
   automerge:
     needs: build
