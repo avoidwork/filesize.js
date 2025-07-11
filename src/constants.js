@@ -1,25 +1,38 @@
-export const ARRAY = "array";
+// Error Messages
+export const INVALID_NUMBER = "Invalid number";
+export const INVALID_ROUND = "Invalid rounding method";
+
+// Standard Types
+export const IEC = "iec";
+export const JEDEC = "jedec";
+export const SI = "si";
+
+// Unit Types
 export const BIT = "bit";
 export const BITS = "bits";
 export const BYTE = "byte";
 export const BYTES = "bytes";
-export const EMPTY = "";
-export const EXPONENT = "exponent";
-export const FUNCTION = "function";
-export const IEC = "iec";
-export const INVALID_NUMBER = "Invalid number";
-export const INVALID_ROUND = "Invalid rounding method";
-export const JEDEC = "jedec";
-export const OBJECT = "object";
-export const PERIOD = ".";
-export const ROUND = "round";
-export const S = "s";
-export const SI = "si";
 export const SI_KBIT = "kbit";
 export const SI_KBYTE = "kB";
-export const SPACE = " ";
+
+// Output Format Types
+export const ARRAY = "array";
+export const FUNCTION = "function";
+export const OBJECT = "object";
 export const STRING = "string";
+
+// Processing Constants
+export const EXPONENT = "exponent";
+export const ROUND = "round";
+
+// Special Characters and Values
+export const EMPTY = "";
+export const PERIOD = ".";
+export const S = "s";
+export const SPACE = " ";
 export const ZERO = "0";
+
+// Data Structures
 export const STRINGS = {
 	symbol: {
 		iec: {

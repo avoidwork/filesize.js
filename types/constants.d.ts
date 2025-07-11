@@ -1,42 +1,51 @@
-export const ARRAY: "array";
+// Error Messages
+export const INVALID_NUMBER: "Invalid number";
+export const INVALID_ROUND: "Invalid rounding method";
+
+// Standard Types
+export const IEC: "iec";
+export const JEDEC: "jedec";
+export const SI: "si";
+
+// Unit Types
 export const BIT: "bit";
 export const BITS: "bits";
 export const BYTE: "byte";
 export const BYTES: "bytes";
-export const EMPTY: "";
-export const EXPONENT: "exponent";
-export const FUNCTION: "function";
-export const IEC: "iec";
-export const INVALID_NUMBER: "Invalid number";
-export const INVALID_ROUND: "Invalid rounding method";
-export const JEDEC: "jedec";
-export const OBJECT: "object";
-export const PERIOD: ".";
-export const ROUND: "round";
-export const S: "s";
-export const SI: "si";
 export const SI_KBIT: "kbit";
 export const SI_KBYTE: "kB";
-export const SPACE: " ";
+
+// Output Format Types
+export const ARRAY: "array";
+export const FUNCTION: "function";
+export const OBJECT: "object";
 export const STRING: "string";
+
+// Processing Constants
+export const EXPONENT: "exponent";
+export const ROUND: "round";
+
+// Special Characters and Values
+export const EMPTY: "";
+export const PERIOD: ".";
+export const S: "s";
+export const SPACE: " ";
 export const ZERO: "0";
-export namespace STRINGS {
-    namespace symbol {
-        namespace iec {
-            const bits: string[];
-            const bytes: string[];
-        }
-        namespace jedec {
-            const bits_1: string[];
-            export { bits_1 as bits };
-            const bytes_1: string[];
-            export { bytes_1 as bytes };
-        }
-    }
-    namespace fullform {
-        const iec_1: string[];
-        export { iec_1 as iec };
-        const jedec_1: string[];
-        export { jedec_1 as jedec };
-    }
-}
+
+// Data Structures
+export const STRINGS: {
+  symbol: {
+    iec: {
+      bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"];
+      bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"];
+    };
+    jedec: {
+      bits: ["bit", "Kbit", "Mbit", "Gbit", "Tbit", "Pbit", "Ebit", "Zbit", "Ybit"];
+      bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    };
+  };
+  fullform: {
+    iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"];
+    jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"];
+  };
+}; 

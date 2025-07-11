@@ -1,5 +1,5 @@
 import terser from "@rollup/plugin-terser";
-import {createRequire} from "node:module";
+import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const pkg = require("./package.json");
 const year = new Date().getFullYear();
@@ -31,22 +31,22 @@ export default [
 			},
 			{
 				...esmOutBase,
-				file: `dist/${pkg.name}.esm.js`
+				file: `dist/${pkg.name}.js`
 			},
 			{
 				...esmOutBase,
 				...minOutBase,
-				file: `dist/${pkg.name}.esm.min.js`
+				file: `dist/${pkg.name}.min.js`
 			},
 			{
 				...umdOutBase,
-				file: `dist/${pkg.name}.js`,
+				file: `dist/${pkg.name}.umd.js`,
 				name: "filesize"
 			},
 			{
 				...umdOutBase,
 				...minOutBase,
-				file: `dist/${pkg.name}.min.js`,
+				file: `dist/${pkg.name}.umd.min.js`,
 				name: "filesize"
 			}
 		]

@@ -1,32 +1,45 @@
 /**
  * filesize
  *
- * @copyright 2024 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2025 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 10.1.6
+ * @version 11.0.0
  */
-(function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';const ARRAY = "array";
+// Error Messages
+const INVALID_NUMBER = "Invalid number";
+const INVALID_ROUND = "Invalid rounding method";
+
+// Standard Types
+const IEC = "iec";
+const JEDEC = "jedec";
+const SI = "si";
+
+// Unit Types
 const BIT = "bit";
 const BITS = "bits";
 const BYTE = "byte";
 const BYTES = "bytes";
-const EMPTY = "";
-const EXPONENT = "exponent";
-const FUNCTION = "function";
-const IEC = "iec";
-const INVALID_NUMBER = "Invalid number";
-const INVALID_ROUND = "Invalid rounding method";
-const JEDEC = "jedec";
-const OBJECT = "object";
-const PERIOD = ".";
-const ROUND = "round";
-const S = "s";
-const SI = "si";
 const SI_KBIT = "kbit";
 const SI_KBYTE = "kB";
-const SPACE = " ";
+
+// Output Format Types
+const ARRAY = "array";
+const FUNCTION = "function";
+const OBJECT = "object";
 const STRING = "string";
+
+// Processing Constants
+const EXPONENT = "exponent";
+const ROUND = "round";
+
+// Special Characters and Values
+const EMPTY = "";
+const PERIOD = ".";
+const S = "s";
+const SPACE = " ";
 const ZERO = "0";
+
+// Data Structures
 const STRINGS = {
 	symbol: {
 		iec: {
@@ -42,7 +55,34 @@ const STRINGS = {
 		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
 		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 	}
-};function filesize (arg, {
+};/**
+ * Converts a file size in bytes to a human-readable string with appropriate units
+ * @param {number|bigint} arg - The file size in bytes to convert
+ * @param {Object} [options={}] - Configuration options for formatting
+ * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
+ * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
+ * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
+ * @param {number} [options.round=2] - Number of decimal places to round to
+ * @param {string|boolean} [options.locale=""] - Locale for number formatting, true for system locale
+ * @param {Object} [options.localeOptions={}] - Additional options for locale formatting
+ * @param {string} [options.separator=""] - Custom decimal separator
+ * @param {string} [options.spacer=" "] - String to separate value and unit
+ * @param {Object} [options.symbols={}] - Custom unit symbols
+ * @param {string} [options.standard=""] - Unit standard to use (SI, IEC, JEDEC)
+ * @param {string} [options.output="string"] - Output format: "string", "array", "object", or "exponent"
+ * @param {boolean} [options.fullform=false] - If true, uses full unit names instead of abbreviations
+ * @param {Array} [options.fullforms=[]] - Custom full unit names
+ * @param {number} [options.exponent=-1] - Force specific exponent (-1 for auto)
+ * @param {string} [options.roundingMethod="round"] - Math rounding method to use
+ * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
+ * @returns {string|Array|Object|number} Formatted file size based on output option
+ * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
+ * @example
+ * filesize(1024) // "1 KB"
+ * filesize(1024, {bits: true}) // "8 Kb"
+ * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
+ */
+function filesize (arg, {
 	bits = false,
 	pad = false,
 	base = -1,
@@ -191,6 +231,31 @@ const STRINGS = {
 	} : result.join(spacer);
 }
 
+/**
+ * Creates a partially applied version of filesize with preset options
+ * @param {Object} [options={}] - Default options to apply to the returned function
+ * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
+ * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
+ * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
+ * @param {number} [options.round=2] - Number of decimal places to round to
+ * @param {string|boolean} [options.locale=""] - Locale for number formatting, true for system locale
+ * @param {Object} [options.localeOptions={}] - Additional options for locale formatting
+ * @param {string} [options.separator=""] - Custom decimal separator
+ * @param {string} [options.spacer=" "] - String to separate value and unit
+ * @param {Object} [options.symbols={}] - Custom unit symbols
+ * @param {string} [options.standard=""] - Unit standard to use (SI, IEC, JEDEC)
+ * @param {string} [options.output="string"] - Output format: "string", "array", "object", or "exponent"
+ * @param {boolean} [options.fullform=false] - If true, uses full unit names instead of abbreviations
+ * @param {Array} [options.fullforms=[]] - Custom full unit names
+ * @param {number} [options.exponent=-1] - Force specific exponent (-1 for auto)
+ * @param {string} [options.roundingMethod="round"] - Math rounding method to use
+ * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
+ * @returns {Function} A function that takes a file size and returns formatted output
+ * @example
+ * const formatBytes = partial({round: 1, standard: "IEC"});
+ * formatBytes(1024) // "1.0 KiB"
+ * formatBytes(2048) // "2.0 KiB"
+ */
 // Partial application for functional programming
 function partial ({
 	bits = false,
@@ -228,4 +293,4 @@ function partial ({
 		roundingMethod,
 		precision
 	});
-}exports.filesize=filesize;exports.partial=partial;}));
+}export{filesize,partial};
