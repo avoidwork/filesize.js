@@ -18,6 +18,7 @@
   ],
   "license": "BSD-3-Clause",
   "source": "src/filesize.js",
+  "module": "dist/filesize.js",
   "main": "dist/filesize.cjs",
   "exports": {
     "types": "./types/filesize.d.ts",
