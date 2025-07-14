@@ -39,7 +39,13 @@
     "mocha": "c8 mocha tests/**/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
-    "prepare": "husky"
+    "prepare": "husky",
+    "benchmark": "node benchmarks/index.js",
+    "benchmark:basic": "node benchmarks/basic-performance.js",
+    "benchmark:options": "node benchmarks/options-benchmark.js",
+    "benchmark:stress": "node benchmarks/stress-test.js",
+    "benchmark:partial": "node benchmarks/partial-benchmark.js",
+    "benchmark:gc": "node --expose-gc benchmarks/index.js"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
