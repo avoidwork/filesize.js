@@ -1,10 +1,10 @@
 # filesize.js
 
-[![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize)
-[![npm version](https://badge.fury.io/js/filesize.svg)](https://badge.fury.io/js/filesize)
+[![downloads](https://img.shields.io/npm/dt/filesize.svg)](https://www.npmjs.com/package/filesize.js)
+[![npm version](https://badge.fury.io/js/filesize.svg)](https://badge.fury.io/js/filesize.js)
 [![Node.js Version](https://img.shields.io/node/v/filesize.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![Build Status](https://github.com/avoidwork/woodland/actions/workflows/ci.yml/badge.svg)](https://github.com/avoidwork/filesize/actions)
+[![Build Status](https://github.com/avoidwork/woodland/actions/workflows/ci.yml/badge.svg)](https://github.com/avoidwork/filesize.js/actions)
 
 A lightweight, high-performance file size utility for JavaScript that converts bytes to human-readable strings. Works in both Node.js and browser environments with comprehensive format support.
 
