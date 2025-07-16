@@ -26,7 +26,7 @@ import {
 
 /**
  * Converts a file size in bytes to a human-readable string with appropriate units
- * @param {number|bigint} arg - The file size in bytes to convert
+ * @param {number|string|bigint} arg - The file size in bytes to convert
  * @param {Object} [options={}] - Configuration options for formatting
  * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
  * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter

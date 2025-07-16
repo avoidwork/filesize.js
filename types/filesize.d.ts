@@ -58,7 +58,7 @@ export type FilesizeArray = [number | string, string];
 /**
  * Return type based on output option
  */
-export type FilesizeReturn<T extends FilesizeOptions = {}> = 
+export type FilesizeReturn<T extends FilesizeOptions = {}> =
   T['output'] extends "object" ? FilesizeObject :
   T['output'] extends "array" ? FilesizeArray :
   T['output'] extends "exponent" ? number :
@@ -76,7 +76,7 @@ export type FilesizeReturn<T extends FilesizeOptions = {}> =
  * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
  */
 export function filesize<T extends FilesizeOptions = {}>(
-  arg: number | bigint,
+  arg: number | string | bigint,
   options?: T
 ): FilesizeReturn<T>;
 
@@ -91,4 +91,4 @@ export function filesize<T extends FilesizeOptions = {}>(
  */
 export function partial<T extends FilesizeOptions = {}>(
   options?: T
-): (arg: number | bigint) => FilesizeReturn<T>; 
+): (arg: number | string | bigint) => FilesizeReturn<T>;
