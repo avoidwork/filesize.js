@@ -237,6 +237,206 @@ describe('filesize', () => {
       assert.throws(() => filesize(1024, { roundingMethod: 'nonexistent' }), TypeError);
     });
   });
+
+  describe('Input type handling', () => {
+    describe('Number input', () => {
+      describe('filesize() with number input', () => {
+        it('should handle integer numbers', () => {
+          assert.strictEqual(filesize(1024), '1.02 kB');
+          assert.strictEqual(filesize(0), '0 B');
+          assert.strictEqual(filesize(-1024), '-1.02 kB');
+        });
+
+        it('should handle floating point numbers', () => {
+          assert.strictEqual(filesize(1536.5), '1.54 kB');
+          assert.strictEqual(filesize(0.5), '1 B');
+        });
+
+        it('should handle very large numbers', () => {
+          const largeNumber = Number.MAX_SAFE_INTEGER;
+          const result = filesize(largeNumber);
+          assert(typeof result === 'string');
+        });
+      });
+
+      describe('partial() with number input', () => {
+        it('should handle integer numbers', () => {
+          const formatIEC = partial({ standard: 'iec' });
+          assert.strictEqual(formatIEC(1024), '1 KiB');
+          assert.strictEqual(formatIEC(0), '0 B');
+          assert.strictEqual(formatIEC(-1024), '-1 KiB');
+        });
+
+        it('should handle floating point numbers', () => {
+          const formatRounded = partial({ round: 1 });
+          assert.strictEqual(formatRounded(1536.7), '1.5 kB');
+          assert.strictEqual(formatRounded(0.5), '1 B');
+        });
+
+        it('should handle very large numbers', () => {
+          const formatBits = partial({ bits: true });
+          const largeNumber = Number.MAX_SAFE_INTEGER;
+          const result = formatBits(largeNumber);
+          assert(typeof result === 'string');
+        });
+      });
+    });
+
+    describe('String input', () => {
+      describe('filesize() with string input', () => {
+        it('should handle valid integer string', () => {
+          assert.strictEqual(filesize('1024'), '1.02 kB');
+          assert.strictEqual(filesize('0'), '0 B');
+          assert.strictEqual(filesize('-1024'), '-1.02 kB');
+        });
+
+        it('should handle valid float string', () => {
+          assert.strictEqual(filesize('1536.5'), '1.54 kB');
+          assert.strictEqual(filesize('0.5'), '1 B');
+        });
+
+        it('should handle scientific notation string', () => {
+          assert.strictEqual(filesize('1e3'), '1 kB');
+          assert.strictEqual(filesize('1.024e3'), '1.02 kB');
+        });
+
+        it('should handle string with leading/trailing whitespace', () => {
+          assert.strictEqual(filesize(' 1024 '), '1.02 kB');
+          assert.strictEqual(filesize('\t1024\n'), '1.02 kB');
+        });
+
+        it('should work with string input and different options', () => {
+          assert.strictEqual(filesize('1024', { standard: 'iec' }), '1 KiB');
+          assert.strictEqual(filesize('1000', { bits: true }), '8 kbit');
+          assert.strictEqual(filesize('1024', { output: 'array' })[0], 1.02);
+        });
+      });
+
+      describe('partial() with string input', () => {
+        it('should handle valid integer string', () => {
+          const formatJEDEC = partial({ standard: 'jedec' });
+          assert.strictEqual(formatJEDEC('1024'), '1 KB');
+          assert.strictEqual(formatJEDEC('0'), '0 B');
+          assert.strictEqual(formatJEDEC('-1024'), '-1 KB');
+        });
+
+        it('should handle valid float string', () => {
+          const formatPadded = partial({ pad: true, round: 2 });
+          assert.strictEqual(formatPadded('1536.5'), '1.54 kB');
+          assert.strictEqual(formatPadded('0.5'), '1.00 B');
+        });
+
+        it('should handle scientific notation string', () => {
+          const formatBits = partial({ bits: true });
+          assert.strictEqual(formatBits('1e3'), '8 kbit');
+          assert.strictEqual(formatBits('1.024e3'), '8.19 kbit');
+        });
+
+        it('should handle string with leading/trailing whitespace', () => {
+          const formatFullForm = partial({ fullform: true, standard: 'iec' });
+          assert.strictEqual(formatFullForm(' 1024 '), '1 kibibyte');
+          assert.strictEqual(formatFullForm('\t2048\n'), '2 kibibytes');
+        });
+
+        it('should work with string input and complex options', () => {
+          const formatComplex = partial({
+            standard: 'si',
+            round: 1,
+            spacer: '_',
+            output: 'array'
+          });
+          const result = formatComplex('1000');
+          assert(Array.isArray(result));
+          assert.strictEqual(result[0], 1);
+          assert.strictEqual(result[1], 'kB');
+        });
+      });
+    });
+
+    describe('BigInt input', () => {
+      describe('filesize() with BigInt input', () => {
+        it('should handle regular BigInt values', () => {
+          assert.strictEqual(filesize(BigInt(1024)), '1.02 kB');
+          assert.strictEqual(filesize(BigInt(0)), '0 B');
+          assert.strictEqual(filesize(BigInt(-1024)), '-1.02 kB');
+        });
+
+        it('should handle large BigInt values', () => {
+          const largeBigInt = BigInt('9007199254740992'); // 2^53
+          const result = filesize(largeBigInt);
+          assert(typeof result === 'string');
+          assert(result.includes('PB') || result.includes('PiB'));
+        });
+
+        it('should handle very large BigInt values', () => {
+          const veryLargeBigInt = BigInt('1208925819614629174706176'); // 1024^8
+          const result = filesize(veryLargeBigInt);
+          assert(typeof result === 'string');
+          assert(result.includes('YB') || result.includes('YiB'));
+        });
+
+        it('should work with BigInt input and different options', () => {
+          assert.strictEqual(filesize(BigInt(1024), { standard: 'jedec' }), '1 KB');
+          assert.strictEqual(filesize(BigInt(1000), { bits: true }), '8 kbit');
+          
+          const objectResult = filesize(BigInt(1024), { output: 'object' });
+          assert.strictEqual(objectResult.value, 1.02);
+          assert.strictEqual(objectResult.symbol, 'kB');
+        });
+      });
+
+      describe('partial() with BigInt input', () => {
+        it('should handle regular BigInt values', () => {
+          const formatCustomSymbols = partial({ symbols: { KiB: 'kibibyte' }, standard: 'iec' });
+          assert.strictEqual(formatCustomSymbols(BigInt(1024)), '1 kibibyte');
+          assert.strictEqual(formatCustomSymbols(BigInt(0)), '0 B');
+          assert.strictEqual(formatCustomSymbols(BigInt(-1024)), '-1 kibibyte');
+        });
+
+        it('should handle large BigInt values', () => {
+          const formatPrecision = partial({ precision: 3 });
+          const largeBigInt = BigInt('9007199254740992'); // 2^53
+          const result = formatPrecision(largeBigInt);
+          assert(typeof result === 'string');
+          assert(result.includes('PB') || result.includes('PiB'));
+        });
+
+        it('should handle very large BigInt values', () => {
+          const formatExponent = partial({ exponent: -1 }); // Auto-select exponent
+          const veryLargeBigInt = BigInt('1208925819614629174706176'); // 1024^8
+          const result = formatExponent(veryLargeBigInt);
+          assert(typeof result === 'string');
+          assert(result.includes('YB') || result.includes('YiB'));
+        });
+
+        it('should work with BigInt input and different output formats', () => {
+          const formatObject = partial({ output: 'object', standard: 'iec' });
+          const objectResult = formatObject(BigInt(1024));
+          assert.strictEqual(typeof objectResult, 'object');
+          assert.strictEqual(objectResult.value, 1);
+          assert.strictEqual(objectResult.symbol, 'KiB');
+
+          const formatExponentOnly = partial({ output: 'exponent' });
+          const exponentResult = formatExponentOnly(BigInt(1024));
+          assert.strictEqual(typeof exponentResult, 'number');
+          assert.strictEqual(exponentResult, 1);
+        });
+
+        it('should work with BigInt input and bits option', () => {
+          const formatBits = partial({ bits: true, round: 1 });
+          assert.strictEqual(formatBits(BigInt(1024)), '8.2 kbit');
+          assert.strictEqual(formatBits(BigInt(1000)), '8 kbit');
+        });
+
+        it('should work with BigInt input and locale formatting', () => {
+          const formatLocale = partial({ locale: 'en-US', round: 2 });
+          const result = formatLocale(BigInt(1536));
+          assert(typeof result === 'string');
+          assert(result.includes('1.5') || result.includes('1.54'));
+        });
+      });
+    });
+  });
 });
 
 describe('partial', () => {
