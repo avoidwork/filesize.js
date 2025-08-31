@@ -4,14 +4,15 @@
 
 1. [Overview](#overview)
 2. [Architecture](#architecture)
-3. [Data Flow](#data-flow)
-4. [API Reference](#api-reference)
-5. [Usage Patterns](#usage-patterns)
-6. [Modern Application Examples (2025)](#modern-application-examples-2025)
-7. [Internationalization & Localization](#internationalization--localization)
-8. [Performance Considerations](#performance-considerations)
-9. [Integration Patterns](#integration-patterns)
-10. [Troubleshooting](#troubleshooting)
+3. [Mathematical Foundation](#mathematical-foundation)
+4. [Data Flow](#data-flow)
+5. [API Reference](#api-reference)
+6. [Usage Patterns](#usage-patterns)
+7. [Modern Application Examples (2025)](#modern-application-examples-2025)
+8. [Internationalization & Localization](#internationalization--localization)
+9. [Performance Considerations](#performance-considerations)
+10. [Integration Patterns](#integration-patterns)
+11. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -95,6 +96,167 @@ graph LR
     style B fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
     style C fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
 ```
+
+## Mathematical Foundation
+
+The filesize.js library implements several mathematical algorithms to convert raw byte values into human-readable format with appropriate units. This section describes the core mathematical formulas and their implementations.
+
+### Fundamental Conversion Formula
+
+The basic conversion from bytes to higher-order units follows the general formula:
+
+$$
+\text{value} = \frac{\text{bytes}}{\text{base}^{\text{exponent}}}
+$$
+
+Where:
+- \( \text{bytes} \) is the input byte value
+- \( \text{base} \) is either 2 (binary) or 10 (decimal) depending on the standard
+- \( \text{exponent} \) determines the unit scale (0=bytes, 1=KB/KiB, 2=MB/MiB, etc.)
+
+### Exponent Calculation
+
+The appropriate exponent for automatic unit selection is calculated using logarithms:
+
+$$
+e = \lfloor \log_{\text{base}}(\text{bytes}) \rfloor
+$$
+
+For implementation efficiency, this is computed using the change of base formula:
+
+$$
+e = \left\lfloor \frac{\ln(\text{bytes})}{\ln(\text{base})} \right\rfloor
+$$
+
+Where:
+- \( \ln \) is the natural logarithm
+- \( \lfloor \cdot \rfloor \) is the floor function
+- \( \text{base} = 1024 \) for binary (IEC) standard
+- \( \text{base} = 1000 \) for decimal (SI/JEDEC) standards
+
+### Binary vs Decimal Standards
+
+#### Binary Standard (IEC)
+Uses powers of 2 with base 1024:
+
+$$
+\text{value} = \frac{\text{bytes}}{2^{10 \cdot e}} = \frac{\text{bytes}}{1024^e}
+$$
+
+Units: B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
+
+#### Decimal Standard (SI/JEDEC)
+Uses powers of 10 with base 1000:
+
+$$
+\text{value} = \frac{\text{bytes}}{10^{3 \cdot e}} = \frac{\text{bytes}}{1000^e}
+$$
+
+Units: B, KB, MB, GB, TB, PB, EB, ZB, YB
+
+### Bits Conversion
+
+When converting to bits instead of bytes, the formula becomes:
+
+$$
+\text{value}_{\text{bits}} = \frac{8 \cdot \text{bytes}}{\text{base}^e}
+$$
+
+This multiplication by 8 reflects the conversion from bytes to bits (1 byte = 8 bits).
+
+### Precision and Rounding
+
+#### Decimal Rounding
+The rounding operation applies a power-of-10 scaling factor:
+
+$$
+\text{rounded\_value} = \frac{\text{round}(\text{value} \cdot 10^r)}{10^r}
+$$
+
+Where \( r \) is the number of decimal places specified by the `round` parameter.
+
+#### Significant Digits (Precision)
+When precision is specified, the value is adjusted to show \( p \) significant digits:
+
+$$
+\text{precise\_value} = \text{toPrecision}(\text{value}, p)
+$$
+
+This uses JavaScript's built-in precision formatting rather than mathematical rounding.
+
+### Overflow Handling
+
+When a calculated value equals or exceeds the base threshold, the algorithm increments the exponent:
+
+$$
+\text{if } \text{value} \geq \text{base} \text{ and } e < 8 \text{ then:}
+$$
+$$
+\begin{cases}
+\text{value} = 1 \\
+e = e + 1
+\end{cases}
+$$
+
+This ensures proper unit progression (e.g., 1024 KB becomes 1 MB).
+
+### Exponent Boundary Conditions
+
+The library enforces boundaries on the exponent:
+
+$$
+e = \begin{cases}
+0 & \text{if } e < 0 \\
+8 & \text{if } e > 8 \\
+e & \text{otherwise}
+\end{cases}
+$$
+
+For exponents exceeding 8, precision adjustment occurs:
+
+$$
+\text{precision}_{\text{adjusted}} = \text{precision} + (8 - e_{\text{original}})
+$$
+
+### Special Cases
+
+#### Zero Input
+When the input is zero:
+
+$$
+\text{value} = 0, \quad e = 0, \quad \text{unit} = \text{base unit}
+$$
+
+#### Negative Input
+For negative inputs, the absolute value is processed and the sign is preserved:
+
+$$
+\text{result} = -\left|\text{filesize}(|\text{bytes}|, \text{options})\right|
+$$
+
+### Mathematical Complexity
+
+The algorithmic complexity of the conversion process is:
+
+- **Time Complexity**: \( O(1) \) - constant time for all operations
+- **Space Complexity**: \( O(1) \) - constant space usage
+- **Numerical Precision**: IEEE 754 double precision for values up to \( 2^{53} - 1 \)
+
+### Implementation Examples
+
+#### Standard Conversion (1536 bytes)
+Given: bytes = 1536, base = 1024 (binary)
+
+1. Calculate exponent: \( e = \lfloor \log_{1024}(1536) \rfloor = \lfloor 1.084 \rfloor = 1 \)
+2. Calculate value: \( \text{value} = \frac{1536}{1024^1} = 1.5 \)
+3. Result: "1.5 KiB"
+
+#### Bits Conversion (1024 bytes)
+Given: bytes = 1024, bits = true, base = 1024
+
+1. Calculate exponent: \( e = \lfloor \log_{1024}(1024) \rfloor = 1 \)
+2. Calculate value: \( \text{value} = \frac{1024 \cdot 8}{1024^1} = 8 \)
+3. Result: "8 Kib"
 
 ## Data Flow
 
