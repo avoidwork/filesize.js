@@ -4,7 +4,7 @@
  */
 
 import assert from 'assert';
-import { filesize, partial } from '../../dist/filesize.js';
+import { filesize, partial } from '../../src/filesize.js';
 
 describe('filesize', () => {
   describe('Basic functionality', () => {

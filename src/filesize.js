@@ -23,7 +23,7 @@ import {
 	STRING,
 	STRINGS,
 	ZERO
-} from "./constants";
+} from "./constants.js";
 
 /**
  * Converts a file size in bytes to a human-readable string with appropriate units
