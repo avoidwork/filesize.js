@@ -279,7 +279,7 @@ describe('filesize', () => {
       });
     });
 
-    it('should handle precision with base 2 when scientific notation is produced', () => {
+    it('should handle precision with base 2 when scientific notation is produced (regular number)', () => {
       // Test case that triggers base === 2 path in line 168 precision handling
       // We need a number that will produce scientific notation with toPrecision
       // and uses base 2 (IEC standard)
@@ -292,7 +292,19 @@ describe('filesize', () => {
       assert(result.includes('TiB') || result.includes('PiB'));
     });
 
-    it('should handle precision with base 10 when scientific notation is produced', () => {
+    it('should handle precision with base 2 when scientific notation is produced (BigInt)', () => {
+      // Test case that triggers base === 2 path in line 168 precision handling using BigInt
+      // This ensures both number types are tested for base 2 path
+      const testNumber = BigInt('999999999999999'); // Large BigInt that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'iec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use IEC units (base 2)
+      assert(result.includes('TiB') || result.includes('PiB'));
+    });
+
+    it('should handle precision with base 10 when scientific notation is produced (regular number)', () => {
       // Test case that triggers base === 10 path in line 168 precision handling  
       // We need a number that will produce scientific notation with toPrecision
       // and uses base 10 (SI/JEDEC standard)
@@ -303,6 +315,61 @@ describe('filesize', () => {
       assert(!result.includes('E'));
       // Should use JEDEC units (base 10 logic)
       assert(result.includes('TB') || result.includes('PB'));
+    });
+
+    it('should handle precision with base 10 when scientific notation is produced (BigInt)', () => {
+      // Test case that triggers base === 10 path in line 168 precision handling using BigInt
+      // This ensures both number types are tested for base 10 path
+      const testNumber = BigInt('999999999999999'); // Large BigInt that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'jedec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use JEDEC units (base 10 logic)
+      assert(result.includes('TB') || result.includes('PB'));
+    });
+
+    it('should handle precision with YiB-level numbers where e >= 8 (regular number)', () => {
+      // Test case that covers line 166 when e >= 8 (YiB level) using regular number
+      // This triggers result[0].includes(E) but e < 8 is false, so increment logic is skipped
+      const yibNumber = Math.pow(1024, 8); // 1 YiB in bytes using regular number
+      const result = filesize(yibNumber, { precision: 1, standard: 'iec' });
+      assert(typeof result === 'string');
+      // For extremely large regular numbers, some scientific notation may be expected
+      assert(result.includes('YiB'));
+    });
+
+    it('should handle precision with YiB-level numbers where e >= 8 (BigInt)', () => {
+      // Test case that covers line 166 when e >= 8 (YiB level) using BigInt
+      // This triggers result[0].includes(E) but e < 8 is false, so increment logic is skipped
+      // YiB is at exponent 8, so we need a number large enough to reach this level
+      const yibNumber = BigInt(1024) ** BigInt(8); // 1 YiB in bytes using BigInt
+      const result = filesize(yibNumber, { precision: 1, standard: 'iec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      assert(result.includes('YiB'));
+    });
+
+    it('should handle precision with extremely large numbers that exceed YiB (regular number)', () => {
+      // Test case for numbers that are larger than YiB using regular number
+      // This ensures we test the e >= 8 condition thoroughly with regular numbers
+      const extremeNumber = Math.pow(1024, 8) * 1000; // 1000 YiB using regular number
+      const result = filesize(extremeNumber, { precision: 2, standard: 'iec' });
+      assert(typeof result === 'string');
+      // For extremely large regular numbers, some scientific notation may be expected
+      assert(result.includes('YiB'));
+    });
+
+    it('should handle precision with extremely large numbers that exceed YiB (BigInt)', () => {
+      // Test case for numbers that are larger than YiB using BigInt
+      // This ensures we test the e >= 8 condition thoroughly with BigInt
+      const extremeNumber = BigInt(1024) ** BigInt(8) * BigInt(1000); // 1000 YiB using BigInt
+      const result = filesize(extremeNumber, { precision: 2, standard: 'iec' });
+      assert(typeof result === 'string');
+      // For extremely large BigInt numbers, the result should still use YiB units
+      // Some scientific notation in the final result may be acceptable for such large numbers
+      assert(result.includes('YiB'));
     });
   });
 
