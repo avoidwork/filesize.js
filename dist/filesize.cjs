@@ -198,7 +198,7 @@ function filesize (arg, {
 		if (precision > 0) {
 			result[0] = result[0].toPrecision(precision);
 
-			if (result[0].includes(E)) {
+			if (result[0].includes(E) && e < 8) {
 				e++;
 				d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
 				val = num / d;
