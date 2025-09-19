@@ -4,7 +4,7 @@
  */
 
 import assert from 'assert';
-import { filesize, partial } from '../../dist/filesize.js';
+import { filesize, partial } from '../../src/filesize.js';
 
 describe('filesize', () => {
   describe('Basic functionality', () => {
@@ -172,6 +172,137 @@ describe('filesize', () => {
     it('should use specified precision', () => {
       assert.strictEqual(filesize(1536, { precision: 3 }), '1.54 kB');
       assert.strictEqual(filesize(1536000, { precision: 2 }), '1.5 MB');
+    });
+
+    it('should remove scientific notation from precision results', () => {
+      // Test cases where toPrecision would normally produce scientific notation
+      // but our implementation removes it by splitting on "e"
+      
+      // Very large numbers that would produce scientific notation
+      assert.strictEqual(filesize(1234567890123, { precision: 2 }), '1.2 TB');
+      assert.strictEqual(filesize(9876543210987, { precision: 3 }), '9.88 TB');
+      
+      // Test with different precision values on large numbers
+      assert.strictEqual(filesize(1e15, { precision: 1 }), '1 PB');
+      assert.strictEqual(filesize(1e15, { precision: 2 }), '1.0 PB');
+      assert.strictEqual(filesize(1e15, { precision: 3 }), '1.00 PB');
+    });
+
+    it('should handle precision with very small numbers', () => {
+      // Very small numbers (less than 1 byte)
+      assert.strictEqual(filesize(0.001, { precision: 1 }), '0 B');
+      assert.strictEqual(filesize(0.1, { precision: 2 }), '0.0 B');
+      assert.strictEqual(filesize(0.5, { precision: 1 }), '1 B');
+    });
+
+    it('should handle precision with numbers that would produce e+ notation', () => {
+      // Numbers that produce e+ notation with toPrecision
+      const largeNum = 1234567890;
+      assert.strictEqual(filesize(largeNum, { precision: 2 }), '1.2 GB');
+      assert.strictEqual(filesize(largeNum, { precision: 3 }), '1.23 GB');
+      assert.strictEqual(filesize(largeNum, { precision: 1 }), '1 GB');
+    });
+
+    it('should handle precision with numbers that would produce e- notation', () => {
+      // Very small decimal numbers that would produce e- notation
+      assert.strictEqual(filesize(0.0001, { precision: 1 }), '0 B');
+      assert.strictEqual(filesize(0.00001, { precision: 2 }), '0.0 B');
+    });
+
+    it('should work with precision and different standards', () => {
+      const largeNum = 1234567890;
+      assert.strictEqual(filesize(largeNum, { precision: 2, standard: 'iec' }), '1.1 GiB');
+      assert.strictEqual(filesize(largeNum, { precision: 2, standard: 'jedec' }), '1.1 GB');
+      assert.strictEqual(filesize(largeNum, { precision: 2, standard: 'si' }), '1.2 GB');
+    });
+
+    it('should work with precision and bits option', () => {
+      const largeNum = 1234567890;
+      assert.strictEqual(filesize(largeNum, { precision: 2, bits: true }), '9.9 Gbit');
+      assert.strictEqual(filesize(largeNum, { precision: 3, bits: true }), '9.88 Gbit');
+    });
+
+    it('should work with precision and array output', () => {
+      const result = filesize(1234567890, { precision: 2, output: 'array' });
+      assert(Array.isArray(result));
+      assert.strictEqual(result[0], '1.2');
+      assert.strictEqual(result[1], 'GB');
+    });
+
+    it('should work with precision and object output', () => {
+      const result = filesize(1234567890, { precision: 2, output: 'object' });
+      assert.strictEqual(typeof result, 'object');
+      assert.strictEqual(result.value, '1.2');
+      assert.strictEqual(result.symbol, 'GB');
+    });
+
+    it('should handle precision with extremely large numbers', () => {
+      // Test with numbers that exceed normal exponent range
+      const extremeNumber = Math.pow(1024, 15);
+      const result = filesize(extremeNumber, { precision: 2 });
+      assert(typeof result === 'string');
+      // Note: For extremely large numbers that exceed JavaScript's normal number range,
+      // the number itself may be in scientific notation, which is expected behavior
+      assert(result.includes('YB') || result.includes('YiB'));
+    });
+
+    it('should handle precision edge cases', () => {
+      // Test precision with zero
+      assert.strictEqual(filesize(0, { precision: 3 }), '0.00 B');
+      
+      // Test precision with exactly 1 byte
+      assert.strictEqual(filesize(1, { precision: 2 }), '1.0 B');
+      
+      // Test precision with negative numbers
+      assert.strictEqual(filesize(-1234567890, { precision: 2 }), '-1.2 GB');
+    });
+
+    it('should ensure no scientific notation in any precision result', () => {
+      // Test a range of numbers that would normally produce scientific notation from toPrecision
+      // but should have it removed by our implementation
+      const testNumbers = [
+        1e3, 1e6, 1e9, 1e12,
+        1234567890123456,
+        Math.pow(10, 10)
+      ];
+
+      testNumbers.forEach(num => {
+        [1, 2, 3, 4].forEach(precision => {
+          const result = filesize(num, { precision });
+          // Result should not contain scientific notation markers when using toPrecision
+          // Note: We exclude extremely large numbers that naturally contain 'e' in JavaScript
+          if (!num.toString().includes('e')) {
+            assert(!result.includes('e'), `Result "${result}" contains 'e' for number ${num} with precision ${precision}`);
+            assert(!result.includes('E'), `Result "${result}" contains 'E' for number ${num} with precision ${precision}`);
+          }
+        });
+      });
+    });
+
+    it('should handle precision with base 2 when scientific notation is produced', () => {
+      // Test case that triggers base === 2 path in line 168 precision handling
+      // We need a number that will produce scientific notation with toPrecision
+      // and uses base 2 (IEC standard)
+      const testNumber = 999999999999999; // Large number that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'iec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use IEC units (base 2)
+      assert(result.includes('TiB') || result.includes('PiB'));
+    });
+
+    it('should handle precision with base 10 when scientific notation is produced', () => {
+      // Test case that triggers base === 10 path in line 168 precision handling  
+      // We need a number that will produce scientific notation with toPrecision
+      // and uses base 10 (SI/JEDEC standard)
+      const testNumber = 999999999999999; // Large number that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'jedec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use JEDEC units (base 10 logic)
+      assert(result.includes('TB') || result.includes('PB'));
     });
   });
 
@@ -499,6 +630,35 @@ describe('partial', () => {
         fullform: true
       });
       assert.strictEqual(formatComplex(1024), '8 kibibits');
+    });
+  });
+
+  describe('Precision with partial', () => {
+    it('should apply precision option from partial', () => {
+      const formatPrecision = partial({ precision: 2 });
+      assert.strictEqual(formatPrecision(1234567890), '1.2 GB');
+      assert.strictEqual(formatPrecision(9876543210), '9.9 GB');
+    });
+
+    it('should remove scientific notation in partial functions', () => {
+      const formatWithPrecision = partial({ precision: 3 });
+      const largeNum = 1234567890123;
+      const result = formatWithPrecision(largeNum);
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      assert.strictEqual(result, '1.23 TB');
+    });
+
+    it('should work with precision and other options combined', () => {
+      const formatComplex = partial({
+        precision: 2,
+        standard: 'iec',
+        bits: true
+      });
+      const result = formatComplex(1234567890);
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      assert.strictEqual(result, '9.2 Gibit');
     });
   });
 

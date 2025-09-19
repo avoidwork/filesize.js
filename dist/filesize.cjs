@@ -3,7 +3,7 @@
  *
  * @copyright 2025 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.2
+ * @version 11.0.4
  */
 'use strict';
 
@@ -35,6 +35,7 @@ const EXPONENT = "exponent";
 const ROUND = "round";
 
 // Special Characters and Values
+const E = "e";
 const EMPTY = "";
 const PERIOD = ".";
 const S = "s";
@@ -166,9 +167,15 @@ function filesize (arg, {
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
+
+		if (precision > 0) {
+			result[0] = result[0].toPrecision(precision);
+		}
+
 		u = result[1] = STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	} else {
-		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+		let d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
+		val = num / d;
 
 		if (bits) {
 			val = val * 8;
@@ -179,12 +186,24 @@ function filesize (arg, {
 			}
 		}
 
-		const p = Math.pow(10, e > 0 ? round : 0);
+		let p = Math.pow(10, e > 0 ? round : 0);
 		result[0] = roundingFunc(val * p) / p;
 
 		if (result[0] === ceil && e < 8 && exponent === -1) {
 			result[0] = 1;
 			e++;
+		}
+
+		// Setting optional precision
+		if (precision > 0) {
+			result[0] = result[0].toPrecision(precision);
+
+			if (result[0].includes(E)) {
+				e++;
+				d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
+				val = num / d;
+				result[0] = roundingFunc(val * p) / p;
+			}
 		}
 
 		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : STRINGS.symbol[standard][bits ? BITS : BYTES][e];
@@ -193,11 +212,6 @@ function filesize (arg, {
 	// Decorating a 'diff'
 	if (neg) {
 		result[0] = -result[0];
-	}
-
-	// Setting optional precision
-	if (precision > 0) {
-		result[0] = result[0].toPrecision(precision);
 	}
 
 	// Applying custom symbol
