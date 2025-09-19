@@ -163,11 +163,6 @@ function filesize (arg, {
 	// Zero is now a special case because bytes divide by 1
 	if (num === 0) {
 		result[0] = 0;
-
-		if (precision > 0) {
-			result[0] = result[0].toPrecision(precision);
-		}
-
 		u = result[1] = STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	} else {
 		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
@@ -189,23 +184,18 @@ function filesize (arg, {
 			e++;
 		}
 
-		// Setting optional precision
-		if (precision > 0) {
-			result[0] = result[0].toPrecision(precision);
-			const [ newResult, newExponent ] = result[0].split(E);
-			result[0] = newResult;
-
-			if (newExponent !== undefined) {
-				e += parseInt(newExponent, 10);
-			}
-		}
-
 		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	}
 
 	// Decorating a 'diff'
 	if (neg) {
 		result[0] = -result[0];
+	}
+
+	// Setting optional precision
+	if (precision > 0) {
+		result[0] = result[0].toPrecision(precision);
+		result[0] = result[0].split(E)[0];
 	}
 
 	// Applying custom symbol
