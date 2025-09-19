@@ -33,7 +33,6 @@ const EXPONENT = "exponent";
 const ROUND = "round";
 
 // Special Characters and Values
-const E = "e";
 const EMPTY = "";
 const PERIOD = ".";
 const S = "s";
@@ -195,7 +194,6 @@ function filesize (arg, {
 	// Setting optional precision
 	if (precision > 0) {
 		result[0] = result[0].toPrecision(precision);
-		result[0] = result[0].split(E)[0];
 	}
 
 	// Applying custom symbol
