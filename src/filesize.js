@@ -150,7 +150,7 @@ export function filesize (arg, {
 			}
 		}
 
-		const p = Math.pow(10, e > 0 ? round : 0);
+		let p = Math.pow(10, e > 0 ? round : 0);
 		result[0] = roundingFunc(val * p) / p;
 
 		if (result[0] === ceil && e < 8 && exponent === -1) {
@@ -161,11 +161,14 @@ export function filesize (arg, {
 		// Setting optional precision
 		if (precision > 0) {
 			result[0] = result[0].toPrecision(precision);
-			const [ newResult, newExponent ] = result[0].split(E);
-			result[0] = newResult;
+			const [ _newResult, newExponent ] = result[0].split(E);
 
 			if (newExponent !== undefined) {
-				e += parseInt(newExponent, 10);
+				e++;
+				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+
+				p = Math.pow(10, e > 0 ? round : 0);
+				result[0] = roundingFunc(val * p) / p;
 			}
 		}
 

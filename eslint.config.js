@@ -11,6 +11,9 @@ export default [
 				BigInt: true,
 				beforeEach: true
 			}
+		},
+		rules: {
+			"no-unused-vars": ["error", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
 		}
 	},
 	pluginJs.configs.recommended,
