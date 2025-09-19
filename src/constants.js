@@ -26,6 +26,7 @@ export const EXPONENT = "exponent";
 export const ROUND = "round";
 
 // Special Characters and Values
+export const E = "e";
 export const EMPTY = "";
 export const PERIOD = ".";
 export const S = "s";

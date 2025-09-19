@@ -4,6 +4,7 @@ import {
 	BITS,
 	BYTE,
 	BYTES,
+	E,
 	EMPTY,
 	EXPONENT,
 	FUNCTION,
@@ -163,6 +164,7 @@ export function filesize (arg, {
 	// Setting optional precision
 	if (precision > 0) {
 		result[0] = result[0].toPrecision(precision);
+		result[0] = result[0].split(E)[0];
 	}
 
 	// Applying custom symbol
