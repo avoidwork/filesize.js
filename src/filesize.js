@@ -139,7 +139,8 @@ export function filesize (arg, {
 
 		u = result[1] = STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	} else {
-		val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+		let d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
+		val = num / d;
 
 		if (bits) {
 			val = val * 8;
@@ -164,7 +165,8 @@ export function filesize (arg, {
 
 			if (result[0].includes(E)) {
 				e++;
-				val = num / (base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e));
+				d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
+				val = num / d;
 				result[0] = roundingFunc(val * p) / p;
 			}
 		}
