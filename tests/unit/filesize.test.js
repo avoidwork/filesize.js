@@ -278,6 +278,32 @@ describe('filesize', () => {
         });
       });
     });
+
+    it('should handle precision with base 2 when scientific notation is produced', () => {
+      // Test case that triggers base === 2 path in line 168 precision handling
+      // We need a number that will produce scientific notation with toPrecision
+      // and uses base 2 (IEC standard)
+      const testNumber = 999999999999999; // Large number that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'iec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use IEC units (base 2)
+      assert(result.includes('TiB') || result.includes('PiB'));
+    });
+
+    it('should handle precision with base 10 when scientific notation is produced', () => {
+      // Test case that triggers base === 10 path in line 168 precision handling  
+      // We need a number that will produce scientific notation with toPrecision
+      // and uses base 10 (SI/JEDEC standard)
+      const testNumber = 999999999999999; // Large number that triggers scientific notation
+      const result = filesize(testNumber, { precision: 1, standard: 'jedec' });
+      assert(typeof result === 'string');
+      assert(!result.includes('e'));
+      assert(!result.includes('E'));
+      // Should use JEDEC units (base 10 logic)
+      assert(result.includes('TB') || result.includes('PB'));
+    });
   });
 
   describe('Edge cases', () => {
