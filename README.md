@@ -343,7 +343,7 @@ filesize(265318, {standard: "jedec"}); // "259.1 KB"
 ```javascript
 filesize(500, {bits: true}); // "4 kbit"
 filesize(1024, {bits: true}); // "8.19 kbit"
-filesize(1024, {bits: true, base: 2}); // "8 kibit"
+filesize(1024, {bits: true, base: 2}); // "8 Kibit"
 ```
 
 ### Custom Formatting
@@ -351,7 +351,7 @@ filesize(1024, {bits: true, base: 2}); // "8 kibit"
 ```javascript
 // Full form units
 filesize(1024, {fullform: true}); // "1.02 kilobytes"
-filesize(1024, {base: 2, fullform: true}); // "1 kibibytes"
+filesize(1024, {base: 2, fullform: true}); // "1 kibibyte"
 
 // Custom separators and spacing
 filesize(265318, {separator: ","}); // "265,32 kB"
@@ -386,7 +386,7 @@ filesize(1024, {exponent: 1}); // "1.02 kB"
 filesize(BigInt(1024), {standard: "jedec"}); // "1 KB"
 
 // Extreme precision for very large numbers
-filesize(Math.pow(1024, 8), {precision: 3}); // "1208925819614629174706176 YB"
+filesize(Math.pow(1024, 8), {precision: 3}); // "1.21 YB"
 ```
 
 ### Partial Application Patterns
