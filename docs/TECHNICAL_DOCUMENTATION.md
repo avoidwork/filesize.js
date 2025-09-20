@@ -145,14 +145,14 @@ Uses powers of 2 with base 1024:
 
 Units: B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
 
-#### Decimal Standard (SI/JEDEC)
+#### Decimal Standard (SI)
 Uses powers of 10 with base 1000:
 
 ```math
 \text{value} = \frac{\text{bytes}}{10^{3 \cdot e}} = \frac{\text{bytes}}{1000^e}
 ```
 
-Units: B, KB, MB, GB, TB, PB, EB, ZB, YB
+Units: B, KB, MB, GB, TB, PB, EB, ZB, YB (uses JEDEC-style symbols)
 
 ### Bits Conversion
 
