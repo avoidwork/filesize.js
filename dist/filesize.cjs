@@ -232,12 +232,12 @@ function filesize (arg, {
 		return e;
 	}
 
-	// Use pre-computed lookup tables instead of Math.pow
+	// Use pre-computed lookup tables (e is always <= 8, arrays have 9 elements)
 	let d;
 	if (isDecimal) {
-		d = e < DECIMAL_POWERS.length ? DECIMAL_POWERS[e] : Math.pow(1000, e);
+		d = DECIMAL_POWERS[e];
 	} else {
-		d = e < BINARY_POWERS.length ? BINARY_POWERS[e] : Math.pow(2, e * 10);
+		d = BINARY_POWERS[e];
 	}
 	
 	val = num / d;
@@ -266,11 +266,11 @@ function filesize (arg, {
 
 		if (result[0].includes(E) && e < 8) {
 			e++;
-			// Recalculate with new exponent
+			// Recalculate with new exponent (e is always <= 8)
 			if (isDecimal) {
-				d = e < DECIMAL_POWERS.length ? DECIMAL_POWERS[e] : Math.pow(1000, e);
+				d = DECIMAL_POWERS[e];
 			} else {
-				d = e < BINARY_POWERS.length ? BINARY_POWERS[e] : Math.pow(2, e * 10);
+				d = BINARY_POWERS[e];
 			}
 			val = num / d;
 			result[0] = (p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p).toPrecision(precision);

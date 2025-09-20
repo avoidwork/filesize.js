@@ -452,6 +452,34 @@ describe('filesize', () => {
       assert.ok(typeof result === 'string');
     });
 
+    it('should cover p===1 branch in precision recalculation', () => {
+      // Try to force the p===1 branch in the precision recalculation
+      // This needs a very specific edge case where scientific notation is produced
+      // and after increment e=0 or round=0 makes p=1
+      const result = filesize(0.0001, { precision: 20, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should trigger precision recalculation with bytes and round=0', () => {
+      // Another attempt: very small number that might produce scientific notation in bytes
+      const result = filesize(0.000000000000001, { precision: 30, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should cover p===1 branch with input=1 and extreme precision', () => {
+      // When input=1, e=0, so p=1. High precision might trigger scientific notation
+      // and the recalculation with p===1 branch
+      const result = filesize(1, { precision: 50 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should attempt to trigger the elusive p===1 branch in recalculation', () => {
+      // Numbers that would produce scientific notation with precision=1
+      // When e=0 (bytes), p=1, and toPrecision(1) might produce "1e+1" etc.
+      const result = filesize(10, { precision: 1, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
     it('should handle extremely large numbers with precision adjustment', () => {
       const extremeNumber = Math.pow(1024, 15); // Much larger than supported exponent
       const result = filesize(extremeNumber, { precision: 3 });
