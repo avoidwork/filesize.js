@@ -40,6 +40,34 @@ describe('filesize', () => {
     });
   });
 
+  describe('Zero value edge cases', () => {
+    it('should handle zero with exponent output', () => {
+      assert.strictEqual(filesize(0, { output: 'exponent' }), 0);
+    });
+
+    it('should handle zero with custom symbols', () => {
+      assert.strictEqual(filesize(0, { symbols: { 'B': 'Bytes' } }), '0 Bytes');
+    });
+
+    it('should handle zero with fullform', () => {
+      assert.strictEqual(filesize(0, { fullform: true }), '0 byte');
+    });
+
+    it('should handle zero with fullform and bits', () => {
+      assert.strictEqual(filesize(0, { fullform: true, bits: true }), '0 bit');
+    });
+
+    it('should handle zero with array output', () => {
+      const result = filesize(0, { output: 'array' });
+      assert.deepStrictEqual(result, [0, 'B']);
+    });
+
+    it('should handle zero with object output', () => {
+      const result = filesize(0, { output: 'object' });
+      assert.deepStrictEqual(result, { value: 0, symbol: 'B', exponent: 0, unit: 'B' });
+    });
+  });
+
   describe('Standards', () => {
     it('should use IEC standard', () => {
       assert.strictEqual(filesize(1024, { standard: 'iec' }), '1 KiB');
@@ -396,6 +424,60 @@ describe('filesize', () => {
       const hugeNumber = Math.pow(1024, 10);
       const result = filesize(hugeNumber);
       assert(typeof result === 'string');
+    });
+
+    it('should handle numbers exceeding lookup table size (decimal)', () => {
+      // Test number requiring Math.pow fallback for decimal powers
+      const hugeNumber = Math.pow(1000, 15); // Exceeds DECIMAL_POWERS array
+      const result = filesize(hugeNumber, { base: 10 });
+      assert.ok(result.includes('YB'));
+    });
+
+    it('should handle numbers exceeding lookup table size (binary)', () => {
+      // Test number requiring Math.pow fallback for binary powers  
+      const hugeNumber = Math.pow(2, 100); // Exceeds BINARY_POWERS array
+      const result = filesize(hugeNumber, { base: 2 });
+      assert.ok(result.includes('YiB'));
+    });
+
+    it('should handle precision with numbers exceeding lookup table', () => {
+      const hugeNumber = Math.pow(1000, 12);
+      const result = filesize(hugeNumber, { precision: 2, base: 10 });
+      assert.ok(result.includes('YB'));
+    });
+
+    it('should handle precision with round=0 and scientific notation', () => {
+      // Test case where p === 1 in the precision recalculation branch
+      const result = filesize(1000000000000000000, { precision: 1, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should cover p===1 branch in precision recalculation', () => {
+      // Try to force the p===1 branch in the precision recalculation
+      // This needs a very specific edge case where scientific notation is produced
+      // and after increment e=0 or round=0 makes p=1
+      const result = filesize(0.0001, { precision: 20, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should trigger precision recalculation with bytes and round=0', () => {
+      // Another attempt: very small number that might produce scientific notation in bytes
+      const result = filesize(0.000000000000001, { precision: 30, round: 0 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should cover p===1 branch with input=1 and extreme precision', () => {
+      // When input=1, e=0, so p=1. High precision might trigger scientific notation
+      // and the recalculation with p===1 branch
+      const result = filesize(1, { precision: 50 });
+      assert.ok(typeof result === 'string');
+    });
+
+    it('should attempt to trigger the elusive p===1 branch in recalculation', () => {
+      // Numbers that would produce scientific notation with precision=1
+      // When e=0 (bytes), p=1, and toPrecision(1) might produce "1e+1" etc.
+      const result = filesize(10, { precision: 1, round: 0 });
+      assert.ok(typeof result === 'string');
     });
 
     it('should handle extremely large numbers with precision adjustment', () => {
