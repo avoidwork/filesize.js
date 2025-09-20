@@ -198,7 +198,7 @@ function filesize (arg, {
 				e++;
 				d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
 				val = num / d;
-				result[0] = roundingFunc(val * p) / p;
+				result[0] = (roundingFunc(val * p) / p).toPrecision(precision);
 			}
 		}
 
