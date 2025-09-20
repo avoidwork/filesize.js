@@ -371,6 +371,12 @@ describe('filesize', () => {
       // Some scientific notation in the final result may be acceptable for such large numbers
       assert(result.includes('YiB'));
     });
+
+    it('should handle precision with specific test case for GiB values', () => {
+      // Test specific precision case: filesize(1058223158, {base: 2, standard: 'iec', precision: 3})
+      // This should output '0.990 GiB'
+      assert.strictEqual(filesize(1058223158, {base: 2, standard: 'iec', precision: 3}), '0.990 GiB');
+    });
   });
 
   describe('Edge cases', () => {
