@@ -56,7 +56,36 @@ const STRINGS = {
 		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
 		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
 	}
-};/**
+};
+
+// Pre-computed lookup tables for performance optimization
+const BINARY_POWERS = [
+	1, // 2^0
+	1024, // 2^10
+	1048576, // 2^20
+	1073741824, // 2^30
+	1099511627776, // 2^40
+	1125899906842624, // 2^50
+	1152921504606846976, // 2^60
+	1180591620717411303424, // 2^70
+	1208925819614629174706176 // 2^80
+];
+
+const DECIMAL_POWERS = [
+	1, // 10^0
+	1000, // 10^3
+	1000000, // 10^6
+	1000000000, // 10^9
+	1000000000000, // 10^12
+	1000000000000000, // 10^15
+	1000000000000000000, // 10^18
+	1000000000000000000000, // 10^21
+	1000000000000000000000000 // 10^24
+];
+
+// Pre-computed log values for faster exponent calculation
+const LOG_2_1024 = Math.log(1024);
+const LOG_10_1000 = Math.log(1000);/**
  * Converts a file size in bytes to a human-readable string with appropriate units
  * @param {number|string|bigint} arg - The file size in bytes to convert
  * @param {Object} [options={}] - Configuration options for formatting
@@ -107,21 +136,31 @@ function filesize (arg, {
 		val = 0,
 		u = EMPTY;
 
-	// Sync base & standard
+	// Optimized base & standard synchronization with early returns
+	let isDecimal, ceil, actualStandard;
 	if (standard === SI) {
-		base = 10;
-		standard = JEDEC;
-	} else if (standard === IEC || standard === JEDEC) {
-		base = 2;
+		isDecimal = true;
+		ceil = 1000;
+		actualStandard = JEDEC;
+	} else if (standard === IEC) {
+		isDecimal = false;
+		ceil = 1024;
+		actualStandard = IEC;
+	} else if (standard === JEDEC) {
+		isDecimal = false; // JEDEC uses binary (1024) by default
+		ceil = 1024;
+		actualStandard = JEDEC;
 	} else if (base === 2) {
-		standard = IEC;
+		isDecimal = false;
+		ceil = 1024;
+		actualStandard = IEC;
 	} else {
-		base = 10;
-		standard = JEDEC;
+		isDecimal = true;
+		ceil = 1000;
+		actualStandard = JEDEC;
 	}
 
-	const ceil = base === 10 ? 1000 : 1024,
-		full = fullform === true,
+	const full = fullform === true,
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
@@ -138,9 +177,39 @@ function filesize (arg, {
 		num = -num;
 	}
 
-	// Determining the exponent
+	// Fast path for zero
+	if (num === 0) {
+		result[0] = precision > 0 ? (0).toPrecision(precision) : 0;
+		u = result[1] = STRINGS.symbol[actualStandard][bits ? BITS : BYTES][0];
+		
+		if (output === EXPONENT) {
+			return 0;
+		}
+		
+		// Skip most processing for zero case
+		if (symbols[result[1]]) {
+			result[1] = symbols[result[1]];
+		}
+		
+		if (full) {
+			result[1] = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+		}
+		
+		return output === ARRAY ? result : output === OBJECT ? {
+			value: result[0],
+			symbol: result[1],
+			exponent: 0,
+			unit: u
+		} : result.join(spacer);
+	}
+
+	// Optimized exponent calculation using pre-computed log values
 	if (e === -1 || isNaN(e)) {
-		e = Math.floor(Math.log(num) / Math.log(ceil));
+		if (isDecimal) {
+			e = Math.floor(Math.log(num) / LOG_10_1000);
+		} else {
+			e = Math.floor(Math.log(num) / LOG_2_1024);
+		}
 
 		if (e < 0) {
 			e = 0;
@@ -152,7 +221,6 @@ function filesize (arg, {
 		if (precision > 0) {
 			precision += 8 - e;
 		}
-
 		e = 8;
 	}
 
@@ -160,50 +228,54 @@ function filesize (arg, {
 		return e;
 	}
 
-	// Zero is now a special case because bytes divide by 1
-	if (num === 0) {
-		result[0] = 0;
-
-		if (precision > 0) {
-			result[0] = result[0].toPrecision(precision);
-		}
-
-		u = result[1] = STRINGS.symbol[standard][bits ? BITS : BYTES][e];
+	// Use pre-computed lookup tables instead of Math.pow
+	let d;
+	if (isDecimal) {
+		d = e < DECIMAL_POWERS.length ? DECIMAL_POWERS[e] : Math.pow(1000, e);
 	} else {
-		let d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
-		val = num / d;
+		d = e < BINARY_POWERS.length ? BINARY_POWERS[e] : Math.pow(2, e * 10);
+	}
+	
+	val = num / d;
 
-		if (bits) {
-			val = val * 8;
+	if (bits) {
+		val = val * 8;
 
-			if (val >= ceil && e < 8) {
-				val = val / ceil;
-				e++;
-			}
-		}
-
-		let p = Math.pow(10, e > 0 ? round : 0);
-		result[0] = roundingFunc(val * p) / p;
-
-		if (result[0] === ceil && e < 8 && exponent === -1) {
-			result[0] = 1;
+		if (val >= ceil && e < 8) {
+			val = val / ceil;
 			e++;
 		}
-
-		// Setting optional precision
-		if (precision > 0) {
-			result[0] = result[0].toPrecision(precision);
-
-			if (result[0].includes(E) && e < 8) {
-				e++;
-				d = base === 2 ? Math.pow(2, e * 10) : Math.pow(1000, e);
-				val = num / d;
-				result[0] = (roundingFunc(val * p) / p).toPrecision(precision);
-			}
-		}
-
-		u = result[1] = base === 10 && e === 1 ? bits ? SI_KBIT : SI_KBYTE : STRINGS.symbol[standard][bits ? BITS : BYTES][e];
 	}
+
+	// Optimize rounding calculation
+	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
+	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
+
+	if (result[0] === ceil && e < 8 && exponent === -1) {
+		result[0] = 1;
+		e++;
+	}
+
+	// Setting optional precision
+	if (precision > 0) {
+		result[0] = result[0].toPrecision(precision);
+
+		if (result[0].includes(E) && e < 8) {
+			e++;
+			// Recalculate with new exponent
+			if (isDecimal) {
+				d = e < DECIMAL_POWERS.length ? DECIMAL_POWERS[e] : Math.pow(1000, e);
+			} else {
+				d = e < BINARY_POWERS.length ? BINARY_POWERS[e] : Math.pow(2, e * 10);
+			}
+			val = num / d;
+			result[0] = (p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p).toPrecision(precision);
+		}
+	}
+
+	// Cache symbol lookup
+	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
+	u = result[1] = (isDecimal && e === 1) ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
 
 	// Decorating a 'diff'
 	if (neg) {
@@ -211,8 +283,11 @@ function filesize (arg, {
 	}
 
 	// Applying custom symbol
-	result[1] = symbols[result[1]] || result[1];
+	if (symbols[result[1]]) {
+		result[1] = symbols[result[1]];
+	}
 
+	// Optimized locale/separator handling
 	if (locale === true) {
 		result[0] = result[0].toLocaleString();
 	} else if (locale.length > 0) {
@@ -222,9 +297,9 @@ function filesize (arg, {
 	}
 
 	if (pad && round > 0) {
-		const i =  result[0].toString(),
-			x = separator || ((i.match(/(\D)/g) || []).pop() || PERIOD),
-			tmp = i.toString().split(x),
+		const resultStr = result[0].toString(),
+			x = separator || ((resultStr.match(/(\D)/g) || []).pop() || PERIOD),
+			tmp = resultStr.split(x),
 			s = tmp[1] || EMPTY,
 			l = s.length,
 			n = round - l;
@@ -233,16 +308,24 @@ function filesize (arg, {
 	}
 
 	if (full) {
-		result[1] = fullforms[e] ? fullforms[e] : STRINGS.fullform[standard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+		result[1] = fullforms[e] || STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
 	}
 
-	// Returning Array, Object, or String (default)
-	return output === ARRAY ? result : output === OBJECT ? {
-		value: result[0],
-		symbol: result[1],
-		exponent: e,
-		unit: u
-	} : result.join(spacer);
+	// Optimized return logic
+	if (output === ARRAY) {
+		return result;
+	}
+	
+	if (output === OBJECT) {
+		return {
+			value: result[0],
+			symbol: result[1],
+			exponent: e,
+			unit: u
+		};
+	}
+	
+	return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
 }
 
 /**
