@@ -176,13 +176,13 @@ The rounding operation applies a power-of-10 scaling factor:
 Where $r$ is the number of decimal places specified by the `round` parameter.
 
 #### Significant Digits (Precision)
-When precision is specified, the value is adjusted to show $p$ significant digits:
+When precision is specified ($p > 0$), the value is adjusted to show $p$ significant digits after rounding:
 
 ```math
-\text{precise\_value} = \text{toPrecision}(\text{value}, p)
+\text{precise\_value} = \text{toPrecision}(\text{rounded\_value}, p)
 ```
 
-This uses JavaScript's built-in precision formatting rather than mathematical rounding.
+The precision parameter takes precedence over round when both are specified. If scientific notation results (contains 'E'), the exponent is incremented and the calculation is repeated to avoid exponential notation in output.
 
 ### Overflow Handling
 
