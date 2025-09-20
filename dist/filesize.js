@@ -3,7 +3,7 @@
  *
  * @copyright 2025 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.9
+ * @version 11.0.10
  */
 // Error Messages
 const INVALID_NUMBER = "Invalid number";
