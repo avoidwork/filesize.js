@@ -125,62 +125,70 @@ filesize.js is optimized for high performance with comprehensive benchmarks cove
 
 | Scenario | Operations/sec | Notes |
 |----------|----------------|-------|
-| **Basic conversion** | ~10-12M ops/sec | Fastest operations (small numbers) |
-| **Large numbers** | ~10-11M ops/sec | Consistent performance |
-| **With options** | ~4-9M ops/sec | Depends on option complexity |
-| **Locale formatting** | ~85K ops/sec | Most expensive operation |
-| **Partial functions** | ~6-8M ops/sec | ~10-20% overhead, amortized |
+| **Basic conversion** | ~16-27M ops/sec | Fastest operations (large numbers) |
+| **Small numbers** | ~18-20M ops/sec | Consistent performance |
+| **With options** | ~5-13M ops/sec | Depends on option complexity |
+| **Locale formatting** | ~91K ops/sec | Most expensive operation |
+| **Stress testing** | ~2-10M ops/sec | Handles edge cases gracefully |
 
 ### 📊 Detailed Benchmark Results
 
-#### Basic Performance (5-run average, excluding outliers)
-- **filesize(0)**: 10.1M ops/sec
-- **filesize(512)**: 12.3M ops/sec
-- **filesize(1024)**: 10.2M ops/sec  
-- **filesize(1MB)**: 11.3M ops/sec
-- **filesize(1GB)**: 11.1M ops/sec
-- **With bits=true**: 9.3M ops/sec
-- **With standard="iec"**: 9.6M ops/sec
-- **With fullform=true**: 4.4M ops/sec
-- **Object output**: 5.1M ops/sec
+#### Basic Performance (5-run average)
+- **filesize(0)**: 18.6M ops/sec
+- **filesize(512)**: 20.3M ops/sec
+- **filesize(1024)**: 18.7M ops/sec  
+- **filesize(1MB)**: 23.5M ops/sec
+- **filesize(1GB)**: 23.6M ops/sec
+- **filesize(1TB)**: 26.9M ops/sec
+- **With bits=true**: 16.8M ops/sec
+- **With standard="iec"**: 16.6M ops/sec
+- **With round=4**: 13.4M ops/sec
 
 #### Options Performance Impact
-- **Default options**: 6.4M ops/sec (baseline)
-- **bits=true**: 1.66x slower
-- **pad=true**: 2.74x slower  
-- **locale="en-US"**: 75x slower (significant overhead)
-- **standard="iec"**: 1.12x slower
-- **output="object"**: 0.96x faster
-- **Complex combinations**: 1.6-2.1x slower
+- **bits=true**: 12.5M ops/sec
+- **pad=true**: 5.6M ops/sec  
+- **locale="en-US"**: 91K ops/sec (significant overhead)
+- **standard="iec"**: 8.8M ops/sec
+- **standard="jedec"**: 9.0M ops/sec
+- **output="array"**: 10.2M ops/sec
+- **output="object"**: 9.2M ops/sec
+- **fullform=true**: 7.8M ops/sec
+- **precision=3**: 6.3M ops/sec
+- **separator=","**: 7.2M ops/sec
 
 #### Stress Test Results
-- **Edge cases**: 2.0M ops/sec (90% success rate)
-- **Very large numbers**: 3.7M ops/sec (100% success)
-- **BigInt values**: 2.8M ops/sec (100% success)
-- **Memory pressure**: 48K ops/sec (100% success)
-- **Performance consistency**: 84.7% (10 runs average)
+- **Edge cases**: 2.3M ops/sec (90% success rate)
+- **Very large numbers**: 4.6M ops/sec (100% success)
+- **Very small numbers**: 10.4M ops/sec (100% success)
+- **Negative numbers**: 5.4M ops/sec (100% success)
+- **Random options**: 2.3M ops/sec (100% success)
+- **BigInt values**: 3.7M ops/sec (100% success)
+- **Memory pressure**: 49K ops/sec (100% success)
+- **Error conditions**: 715K ops/sec (~40% success rate)
 
 #### Partial Function Performance
-- **Direct calls**: 8.0M ops/sec (baseline)
-- **Simple partial**: 6.7M ops/sec (1.20x slower)
-- **Complex partial**: 5.6M ops/sec (1.42x slower)
-- **Partial with locale**: 84K ops/sec (95x slower)
+Partial functions maintain excellent performance with minimal overhead:
+- **Acceptable overhead**: 1.1-1.4x slower for most configurations
+- **Locale partials**: Significant overhead (~180x slower) due to locale formatting
+- **Creation cost**: Amortized across multiple uses
 
 ### 💡 Performance Insights
 
-**Excellent Performance (>1M ops/sec)**
+**Excellent Performance (>10M ops/sec)**
 - Basic conversions with minimal options
+- Large number processing (1TB+ values)
 - Standard output formats (string, array, object)
 - IEC and JEDEC standards
 
-**Good Performance (100K-1M ops/sec)**  
+**Good Performance (1-10M ops/sec)**  
 - Complex option combinations
 - Precision and rounding operations
 - Fullform output
+- Stress test scenarios
 
 **Use Sparingly (<100K ops/sec)**
-- Locale formatting (significant overhead)
-- Complex locale configurations
+- Locale formatting (significant overhead ~91K ops/sec)
+- Memory pressure conditions
 
 ### 🎯 Optimization Tips
 
@@ -215,7 +223,7 @@ The latest version includes significant performance improvements:
 
 **Overall performance improvement: 30-70% faster** across common use cases while maintaining full backward compatibility.
 
-*Benchmarks run on macOS ARM64, Node.js v23.10.0, 12 CPU cores, 24GB RAM*
+*Benchmarks run on macOS ARM64, Node.js v24.8.0, 12 CPU cores, 24GB RAM (5-run averages)*
 
 ## API Reference
 
