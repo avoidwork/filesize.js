@@ -283,78 +283,85 @@ flowchart TD
     Start([Input: bytes, options]) --> Validate{Valid Input?}
     
     Validate -->|No| Error[Throw TypeError]
-    Validate -->|Yes| Normalize[Normalize Base & Standard]
+    Validate -->|Yes| ValidateRounding{Valid Rounding Method?}
     
-    Normalize --> CalcExp[Calculate Exponent]
+    ValidateRounding -->|No| Error
+    ValidateRounding -->|Yes| Normalize[Normalize Base & Standard]
+    
+    Normalize --> HandleNegative{Input < 0?}
+    HandleNegative -->|Yes| FlipSign[Store negative flag, use absolute value]
+    HandleNegative -->|No| CheckZero{Input = 0?}
+    FlipSign --> CheckZero
+    
+    CheckZero -->|Yes| ZeroCase[Use handleZeroValue helper]
+    CheckZero -->|No| CalcExp[Calculate Exponent using logarithms]
+    
     CalcExp --> CheckExp{Exponent > 8?}
     CheckExp -->|Yes| LimitExp[Limit to 8, Adjust Precision]
-    CheckExp -->|No| CheckZero{Input = 0?}
-    LimitExp --> CheckZero
+    CheckExp -->|No| CheckExpOutput{Output = 'exponent'?}
+    LimitExp --> CheckExpOutput
     
-    CheckZero -->|Yes| ZeroCase[Set result = 0, unit = base unit]
-    CheckZero -->|No| Convert[Convert Value & Calculate Unit]
+    CheckExpOutput -->|Yes| ReturnExp[Return exponent value]
+    CheckExpOutput -->|No| CalcValue[Calculate value using optimized lookup<br/>Includes bits conversion if needed]
     
-    Convert --> CheckBits{Bits Mode?}
-    CheckBits -->|Yes| MultiplyBy8[Multiply by 8]
-    CheckBits -->|No| Round[Apply Rounding]
-    MultiplyBy8 --> Round
+    CalcValue --> Round[Apply Rounding with power of 10]
+    Round --> CheckOverflow{Value >= ceil & e < 8?}
+    CheckOverflow -->|Yes| Increment[Set value=1, increment exponent]
+    CheckOverflow -->|No| CheckPrecision{Precision > 0?}
+    Increment --> CheckPrecision
     
-    Round --> CheckOverflow{Value >= ceil?}
-    CheckOverflow -->|Yes| Increment[Increment Exponent]
-    CheckOverflow -->|No| Format[Apply Formatting]
-    Increment --> Format
+    CheckPrecision -->|Yes| ApplyPrecision[Apply precision handling<br/>Handle scientific notation]
+    CheckPrecision -->|No| GetSymbol[Lookup symbol from table]
+    ApplyPrecision --> GetSymbol
     
-    ZeroCase --> Format
+    GetSymbol --> RestoreSign{Was negative?}
+    RestoreSign -->|Yes| ApplyNegative[Apply negative sign to value]
+    RestoreSign -->|No| CheckCustomSymbols{Custom symbols?}
+    ApplyNegative --> CheckCustomSymbols
     
-    Format --> Locale{Locale Set?}
-    Locale -->|Yes| LocaleFormat[Apply Locale Formatting]
-    Locale -->|No| Separator{Custom Separator?}
-    LocaleFormat --> Padding
-    Separator -->|Yes| CustomSep[Apply Custom Separator]
-    Separator -->|No| Padding{Padding Enabled?}
-    CustomSep --> Padding
+    CheckCustomSymbols -->|Yes| ApplySymbols[Apply custom symbols]
+    CheckCustomSymbols -->|No| FormatNumber[Apply number formatting<br/>locale, separator, padding]
+    ApplySymbols --> FormatNumber
     
-    Padding -->|Yes| PadDecimal[Pad Decimal Places]
-    Padding -->|No| FullForm{Full Form?}
-    PadDecimal --> FullForm
+    FormatNumber --> CheckFullForm{Full form enabled?}
+    CheckFullForm -->|Yes| ExpandUnit[Use full unit names]
+    CheckFullForm -->|No| GenerateOutput[Generate output based on format]
+    ExpandUnit --> GenerateOutput
     
-    FullForm -->|Yes| ExpandUnit[Use Full Unit Names]
-    FullForm -->|No| CustomSymbols{Custom Symbols?}
-    ExpandUnit --> CustomSymbols
-    
-    CustomSymbols -->|Yes| ApplySymbols[Apply Custom Symbols]
-    CustomSymbols -->|No| Output[Generate Output]
-    ApplySymbols --> Output
-    
-    Output --> Return([Return: Formatted Result])
+    ZeroCase --> GenerateOutput
+    ReturnExp --> Return([Return: Formatted Result])
+    GenerateOutput --> Return
     
     style Start fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
     style Error fill:#dc2626,stroke:#b91c1c,stroke-width:2px,color:#ffffff
     style Return fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    style CalcValue fill:#7c2d12,stroke:#92400e,stroke-width:2px,color:#ffffff
+    style ApplyPrecision fill:#d97706,stroke:#b45309,stroke-width:2px,color:#ffffff
 ```
 
 ### Standard Selection Logic
 
 ```mermaid
 flowchart TD
-    Input[Input: standard, base] --> CheckStandard{Standard = SI?}
+    Input[Input: standard, base] --> CheckCached{Standard in<br/>cached configs?}
     
-    CheckStandard -->|Yes| SetDecimal[base = 10<br/>standard = JEDEC]
-    CheckStandard -->|No| CheckIEC{Standard = IEC or JEDEC?}
+    CheckCached -->|Yes: SI| ReturnSI[isDecimal: true<br/>ceil: 1000<br/>actualStandard: JEDEC]
+    CheckCached -->|Yes: IEC| ReturnIEC[isDecimal: false<br/>ceil: 1024<br/>actualStandard: IEC]
+    CheckCached -->|Yes: JEDEC| ReturnJEDEC[isDecimal: false<br/>ceil: 1024<br/>actualStandard: JEDEC]
+    CheckCached -->|No| CheckBase{Base = 2?}
     
-    CheckIEC -->|Yes| SetBinary[base = 2]
-    CheckIEC -->|No| CheckBase{Base = 2?}
+    CheckBase -->|Yes| ReturnBase2[isDecimal: false<br/>ceil: 1024<br/>actualStandard: IEC]
+    CheckBase -->|No| ReturnDefault[isDecimal: true<br/>ceil: 1000<br/>actualStandard: JEDEC]
     
-    CheckBase -->|Yes| SetIEC[standard = IEC]
-    CheckBase -->|No| SetDefault[base = 10<br/>standard = JEDEC]
-    
-    SetDecimal --> Result[Final: base, standard]
-    SetBinary --> Result
-    SetIEC --> Result
-    SetDefault --> Result
+    ReturnSI --> Result[Final Configuration]
+    ReturnIEC --> Result
+    ReturnJEDEC --> Result
+    ReturnBase2 --> Result
+    ReturnDefault --> Result
     
     style Input fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
     style Result fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    style CheckCached fill:#7c2d12,stroke:#92400e,stroke-width:2px,color:#ffffff
 ```
 
 ## API Reference
@@ -755,23 +762,30 @@ export function SystemMetrics() {
 ```mermaid
 graph TB
     subgraph "Locale Processing"
-        A["Input Locale"] --> B{"Locale Type"}
-        B -->|"true"| C["System Locale"]
-        B -->|"string"| D["Specific Locale"]
-        B -->|"empty"| E["No Localization"]
+        A["Input: value, locale, localeOptions, separator, pad, round"] --> B{"Locale === true?"}
+        B -->|"Yes"| C["toLocaleString()"]
+        B -->|"No"| D{"Locale.length > 0?"}
         
-        C --> F["navigator.language"]
-        D --> G["Custom Locale"]
-        F --> H["toLocaleString()"]
-        G --> H
+        D -->|"Yes"| E["toLocaleString(locale, localeOptions)"]
+        D -->|"No"| F{"Separator.length > 0?"}
         
-        H --> I["Formatted Number"]
-        E --> J["toString()"]
-        J --> K["Apply Custom Separator"]
+        F -->|"Yes"| G["toString().replace('.', separator)"]
+        F -->|"No"| H["Keep original value"]
+        
+        C --> I["Check Padding"]
+        E --> I
+        G --> I
+        H --> I
+        
+        I --> J{"Pad enabled & round > 0?"}
+        J -->|"Yes"| K["Calculate decimal separator<br/>Pad decimal places with zeros"]
+        J -->|"No"| L["Return formatted value"]
+        
+        K --> L
     end
     
     style A fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
-    style I fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    style L fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
     style K fill:#d97706,stroke:#b45309,stroke-width:2px,color:#ffffff
 ```
 
