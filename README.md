@@ -137,9 +137,9 @@ filesize.js is optimized for high performance with comprehensive benchmarks cove
 - **filesize(0)**: 18.6M ops/sec
 - **filesize(512)**: 20.3M ops/sec
 - **filesize(1024)**: 18.7M ops/sec  
-- **filesize(1MB)**: 23.5M ops/sec
-- **filesize(1GB)**: 23.6M ops/sec
-- **filesize(1TB)**: 26.9M ops/sec
+- **filesize(1048576)**: 23.5M ops/sec
+- **filesize(1073741824)**: 23.6M ops/sec
+- **filesize(1099511627776)**: 26.9M ops/sec
 - **With bits=true**: 16.8M ops/sec
 - **With standard="iec"**: 16.6M ops/sec
 - **With round=4**: 13.4M ops/sec
