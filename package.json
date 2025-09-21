@@ -14,7 +14,7 @@
   "files": [
     "dist/filesize.js",
     "dist/filesize.cjs",
-    "types"
+    "types/filesize.d.ts"
   ],
   "license": "BSD-3-Clause",
   "source": "src/filesize.js",
@@ -60,7 +60,7 @@
     "c8": "^10.1.3",
     "eslint": "^9.36.0",
     "husky": "^9.1.7",
-    "mocha": "^11.7.1",
+    "mocha": "^11.7.2",
     "rollup": "^4.52.0"
   },
   "keywords": [
