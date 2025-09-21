@@ -106,13 +106,17 @@ The filesize.js library implements several mathematical algorithms to convert ra
 The basic conversion from bytes to higher-order units follows the general formula:
 
 ```math
-\text{value} = \frac{\text{bytes}}{\text{base}^{\text{exponent}}}
+\text{value} = \frac{\text{bytes}}{\text{divisor}[\text{exponent}]}
 ```
 
 Where:
 - $\text{bytes}$ is the input byte value
-- $\text{base}$ is either 2 (binary) or 10 (decimal) depending on the standard
+- $\text{divisor}[\text{exponent}]$ is a pre-computed lookup table value
 - $\text{exponent}$ determines the unit scale (0=bytes, 1=KB/KiB, 2=MB/MiB, etc.)
+
+**Implementation Note**: For performance optimization, the library uses pre-computed lookup tables (`BINARY_POWERS` and `DECIMAL_POWERS`) instead of calculating powers at runtime:
+- Binary: `[1, 1024, 1048576, 1073741824, ...]` (powers of 1024)
+- Decimal: `[1, 1000, 1000000, 1000000000, ...]` (powers of 1000)
 
 ### Exponent Calculation
 
@@ -137,32 +141,47 @@ Where:
 ### Binary vs Decimal Standards
 
 #### Binary Standard (IEC)
-Uses powers of 2 with base 1024:
+Uses pre-computed powers of 1024:
 
 ```math
-\text{value} = \frac{\text{bytes}}{2^{10 \cdot e}} = \frac{\text{bytes}}{1024^e}
+\text{value} = \frac{\text{bytes}}{\text{BINARY\_POWERS}[e]}
 ```
+
+Where `BINARY_POWERS[e] = 1024^e` for efficiency.
 
 Units: B, KiB, MiB, GiB, TiB, PiB, EiB, ZiB, YiB
 
-#### Decimal Standard (SI)
-Uses powers of 10 with base 1000:
+#### Decimal Standard (SI/JEDEC)
+Uses pre-computed powers of 1000:
 
 ```math
-\text{value} = \frac{\text{bytes}}{10^{3 \cdot e}} = \frac{\text{bytes}}{1000^e}
+\text{value} = \frac{\text{bytes}}{\text{DECIMAL\_POWERS}[e]}
 ```
+
+Where `DECIMAL_POWERS[e] = 1000^e` for efficiency.
 
 Units: B, KB, MB, GB, TB, PB, EB, ZB, YB (uses JEDEC-style symbols)
 
 ### Bits Conversion
 
-When converting to bits instead of bytes, the formula becomes:
+When converting to bits instead of bytes, the implementation follows this sequence:
 
+1. First calculate the base value: $\text{value} = \frac{\text{bytes}}{\text{divisor}[e]}$
+2. Then multiply by 8: $\text{value}_{\text{bits}} = \text{value} \times 8$
+3. Check for overflow and auto-increment if needed
+
+**Bits-Specific Overflow Handling**: 
 ```math
-\text{value}_{\text{bits}} = \frac{8 \cdot \text{bytes}}{\text{base}^e}
+\text{if } \text{value}_{\text{bits}} \geq \text{ceil} \text{ and } e < 8 \text{ then:}
+```
+```math
+\begin{cases}
+\text{value}_{\text{bits}} = \frac{\text{value}_{\text{bits}}}{\text{ceil}} \\
+e = e + 1
+\end{cases}
 ```
 
-This multiplication by 8 reflects the conversion from bytes to bits (1 byte = 8 bits).
+This ensures proper unit progression for bit values (e.g., 8192 Kbit becomes 8 Mbit).
 
 ### Precision and Rounding
 
@@ -182,14 +201,23 @@ When precision is specified ($p > 0$), the value is adjusted to show $p$ signifi
 \text{precise\_value} = \text{toPrecision}(\text{rounded\_value}, p)
 ```
 
-The precision parameter takes precedence over round when both are specified. If scientific notation results (contains 'E'), the exponent is incremented and the calculation is repeated to avoid exponential notation in output.
+**Scientific Notation Avoidance**: If the precision formatting results in scientific notation (contains 'E') and $e < 8$, the algorithm:
+1. Increments the exponent: $e = e + 1$
+2. Recalculates the value using the new exponent
+3. Re-applies rounding and precision formatting
+4. This ensures output remains in standard decimal notation
+
+The precision parameter takes precedence over round when both are specified.
 
 ### Overflow Handling
 
-When a calculated value equals or exceeds the base threshold, the algorithm increments the exponent:
+The library implements two distinct overflow handling mechanisms:
+
+#### 1. Main Flow Overflow (After Rounding)
+When the rounded value exactly equals the ceiling value:
 
 ```math
-\text{if } \text{value} \geq \text{base} \text{ and } e < 8 \text{ then:}
+\text{if } \text{value} = \text{ceil} \text{ and } e < 8 \text{ and } \text{exponent} = -1 \text{ then:}
 ```
 ```math
 \begin{cases}
@@ -198,7 +226,22 @@ e = e + 1
 \end{cases}
 ```
 
-This ensures proper unit progression (e.g., 1024 KB becomes 1 MB).
+**Note**: This only applies when exponent is auto-calculated (`exponent = -1`), not when manually specified.
+
+#### 2. Bits-Specific Overflow (During Value Calculation)
+For bits conversion, overflow is checked immediately after multiplication:
+
+```math
+\text{if } \text{value}_{\text{bits}} \geq \text{ceil} \text{ and } e < 8 \text{ then:}
+```
+```math
+\begin{cases}
+\text{value}_{\text{bits}} = \frac{\text{value}_{\text{bits}}}{\text{ceil}} \\
+e = e + 1
+\end{cases}
+```
+
+Both mechanisms ensure proper unit progression (e.g., 1024 KB becomes 1 MB).
 
 ### Exponent Boundary Conditions
 
@@ -245,19 +288,21 @@ The algorithmic complexity of the conversion process is:
 ### Implementation Examples
 
 #### Default Conversion (1536 bytes)
-Given: bytes = 1536, default settings (base = 10, JEDEC standard)
+Given: bytes = 1536, default settings (decimal, JEDEC standard)
 
-1. Calculate exponent: $e = \lfloor \log_{1000}(1536) \rfloor = \lfloor 1.062 \rfloor = 1$
-2. Calculate value: $\text{value} = \frac{1536}{1000^1} = 1.536$
-3. Apply rounding (2 decimal places): $1.536 \rightarrow 1.54$
-4. Result: "1.54 kB"
+1. Calculate exponent: $e = \lfloor \frac{\ln(1536)}{\ln(1000)} \rfloor = \lfloor 1.062 \rfloor = 1$
+2. Lookup divisor: $\text{DECIMAL\_POWERS}[1] = 1000$
+3. Calculate value: $\text{value} = \frac{1536}{1000} = 1.536$
+4. Apply rounding (2 decimal places): $1.536 \rightarrow 1.54$
+5. Result: "1.54 KB"
 
 #### Binary Conversion (1536 bytes)
 Given: bytes = 1536, base = 2 (IEC standard)
 
-1. Calculate exponent: $e = \lfloor \log_{1024}(1536) \rfloor = \lfloor 1.084 \rfloor = 1$
-2. Calculate value: $\text{value} = \frac{1536}{1024^1} = 1.5$
-3. Result: "1.5 KiB"
+1. Calculate exponent: $e = \lfloor \frac{\ln(1536)}{\ln(1024)} \rfloor = \lfloor 1.084 \rfloor = 1$
+2. Lookup divisor: $\text{BINARY\_POWERS}[1] = 1024$
+3. Calculate value: $\text{value} = \frac{1536}{1024} = 1.5$
+4. Result: "1.5 KiB"
 
 #### Bits Conversion with Default Base (1024 bytes)
 Given: bytes = 1024, bits = true, default settings (base = 10)
