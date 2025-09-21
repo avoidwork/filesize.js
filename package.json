@@ -21,7 +21,7 @@
   "module": "dist/filesize.js",
   "main": "dist/filesize.cjs",
   "exports": {
-    "types": "./types",
+    "types": "./types/filesize.d.ts",
     "import": "./dist/filesize.js",
     "require": "./dist/filesize.cjs"
   },
