@@ -1,33 +1,32 @@
 import {
 	ARRAY,
-	BINARY_POWERS,
 	BIT,
 	BITS,
 	BYTE,
 	BYTES,
-	DECIMAL_POWERS,
-	E,
 	EMPTY,
 	EXPONENT,
 	FUNCTION,
-	IEC,
 	INVALID_NUMBER,
 	INVALID_ROUND,
-	JEDEC,
-	LOG_2_1024,
 	LOG_10_1000,
+	LOG_2_1024,
 	OBJECT,
-	PERIOD,
 	ROUND,
 	S,
-	SI,
 	SI_KBIT,
 	SI_KBYTE,
 	SPACE,
 	STRING,
 	STRINGS,
-	ZERO
 } from "./constants.js";
+import {
+	applyNumberFormatting,
+	applyPrecisionHandling,
+	calculateOptimizedValue,
+	getBaseConfiguration,
+	handleZeroValue
+} from "./helpers.js";
 
 /**
  * Converts a file size in bytes to a human-readable string with appropriate units
@@ -80,29 +79,8 @@ export function filesize (arg, {
 		val = 0,
 		u = EMPTY;
 
-	// Optimized base & standard synchronization with early returns
-	let isDecimal, ceil, actualStandard;
-	if (standard === SI) {
-		isDecimal = true;
-		ceil = 1000;
-		actualStandard = JEDEC;
-	} else if (standard === IEC) {
-		isDecimal = false;
-		ceil = 1024;
-		actualStandard = IEC;
-	} else if (standard === JEDEC) {
-		isDecimal = false; // JEDEC uses binary (1024) by default
-		ceil = 1024;
-		actualStandard = JEDEC;
-	} else if (base === 2) {
-		isDecimal = false;
-		ceil = 1024;
-		actualStandard = IEC;
-	} else {
-		isDecimal = true;
-		ceil = 1000;
-		actualStandard = JEDEC;
-	}
+	// Optimized base & standard configuration lookup
+	const {isDecimal, ceil, actualStandard} = getBaseConfiguration(standard, base);
 
 	const full = fullform === true,
 		neg = num < 0,
@@ -123,38 +101,12 @@ export function filesize (arg, {
 
 	// Fast path for zero
 	if (num === 0) {
-		result[0] = precision > 0 ? (0).toPrecision(precision) : 0;
-		u = result[1] = STRINGS.symbol[actualStandard][bits ? BITS : BYTES][0];
-		
-		if (output === EXPONENT) {
-			return 0;
-		}
-		
-		// Skip most processing for zero case
-		if (symbols[result[1]]) {
-			result[1] = symbols[result[1]];
-		}
-		
-		if (full) {
-			result[1] = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
-		}
-		
-		return output === ARRAY ? result : output === OBJECT ? {
-			value: result[0],
-			symbol: result[1],
-			exponent: 0,
-			unit: u
-		} : result.join(spacer);
+		return handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer);
 	}
 
 	// Optimized exponent calculation using pre-computed log values
 	if (e === -1 || isNaN(e)) {
-		if (isDecimal) {
-			e = Math.floor(Math.log(num) / LOG_10_1000);
-		} else {
-			e = Math.floor(Math.log(num) / LOG_2_1024);
-		}
-
+		e = isDecimal ? Math.floor(Math.log(num) / LOG_10_1000) : Math.floor(Math.log(num) / LOG_2_1024);
 		if (e < 0) {
 			e = 0;
 		}
@@ -172,24 +124,10 @@ export function filesize (arg, {
 		return e;
 	}
 
-	// Use pre-computed lookup tables (e is always <= 8, arrays have 9 elements)
-	let d;
-	if (isDecimal) {
-		d = DECIMAL_POWERS[e];
-	} else {
-		d = BINARY_POWERS[e];
-	}
-	
-	val = num / d;
-
-	if (bits) {
-		val = val * 8;
-
-		if (val >= ceil && e < 8) {
-			val = val / ceil;
-			e++;
-		}
-	}
+	// Calculate value with optimized lookup and bits handling
+	const {result: valueResult, e: valueExponent} = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
+	val = valueResult;
+	e = valueExponent;
 
 	// Optimize rounding calculation
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
@@ -200,21 +138,11 @@ export function filesize (arg, {
 		e++;
 	}
 
-	// Setting optional precision
+	// Apply precision handling
 	if (precision > 0) {
-		result[0] = result[0].toPrecision(precision);
-
-		if (result[0].includes(E) && e < 8) {
-			e++;
-			// Recalculate with new exponent (e is always <= 8)
-			if (isDecimal) {
-				d = DECIMAL_POWERS[e];
-			} else {
-				d = BINARY_POWERS[e];
-			}
-			val = num / d;
-			result[0] = (p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p).toPrecision(precision);
-		}
+		const precisionResult = applyPrecisionHandling(result[0], precision, e, num, isDecimal, bits, ceil, roundingFunc, round);
+		result[0] = precisionResult.value;
+		e = precisionResult.e;
 	}
 
 	// Cache symbol lookup
@@ -231,25 +159,8 @@ export function filesize (arg, {
 		result[1] = symbols[result[1]];
 	}
 
-	// Optimized locale/separator handling
-	if (locale === true) {
-		result[0] = result[0].toLocaleString();
-	} else if (locale.length > 0) {
-		result[0] = result[0].toLocaleString(locale, localeOptions);
-	} else if (separator.length > 0) {
-		result[0] = result[0].toString().replace(PERIOD, separator);
-	}
-
-	if (pad && round > 0) {
-		const resultStr = result[0].toString(),
-			x = separator || ((resultStr.match(/(\D)/g) || []).pop() || PERIOD),
-			tmp = resultStr.split(x),
-			s = tmp[1] || EMPTY,
-			l = s.length,
-			n = round - l;
-
-		result[0] = `${tmp[0]}${x}${s.padEnd(l + n, ZERO)}`;
-	}
+	// Apply locale, separator, and padding formatting
+	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
 	if (full) {
 		result[1] = fullforms[e] || STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
@@ -259,7 +170,7 @@ export function filesize (arg, {
 	if (output === ARRAY) {
 		return result;
 	}
-	
+
 	if (output === OBJECT) {
 		return {
 			value: result[0],
@@ -268,7 +179,7 @@ export function filesize (arg, {
 			unit: u
 		};
 	}
-	
+
 	return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
 }
 
