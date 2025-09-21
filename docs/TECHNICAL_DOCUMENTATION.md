@@ -291,32 +291,32 @@ The algorithmic complexity of the conversion process is:
 Given: bytes = 1536, default settings (decimal, JEDEC standard)
 
 1. Calculate exponent: $e = \lfloor \frac{\ln(1536)}{\ln(1000)} \rfloor = \lfloor 1.062 \rfloor = 1$
-2. Lookup divisor: $\text{DECIMAL\_POWERS}[1] = 1000$
-3. Calculate value: $\text{value} = \frac{1536}{1000} = 1.536$
-4. Apply rounding (2 decimal places): $1.536 \rightarrow 1.54$
+2. Lookup divisor: DECIMAL_POWERS[1] = 1000
+3. Calculate value: $value = \frac{1536}{1000} = 1.536$
+4. Apply rounding (2 decimal places): $1.536 \to 1.54$
 5. Result: "1.54 KB"
 
 #### Binary Conversion (1536 bytes)
 Given: bytes = 1536, base = 2 (IEC standard)
 
 1. Calculate exponent: $e = \lfloor \frac{\ln(1536)}{\ln(1024)} \rfloor = \lfloor 1.084 \rfloor = 1$
-2. Lookup divisor: $\text{BINARY\_POWERS}[1] = 1024$
-3. Calculate value: $\text{value} = \frac{1536}{1024} = 1.5$
+2. Lookup divisor: BINARY_POWERS[1] = 1024
+3. Calculate value: $value = \frac{1536}{1024} = 1.5$
 4. Result: "1.5 KiB"
 
 #### Bits Conversion with Default Base (1024 bytes)
 Given: bytes = 1024, bits = true, default settings (base = 10)
 
-1. Calculate exponent: $e = \lfloor \log_{1000}(1024) \rfloor = \lfloor 1.003 \rfloor = 1$
-2. Calculate value: $\text{value} = \frac{1024 \cdot 8}{1000^1} = 8.192$
-3. Apply rounding (2 decimal places): $8.192 \rightarrow 8.19$
+1. Calculate exponent: $e = \lfloor \frac{\ln(1024)}{\ln(1000)} \rfloor = \lfloor 1.003 \rfloor = 1$
+2. Calculate value: $value = \frac{1024 \times 8}{1000} = 8.192$
+3. Apply rounding (2 decimal places): $8.192 \to 8.19$
 4. Result: "8.19 kbit"
 
 #### Bits Conversion with Binary Base (1024 bytes)
 Given: bytes = 1024, bits = true, base = 2
 
-1. Calculate exponent: $e = \lfloor \log_{1024}(1024) \rfloor = 1$
-2. Calculate value: $\text{value} = \frac{1024 \cdot 8}{1024^1} = 8$
+1. Calculate exponent: $e = \lfloor \frac{\ln(1024)}{\ln(1024)} \rfloor = 1$
+2. Calculate value: $value = \frac{1024 \times 8}{1024} = 8$
 3. Result: "8 Kibit"
 
 ## Data Flow
