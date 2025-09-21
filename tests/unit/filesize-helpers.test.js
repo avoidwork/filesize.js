@@ -10,7 +10,7 @@ import {
 	calculateOptimizedValue,
 	applyPrecisionHandling,
 	applyNumberFormatting
-} from '../../src/filesize.js';
+} from '../../src/helpers.js';
 
 describe('Helper Functions', () => {
 	describe('getBaseConfiguration', () => {
@@ -110,30 +110,30 @@ describe('Helper Functions', () => {
 	describe('calculateOptimizedValue', () => {
 		it('should calculate value without bits', () => {
 			const result = calculateOptimizedValue(1024, 1, false, false, 1024);
-			assert.deepStrictEqual(result, { val: 1, e: 1 });
+			assert.deepStrictEqual(result, { result: 1, e: 1 });
 		});
 
 		it('should calculate value with bits', () => {
 			const result = calculateOptimizedValue(1024, 1, false, true, 1024);
-			assert.deepStrictEqual(result, { val: 8, e: 1 });
+			assert.deepStrictEqual(result, { result: 8, e: 1 });
 		});
 
 		it('should handle bits auto-increment', () => {
 			const result = calculateOptimizedValue(128, 0, false, true, 1024);
-			assert.deepStrictEqual(result, { val: 1, e: 1 });
+			assert.deepStrictEqual(result, { result: 1, e: 1 });
 		});
 
 		it('should use decimal powers', () => {
 			const result = calculateOptimizedValue(1000, 1, true, false, 1000);
-			assert.deepStrictEqual(result, { val: 1, e: 1 });
+			assert.deepStrictEqual(result, { result: 1, e: 1 });
 		});
 
 		it('should not increment when e >= 8', () => {
 			// Use a proper YiB value for exponent 8
 			const yibValue = Math.pow(1024, 8); // 1 YiB in bytes
-			const result = calculateOptimizedValue(yibValue, 8, false, true, 1024);
-			assert.strictEqual(result.e, 8);
-			assert(result.val >= 8); // Should be 8 bits (1 byte * 8)
+			const resultObj = calculateOptimizedValue(yibValue, 8, false, true, 1024);
+			assert.strictEqual(resultObj.e, 8);
+			assert(resultObj.result >= 8); // Should be 8 bits (1 byte * 8)
 		});
 	});
 
