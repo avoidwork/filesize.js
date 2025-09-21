@@ -447,23 +447,61 @@ filesize.js/
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
+### Development Workflow
+
+filesize.js includes an optimized development workflow with modern build tools:
+
+* **🔄 Live Reload**: Use `npm run dev` for automatic rebuilds during development
+* **📊 Bundle Analysis**: Monitor build sizes with `npm run build:analyze`
+* **⚡ Fast Testing**: Live test running with `npm run test:watch`
+* **🔧 Auto-fixing**: Automatic linting fixes with `npm run lint:fix`
+* **📈 Performance**: Optimized Rollup configuration with enhanced tree shaking
+
+**Build Output Analysis:**
+- Minified ES Module: ~1.8KB (gzipped)
+- UMD Bundle: ~1.9KB (gzipped)
+- Comprehensive source maps included
+
 ### Development Commands
 
 ```bash
 # Install dependencies
 npm install
 
-# Run linting
-npm run lint
-
-# Run tests
-npm test
+# Development mode with live rebuild
+npm run dev
 
 # Build distribution
 npm run build
 
-# Run all checks (lint + test)
-npm run ci
+# Build with bundle size analysis
+npm run build:analyze
+
+# Live rebuild during development
+npm run build:watch
+
+# Run linting
+npm run lint
+
+# Auto-fix linting issues
+npm run lint:fix
+
+# Run tests
+npm test
+
+# Live testing during development
+npm run test:watch
+
+# Run only unit tests
+npm run mocha
+
+# Bundle size analysis
+npm run analyze:size
+
+# Benchmarking
+npm run benchmark
+npm run benchmark:basic
+npm run benchmark:stress
 ```
 
 ## License

@@ -29,17 +29,24 @@
   "sourceType": "module",
   "types": "types/filesize.d.ts",
   "engines": {
-    "node": ">= 10.4.0"
+    "node": ">= 16.0.0"
   },
   "scripts": {
     "build": "npm run rollup",
+    "build:watch": "rollup --config --watch",
+    "build:analyze": "npm run rollup && npm run analyze:size",
+    "analyze:size": "echo 'Bundle size analysis:' && du -h dist/* && echo 'Gzipped sizes:' && gzip -c dist/filesize.min.js | wc -c | awk '{print $1\" bytes (gzipped)\"}' && gzip -c dist/filesize.umd.min.js | wc -c | awk '{print $1\" bytes (umd gzipped)\"}'",
     "changelog": "auto-changelog -p",
     "lint": "eslint *.js src/*.js tests/**/*.js",
-    "fix": "eslint --fix *.js src/*.js tests/**/*.js",
+    "lint:fix": "eslint --fix *.js src/*.js tests/**/*.js",
+    "fix": "npm run lint:fix",
     "mocha": "c8 mocha tests/**/*.js",
     "rollup": "rollup --config",
     "test": "npm run lint && npm run mocha",
+    "test:watch": "npm run mocha -- --watch",
+    "prepack": "npm run build",
     "prepare": "husky",
+    "dev": "npm run build:watch",
     "benchmark": "node benchmarks/index.js",
     "benchmark:basic": "node benchmarks/basic-performance.js",
     "benchmark:options": "node benchmarks/options-benchmark.js",
@@ -51,10 +58,10 @@
     "@rollup/plugin-terser": "^0.4.4",
     "auto-changelog": "^2.5.0",
     "c8": "^10.1.3",
-    "eslint": "^9.30.1",
+    "eslint": "^9.36.0",
     "husky": "^9.1.7",
     "mocha": "^11.7.1",
-    "rollup": "^4.44.2"
+    "rollup": "^4.52.0"
   },
   "keywords": [
     "file",
