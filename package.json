@@ -58,7 +58,7 @@
     "@rollup/plugin-terser": "^1.0.0",
     "auto-changelog": "^2.5.0",
     "c8": "^11.0.0",
-    "eslint": "^9.36.0",
+    "eslint": "^10.0.2",
     "husky": "^9.1.7",
     "mocha": "^11.7.2",
     "rollup": "^4.52.0"
