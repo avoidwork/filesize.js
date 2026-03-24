@@ -37,7 +37,7 @@
     "build:analyze": "npm run rollup && npm run analyze:size",
     "analyze:size": "echo 'Bundle size analysis:' && du -h dist/* && echo 'Gzipped sizes:' && gzip -c dist/filesize.min.js | wc -c | awk '{print $1\" bytes (gzipped)\"}' && gzip -c dist/filesize.umd.min.js | wc -c | awk '{print $1\" bytes (umd gzipped)\"}'",
     "changelog": "auto-changelog -p",
-    "lint": "npx oxlint *.js src/*.js tests/**/*.js",
+    "lint": "npx oxlint *.js benchmarks src tests && npx oxfmt *.js benchmarks src tests/unit --check",
     "fix": "npx oxlint --fix *.js benchmarks src tests && npx oxfmt *.js benchmarks src tests/unit --write",
     "test": "npm run lint && node --test --experimental-test-coverage tests/**/*.js",
     "test:watch": "node --test --watch tests/**/*.js",
