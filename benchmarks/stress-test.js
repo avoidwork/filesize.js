@@ -21,7 +21,7 @@ function benchmark(testName, testFunction, iterations = STRESS_ITERATIONS) {
   for (let i = 0; i < WARMUP_ITERATIONS; i++) {
     try {
       testFunction();
-    } catch (e) {
+    } catch {
       // Ignore warmup errors
     }
   }
@@ -39,7 +39,7 @@ function benchmark(testName, testFunction, iterations = STRESS_ITERATIONS) {
     try {
       testFunction();
       successCount++;
-    } catch (e) {
+    } catch {
       errorCount++;
     }
   }
@@ -212,7 +212,7 @@ results.push(
     "Memory pressure",
     () => {
       // Create some memory pressure
-      const tempArray = new Array(1000).fill(0).map(() => Math.random());
+      const tempArray = Array.from({ length: 1000 }, () => Math.random());
       const result = filesize(Math.random() * 1073741824, {
         output: "object",
         fullform: true,
