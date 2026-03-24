@@ -185,23 +185,7 @@ export function filesize (arg, {
 
 /**
  * Creates a partially applied version of filesize with preset options
- * @param {Object} [options={}] - Default options to apply to the returned function
- * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
- * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
- * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
- * @param {number} [options.round=2] - Number of decimal places to round to
- * @param {string|boolean} [options.locale=""] - Locale for number formatting, true for system locale
- * @param {Object} [options.localeOptions={}] - Additional options for locale formatting
- * @param {string} [options.separator=""] - Custom decimal separator
- * @param {string} [options.spacer=" "] - String to separate value and unit
- * @param {Object} [options.symbols={}] - Custom unit symbols
- * @param {string} [options.standard=""] - Unit standard to use (SI, IEC, JEDEC)
- * @param {string} [options.output="string"] - Output format: "string", "array", "object", or "exponent"
- * @param {boolean} [options.fullform=false] - If true, uses full unit names instead of abbreviations
- * @param {Array} [options.fullforms=[]] - Custom full unit names
- * @param {number} [options.exponent=-1] - Force specific exponent (-1 for auto)
- * @param {string} [options.roundingMethod="round"] - Math rounding method to use
- * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
+ * @param {Object} [options={}] - Configuration options (same as filesize)
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
  * const formatBytes = partial({round: 1, standard: "IEC"});

@@ -54,6 +54,7 @@ export function getBaseConfiguration (standard, base) {
  * @param {Array} fullforms - Custom full forms
  * @param {string} output - Output format
  * @param {string} spacer - Spacer character
+ * @param {string} [symbol] - Symbol to use (defaults based on bits/standard)
  * @returns {string|Array|Object|number} Formatted result
  */
 export function handleZeroValue (precision, actualStandard, bits, symbols, full, fullforms, output, spacer, symbol) {
