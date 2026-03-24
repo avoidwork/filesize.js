@@ -233,7 +233,7 @@ Pad decimal places with zeros to match the `round` parameter.
 
 ```javascript
 filesize(1536, {round: 3, pad: true}) // "1.536 kB"
-filesize(1024, {round: 3, pad: true}) // "1.020 kB"
+filesize(1024, {round: 3, pad: true}) // "1.024 kB"
 ```
 
 ### separator
@@ -308,7 +308,7 @@ Custom full unit names array (overrides default full names).
 
 ```javascript
 filesize(12, {fullform: true, fullforms: ["байт", "килобайт", "мегабайт"]})
-// "12 килобайт"
+// "12 байт"
 ```
 
 ### exponent
@@ -318,7 +318,7 @@ Force a specific exponent (-1 for auto).
 ```javascript
 filesize(1024, {exponent: 0}) // "1024 B"
 filesize(1024, {exponent: 1}) // "1.02 kB"
-filesize(1024, {exponent: 2}) // "0.00 MB"
+filesize(1024, {exponent: 2}) // "0 MB"
 ```
 
 ### roundingMethod
