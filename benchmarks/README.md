@@ -178,29 +178,29 @@ import { filesize } from "../dist/filesize.js";
 const ITERATIONS = 10000;
 
 function benchmark(testName, testFunction, iterations = ITERATIONS) {
-  // Warmup
-  for (let i = 0; i < 1000; i++) {
-    testFunction();
-  }
+	// Warmup
+	for (let i = 0; i < 1000; i++) {
+		testFunction();
+	}
 
-  const startTime = process.hrtime.bigint();
-  for (let i = 0; i < iterations; i++) {
-    testFunction();
-  }
-  const endTime = process.hrtime.bigint();
+	const startTime = process.hrtime.bigint();
+	for (let i = 0; i < iterations; i++) {
+		testFunction();
+	}
+	const endTime = process.hrtime.bigint();
 
-  const totalTime = Number(endTime - startTime) / 1000000;
-  const avgTime = totalTime / iterations;
-  const opsPerSecond = Math.round(1000 / avgTime);
+	const totalTime = Number(endTime - startTime) / 1000000;
+	const avgTime = totalTime / iterations;
+	const opsPerSecond = Math.round(1000 / avgTime);
 
-  return { testName, opsPerSecond, avgTime };
+	return { testName, opsPerSecond, avgTime };
 }
 
 // Your custom test
 const result = benchmark("Custom test", () => {
-  return filesize(1024 * 1024, {
-    /* your options */
-  });
+	return filesize(1024 * 1024, {
+		/* your options */
+	});
 });
 
 console.log(result);

@@ -1,31 +1,31 @@
 import {
-  ARRAY,
-  BIT,
-  BITS,
-  BYTE,
-  BYTES,
-  EMPTY,
-  EXPONENT,
-  FUNCTION,
-  INVALID_NUMBER,
-  INVALID_ROUND,
-  LOG_10_1000,
-  LOG_2_1024,
-  OBJECT,
-  ROUND,
-  S,
-  SI_KBIT,
-  SI_KBYTE,
-  SPACE,
-  STRING,
-  STRINGS,
+	ARRAY,
+	BIT,
+	BITS,
+	BYTE,
+	BYTES,
+	EMPTY,
+	EXPONENT,
+	FUNCTION,
+	INVALID_NUMBER,
+	INVALID_ROUND,
+	LOG_10_1000,
+	LOG_2_1024,
+	OBJECT,
+	ROUND,
+	S,
+	SI_KBIT,
+	SI_KBYTE,
+	SPACE,
+	STRING,
+	STRINGS,
 } from "./constants.js";
 import {
-  applyNumberFormatting,
-  applyPrecisionHandling,
-  calculateOptimizedValue,
-  getBaseConfiguration,
-  handleZeroValue,
+	applyNumberFormatting,
+	applyPrecisionHandling,
+	calculateOptimizedValue,
+	getBaseConfiguration,
+	handleZeroValue,
 } from "./helpers.js";
 
 /**
@@ -56,163 +56,163 @@ import {
  * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
  */
 export function filesize(
-  arg,
-  {
-    bits = false,
-    pad = false,
-    base = -1,
-    round = 2,
-    locale = EMPTY,
-    localeOptions = {},
-    separator = EMPTY,
-    spacer = SPACE,
-    symbols = {},
-    standard = EMPTY,
-    output = STRING,
-    fullform = false,
-    fullforms = [],
-    exponent = -1,
-    roundingMethod = ROUND,
-    precision = 0,
-  } = {},
+	arg,
+	{
+		bits = false,
+		pad = false,
+		base = -1,
+		round = 2,
+		locale = EMPTY,
+		localeOptions = {},
+		separator = EMPTY,
+		spacer = SPACE,
+		symbols = {},
+		standard = EMPTY,
+		output = STRING,
+		fullform = false,
+		fullforms = [],
+		exponent = -1,
+		roundingMethod = ROUND,
+		precision = 0,
+	} = {},
 ) {
-  let e = exponent,
-    num = Number(arg),
-    result = [],
-    val = 0,
-    u = EMPTY;
+	let e = exponent,
+		num = Number(arg),
+		result = [],
+		val = 0,
+		u = EMPTY;
 
-  // Optimized base & standard configuration lookup
-  const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
+	// Optimized base & standard configuration lookup
+	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
 
-  const full = fullform === true,
-    neg = num < 0,
-    roundingFunc = Math[roundingMethod];
+	const full = fullform === true,
+		neg = num < 0,
+		roundingFunc = Math[roundingMethod];
 
-  if (typeof arg !== "bigint" && isNaN(arg)) {
-    throw new TypeError(INVALID_NUMBER);
-  }
+	if (typeof arg !== "bigint" && isNaN(arg)) {
+		throw new TypeError(INVALID_NUMBER);
+	}
 
-  if (typeof roundingFunc !== FUNCTION) {
-    throw new TypeError(INVALID_ROUND);
-  }
+	if (typeof roundingFunc !== FUNCTION) {
+		throw new TypeError(INVALID_ROUND);
+	}
 
-  // Flipping a negative number to determine the size
-  if (neg) {
-    num = -num;
-  }
+	// Flipping a negative number to determine the size
+	if (neg) {
+		num = -num;
+	}
 
-  // Fast path for zero
-  if (num === 0) {
-    return handleZeroValue(
-      precision,
-      actualStandard,
-      bits,
-      symbols,
-      full,
-      fullforms,
-      output,
-      spacer,
-    );
-  }
+	// Fast path for zero
+	if (num === 0) {
+		return handleZeroValue(
+			precision,
+			actualStandard,
+			bits,
+			symbols,
+			full,
+			fullforms,
+			output,
+			spacer,
+		);
+	}
 
-  // Optimized exponent calculation using pre-computed log values
-  if (e === -1 || isNaN(e)) {
-    e = isDecimal
-      ? Math.floor(Math.log(num) / LOG_10_1000)
-      : Math.floor(Math.log(num) / LOG_2_1024);
-    if (e < 0) {
-      e = 0;
-    }
-  }
+	// Optimized exponent calculation using pre-computed log values
+	if (e === -1 || isNaN(e)) {
+		e = isDecimal
+			? Math.floor(Math.log(num) / LOG_10_1000)
+			: Math.floor(Math.log(num) / LOG_2_1024);
+		if (e < 0) {
+			e = 0;
+		}
+	}
 
-  // Exceeding supported length, time to reduce & multiply
-  if (e > 8) {
-    if (precision > 0) {
-      precision += 8 - e;
-    }
-    e = 8;
-  }
+	// Exceeding supported length, time to reduce & multiply
+	if (e > 8) {
+		if (precision > 0) {
+			precision += 8 - e;
+		}
+		e = 8;
+	}
 
-  if (output === EXPONENT) {
-    return e;
-  }
+	if (output === EXPONENT) {
+		return e;
+	}
 
-  // Calculate value with optimized lookup and bits handling
-  const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
-    num,
-    e,
-    isDecimal,
-    bits,
-    ceil,
-  );
-  val = valueResult;
-  e = valueExponent;
+	// Calculate value with optimized lookup and bits handling
+	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
+		num,
+		e,
+		isDecimal,
+		bits,
+		ceil,
+	);
+	val = valueResult;
+	e = valueExponent;
 
-  // Optimize rounding calculation
-  const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
-  result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
+	// Optimize rounding calculation
+	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
+	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
 
-  if (result[0] === ceil && e < 8 && exponent === -1) {
-    result[0] = 1;
-    e++;
-  }
+	if (result[0] === ceil && e < 8 && exponent === -1) {
+		result[0] = 1;
+		e++;
+	}
 
-  // Apply precision handling
-  if (precision > 0) {
-    const precisionResult = applyPrecisionHandling(
-      result[0],
-      precision,
-      e,
-      num,
-      isDecimal,
-      bits,
-      ceil,
-      roundingFunc,
-      round,
-    );
-    result[0] = precisionResult.value;
-    e = precisionResult.e;
-  }
+	// Apply precision handling
+	if (precision > 0) {
+		const precisionResult = applyPrecisionHandling(
+			result[0],
+			precision,
+			e,
+			num,
+			isDecimal,
+			bits,
+			ceil,
+			roundingFunc,
+			round,
+		);
+		result[0] = precisionResult.value;
+		e = precisionResult.e;
+	}
 
-  // Cache symbol lookup
-  const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
-  u = result[1] = isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
+	// Cache symbol lookup
+	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
+	u = result[1] = isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
 
-  // Decorating a 'diff'
-  if (neg) {
-    result[0] = -result[0];
-  }
+	// Decorating a 'diff'
+	if (neg) {
+		result[0] = -result[0];
+	}
 
-  // Applying custom symbol
-  if (symbols[result[1]]) {
-    result[1] = symbols[result[1]];
-  }
+	// Applying custom symbol
+	if (symbols[result[1]]) {
+		result[1] = symbols[result[1]];
+	}
 
-  // Apply locale, separator, and padding formatting
-  result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
+	// Apply locale, separator, and padding formatting
+	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
-  if (full) {
-    result[1] =
-      fullforms[e] ||
-      STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
-  }
+	if (full) {
+		result[1] =
+			fullforms[e] ||
+			STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+	}
 
-  // Optimized return logic
-  if (output === ARRAY) {
-    return result;
-  }
+	// Optimized return logic
+	if (output === ARRAY) {
+		return result;
+	}
 
-  if (output === OBJECT) {
-    return {
-      value: result[0],
-      symbol: result[1],
-      exponent: e,
-      unit: u,
-    };
-  }
+	if (output === OBJECT) {
+		return {
+			value: result[0],
+			symbol: result[1],
+			exponent: e,
+			unit: u,
+		};
+	}
 
-  return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
+	return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
 }
 
 /**
@@ -226,5 +226,5 @@ export function filesize(
  */
 // Partial application for functional programming
 export function partial(options = {}) {
-  return (arg) => filesize(arg, options);
+	return (arg) => filesize(arg, options);
 }

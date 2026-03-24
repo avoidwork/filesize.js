@@ -17,30 +17,30 @@ const WARMUP_ITERATIONS = 10000;
  * @returns {Object} Performance results
  */
 function benchmark(testName, testFunction, iterations = ITERATIONS) {
-  // Warmup
-  for (let i = 0; i < WARMUP_ITERATIONS; i++) {
-    testFunction();
-  }
+	// Warmup
+	for (let i = 0; i < WARMUP_ITERATIONS; i++) {
+		testFunction();
+	}
 
-  // Actual benchmark
-  const startTime = process.hrtime.bigint();
+	// Actual benchmark
+	const startTime = process.hrtime.bigint();
 
-  for (let i = 0; i < iterations; i++) {
-    testFunction();
-  }
+	for (let i = 0; i < iterations; i++) {
+		testFunction();
+	}
 
-  const endTime = process.hrtime.bigint();
-  const totalTime = Number(endTime - startTime) / 1000000; // Convert to milliseconds
-  const avgTime = totalTime / iterations;
-  const opsPerSecond = 1000 / avgTime;
+	const endTime = process.hrtime.bigint();
+	const totalTime = Number(endTime - startTime) / 1000000; // Convert to milliseconds
+	const avgTime = totalTime / iterations;
+	const opsPerSecond = 1000 / avgTime;
 
-  return {
-    testName,
-    iterations,
-    totalTime: totalTime.toFixed(2),
-    avgTime: avgTime.toFixed(6),
-    opsPerSecond: Math.round(opsPerSecond),
-  };
+	return {
+		testName,
+		iterations,
+		totalTime: totalTime.toFixed(2),
+		avgTime: avgTime.toFixed(6),
+		opsPerSecond: Math.round(opsPerSecond),
+	};
 }
 
 /**
@@ -48,27 +48,27 @@ function benchmark(testName, testFunction, iterations = ITERATIONS) {
  * @param {Array} results - Array of benchmark results
  */
 function printResults(results) {
-  console.log("\n📊 Basic Performance Benchmark Results");
-  console.log("=".repeat(80));
-  console.log(
-    "Test Name".padEnd(25) +
-      "Iterations".padEnd(12) +
-      "Total (ms)".padEnd(12) +
-      "Avg (ms)".padEnd(12) +
-      "Ops/sec",
-  );
-  console.log("-".repeat(80));
+	console.log("\n📊 Basic Performance Benchmark Results");
+	console.log("=".repeat(80));
+	console.log(
+		"Test Name".padEnd(25) +
+			"Iterations".padEnd(12) +
+			"Total (ms)".padEnd(12) +
+			"Avg (ms)".padEnd(12) +
+			"Ops/sec",
+	);
+	console.log("-".repeat(80));
 
-  results.forEach((result) => {
-    console.log(
-      result.testName.padEnd(25) +
-        result.iterations.toString().padEnd(12) +
-        result.totalTime.padEnd(12) +
-        result.avgTime.padEnd(12) +
-        result.opsPerSecond.toLocaleString(),
-    );
-  });
-  console.log("=".repeat(80));
+	results.forEach((result) => {
+		console.log(
+			result.testName.padEnd(25) +
+				result.iterations.toString().padEnd(12) +
+				result.totalTime.padEnd(12) +
+				result.avgTime.padEnd(12) +
+				result.opsPerSecond.toLocaleString(),
+		);
+	});
+	console.log("=".repeat(80));
 }
 
 // Test data sets
@@ -80,8 +80,8 @@ const results = [];
 console.log("🚀 Starting Basic Performance Benchmarks...\n");
 
 testSizes.forEach((size) => {
-  const result = benchmark(`filesize(${size})`, () => filesize(size));
-  results.push(result);
+	const result = benchmark(`filesize(${size})`, () => filesize(size));
+	results.push(result);
 });
 
 // Test with different options

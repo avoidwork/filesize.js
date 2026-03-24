@@ -17,34 +17,34 @@ const WARMUP_ITERATIONS = 10000;
  * @returns {Object} Performance results
  */
 function benchmark(testName, testFunction, iterations = ITERATIONS) {
-  // Warmup
-  for (let i = 0; i < WARMUP_ITERATIONS; i++) {
-    testFunction();
-  }
+	// Warmup
+	for (let i = 0; i < WARMUP_ITERATIONS; i++) {
+		testFunction();
+	}
 
-  if (global.gc) {
-    global.gc();
-  }
+	if (global.gc) {
+		global.gc();
+	}
 
-  const startTime = process.hrtime.bigint();
+	const startTime = process.hrtime.bigint();
 
-  for (let i = 0; i < iterations; i++) {
-    testFunction();
-  }
+	for (let i = 0; i < iterations; i++) {
+		testFunction();
+	}
 
-  const endTime = process.hrtime.bigint();
-  const totalTime = Number(endTime - startTime) / 1000000;
-  const avgTime = totalTime / iterations;
-  const opsPerSecond = Math.round(1000 / avgTime);
+	const endTime = process.hrtime.bigint();
+	const totalTime = Number(endTime - startTime) / 1000000;
+	const avgTime = totalTime / iterations;
+	const opsPerSecond = Math.round(1000 / avgTime);
 
-  return {
-    testName,
-    iterations,
-    totalTime: totalTime.toFixed(2),
-    avgTime: avgTime.toFixed(6),
-    opsPerSecond,
-    relativeSpeed: 1,
-  };
+	return {
+		testName,
+		iterations,
+		totalTime: totalTime.toFixed(2),
+		avgTime: avgTime.toFixed(6),
+		opsPerSecond,
+		relativeSpeed: 1,
+	};
 }
 
 /**
@@ -52,47 +52,47 @@ function benchmark(testName, testFunction, iterations = ITERATIONS) {
  * @param {Array} results - Array of benchmark results
  */
 function printResults(results) {
-  console.log("\n📊 Partial Function Benchmark Results");
-  console.log("=".repeat(85));
-  console.log(
-    "Test Name".padEnd(30) +
-      "Ops/sec".padEnd(15) +
-      "Avg (ms)".padEnd(12) +
-      "vs Direct".padEnd(12) +
-      "Notes",
-  );
-  console.log("-".repeat(85));
+	console.log("\n📊 Partial Function Benchmark Results");
+	console.log("=".repeat(85));
+	console.log(
+		"Test Name".padEnd(30) +
+			"Ops/sec".padEnd(15) +
+			"Avg (ms)".padEnd(12) +
+			"vs Direct".padEnd(12) +
+			"Notes",
+	);
+	console.log("-".repeat(85));
 
-  // Find direct call baseline for comparison
-  const directBaseline = results.find((r) => r.testName.includes("Direct call"));
+	// Find direct call baseline for comparison
+	const directBaseline = results.find((r) => r.testName.includes("Direct call"));
 
-  results.forEach((result) => {
-    let comparison = "";
-    let note = "";
+	results.forEach((result) => {
+		let comparison = "";
+		let note = "";
 
-    if (directBaseline && result !== directBaseline) {
-      const ratio = directBaseline.opsPerSecond / result.opsPerSecond;
-      if (ratio > 1) {
-        comparison = `${ratio.toFixed(2)}x slower`;
-        note = ratio > 2 ? "⚠️  Significant overhead" : "✓ Acceptable overhead";
-      } else {
-        comparison = `${(1 / ratio).toFixed(2)}x faster`;
-        note = "🚀 Faster than direct";
-      }
-    } else if (result === directBaseline) {
-      comparison = "baseline";
-      note = "📊 Reference";
-    }
+		if (directBaseline && result !== directBaseline) {
+			const ratio = directBaseline.opsPerSecond / result.opsPerSecond;
+			if (ratio > 1) {
+				comparison = `${ratio.toFixed(2)}x slower`;
+				note = ratio > 2 ? "⚠️  Significant overhead" : "✓ Acceptable overhead";
+			} else {
+				comparison = `${(1 / ratio).toFixed(2)}x faster`;
+				note = "🚀 Faster than direct";
+			}
+		} else if (result === directBaseline) {
+			comparison = "baseline";
+			note = "📊 Reference";
+		}
 
-    console.log(
-      result.testName.padEnd(30) +
-        result.opsPerSecond.toLocaleString().padEnd(15) +
-        result.avgTime.padEnd(12) +
-        comparison.padEnd(12) +
-        note,
-    );
-  });
-  console.log("=".repeat(85));
+		console.log(
+			result.testName.padEnd(30) +
+				result.opsPerSecond.toLocaleString().padEnd(15) +
+				result.avgTime.padEnd(12) +
+				comparison.padEnd(12) +
+				note,
+		);
+	});
+	console.log("=".repeat(85));
 }
 
 console.log("🚀 Starting Partial Function Benchmarks...\n");
@@ -104,7 +104,7 @@ const results = [];
 results.push(benchmark("Direct call (baseline)", () => filesize(testValue)));
 
 results.push(
-  benchmark("Direct call w/ options", () => filesize(testValue, { round: 2, standard: "iec" })),
+	benchmark("Direct call w/ options", () => filesize(testValue, { round: 2, standard: "iec" })),
 );
 
 // Test basic partial functions
@@ -132,38 +132,38 @@ results.push(benchmark("Partial w/ locale", () => localePartial(testValue)));
 
 // Test complex partial configurations
 const complexPartial = partial({
-  bits: true,
-  standard: "iec",
-  round: 3,
-  pad: true,
-  output: "object",
+	bits: true,
+	standard: "iec",
+	round: 3,
+	pad: true,
+	output: "object",
 });
 results.push(benchmark("Complex partial", () => complexPartial(testValue)));
 
 // Test partial creation overhead
 results.push(
-  benchmark("Partial creation", () => {
-    const newPartial = partial({ round: 2 });
-    return newPartial(testValue);
-  }),
+	benchmark("Partial creation", () => {
+		const newPartial = partial({ round: 2 });
+		return newPartial(testValue);
+	}),
 );
 
 // Test multiple partial instances
 const partials = [
-  partial({ round: 0 }),
-  partial({ round: 1 }),
-  partial({ round: 2 }),
-  partial({ round: 3 }),
-  partial({ round: 4 }),
+	partial({ round: 0 }),
+	partial({ round: 1 }),
+	partial({ round: 2 }),
+	partial({ round: 3 }),
+	partial({ round: 4 }),
 ];
 
 let partialIndex = 0;
 results.push(
-  benchmark("Multiple partials", () => {
-    const p = partials[partialIndex % partials.length];
-    partialIndex++;
-    return p(testValue);
-  }),
+	benchmark("Multiple partials", () => {
+		const p = partials[partialIndex % partials.length];
+		partialIndex++;
+		return p(testValue);
+	}),
 );
 
 printResults(results);
@@ -173,10 +173,10 @@ console.log("\n🔧 Functional Programming Patterns:");
 
 const sizes = [1024, 1048576, 1073741824, 1099511627776];
 const formatters = [
-  partial({ standard: "iec", round: 1 }),
-  partial({ bits: true, round: 2 }),
-  partial({ fullform: true }),
-  partial({ output: "object" }),
+	partial({ standard: "iec", round: 1 }),
+	partial({ bits: true, round: 2 }),
+	partial({ fullform: true }),
+	partial({ output: "object" }),
 ];
 
 console.log("\nTesting map operations:");
@@ -196,9 +196,9 @@ console.log("\nTesting function chaining:");
 const chainStart = process.hrtime.bigint();
 
 const chainResult = sizes
-  .filter((size) => size > 1024)
-  .map(formatters[1])
-  .slice(0, 2);
+	.filter((size) => size > 1024)
+	.map(formatters[1])
+	.slice(0, 2);
 
 const chainEnd = process.hrtime.bigint();
 const chainTime = Number(chainEnd - chainStart) / 1000000;
@@ -211,14 +211,14 @@ console.log("\nCurrying vs Direct Calls (1000 operations):");
 
 const curryStart = process.hrtime.bigint();
 for (let i = 0; i < 1000; i++) {
-  formatters[0](testValue);
+	formatters[0](testValue);
 }
 const curryEnd = process.hrtime.bigint();
 const curryTime = Number(curryEnd - curryStart) / 1000000;
 
 const directStart = process.hrtime.bigint();
 for (let i = 0; i < 1000; i++) {
-  filesize(testValue, { standard: "iec", round: 1 });
+	filesize(testValue, { standard: "iec", round: 1 });
 }
 const directEnd = process.hrtime.bigint();
 const directTime = Number(directEnd - directStart) / 1000000;

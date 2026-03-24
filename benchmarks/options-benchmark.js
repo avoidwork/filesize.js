@@ -18,36 +18,36 @@ const TEST_SIZE = 1073741824; // 1GB
  * @returns {Object} Performance results
  */
 function benchmark(testName, testFunction, iterations = ITERATIONS) {
-  // Warmup
-  for (let i = 0; i < WARMUP_ITERATIONS; i++) {
-    testFunction();
-  }
+	// Warmup
+	for (let i = 0; i < WARMUP_ITERATIONS; i++) {
+		testFunction();
+	}
 
-  // Garbage collection if available
-  if (global.gc) {
-    global.gc();
-  }
+	// Garbage collection if available
+	if (global.gc) {
+		global.gc();
+	}
 
-  // Actual benchmark
-  const startTime = process.hrtime.bigint();
+	// Actual benchmark
+	const startTime = process.hrtime.bigint();
 
-  for (let i = 0; i < iterations; i++) {
-    testFunction();
-  }
+	for (let i = 0; i < iterations; i++) {
+		testFunction();
+	}
 
-  const endTime = process.hrtime.bigint();
-  const totalTime = Number(endTime - startTime) / 1000000; // Convert to milliseconds
-  const avgTime = totalTime / iterations;
-  const opsPerSecond = 1000 / avgTime;
+	const endTime = process.hrtime.bigint();
+	const totalTime = Number(endTime - startTime) / 1000000; // Convert to milliseconds
+	const avgTime = totalTime / iterations;
+	const opsPerSecond = 1000 / avgTime;
 
-  return {
-    testName,
-    iterations,
-    totalTime: totalTime.toFixed(2),
-    avgTime: avgTime.toFixed(6),
-    opsPerSecond: Math.round(opsPerSecond),
-    relativeSpeed: 1, // Will be calculated later
-  };
+	return {
+		testName,
+		iterations,
+		totalTime: totalTime.toFixed(2),
+		avgTime: avgTime.toFixed(6),
+		opsPerSecond: Math.round(opsPerSecond),
+		relativeSpeed: 1, // Will be calculated later
+	};
 }
 
 /**
@@ -55,34 +55,34 @@ function benchmark(testName, testFunction, iterations = ITERATIONS) {
  * @param {Array} results - Array of benchmark results
  */
 function printResults(results) {
-  // Calculate relative speeds (compared to baseline)
-  const baseline = results[0];
-  results.forEach((result) => {
-    result.relativeSpeed = (baseline.opsPerSecond / result.opsPerSecond).toFixed(2);
-  });
+	// Calculate relative speeds (compared to baseline)
+	const baseline = results[0];
+	results.forEach((result) => {
+		result.relativeSpeed = (baseline.opsPerSecond / result.opsPerSecond).toFixed(2);
+	});
 
-  console.log("\n📊 Options Performance Benchmark Results");
-  console.log("=".repeat(90));
-  console.log(
-    "Test Name".padEnd(30) +
-      "Ops/sec".padEnd(12) +
-      "Avg (ms)".padEnd(12) +
-      "Relative".padEnd(10) +
-      "Notes",
-  );
-  console.log("-".repeat(90));
+	console.log("\n📊 Options Performance Benchmark Results");
+	console.log("=".repeat(90));
+	console.log(
+		"Test Name".padEnd(30) +
+			"Ops/sec".padEnd(12) +
+			"Avg (ms)".padEnd(12) +
+			"Relative".padEnd(10) +
+			"Notes",
+	);
+	console.log("-".repeat(90));
 
-  results.forEach((result, index) => {
-    const note = index === 0 ? "(baseline)" : `${result.relativeSpeed}x slower`;
-    console.log(
-      result.testName.padEnd(30) +
-        result.opsPerSecond.toLocaleString().padEnd(12) +
-        result.avgTime.padEnd(12) +
-        result.relativeSpeed.padEnd(10) +
-        note,
-    );
-  });
-  console.log("=".repeat(90));
+	results.forEach((result, index) => {
+		const note = index === 0 ? "(baseline)" : `${result.relativeSpeed}x slower`;
+		console.log(
+			result.testName.padEnd(30) +
+				result.opsPerSecond.toLocaleString().padEnd(12) +
+				result.avgTime.padEnd(12) +
+				result.relativeSpeed.padEnd(10) +
+				note,
+		);
+	});
+	console.log("=".repeat(90));
 }
 
 console.log("🚀 Starting Options Performance Benchmarks...\n");
@@ -120,49 +120,49 @@ results.push(benchmark("fullform=true", () => filesize(TEST_SIZE, { fullform: tr
 results.push(benchmark("precision=3", () => filesize(TEST_SIZE, { precision: 3 })));
 
 results.push(
-  benchmark('roundingMethod="ceil"', () => filesize(TEST_SIZE, { roundingMethod: "ceil" })),
+	benchmark('roundingMethod="ceil"', () => filesize(TEST_SIZE, { roundingMethod: "ceil" })),
 );
 
 // Test complex option combinations
 results.push(
-  benchmark("Complex combo 1", () =>
-    filesize(TEST_SIZE, {
-      bits: true,
-      standard: "iec",
-      round: 3,
-      pad: true,
-    }),
-  ),
+	benchmark("Complex combo 1", () =>
+		filesize(TEST_SIZE, {
+			bits: true,
+			standard: "iec",
+			round: 3,
+			pad: true,
+		}),
+	),
 );
 
 results.push(
-  benchmark("Complex combo 2", () =>
-    filesize(TEST_SIZE, {
-      fullform: true,
-      locale: "en-US",
-      precision: 2,
-      output: "object",
-    }),
-  ),
+	benchmark("Complex combo 2", () =>
+		filesize(TEST_SIZE, {
+			fullform: true,
+			locale: "en-US",
+			precision: 2,
+			output: "object",
+		}),
+	),
 );
 
 results.push(
-  benchmark("All options", () =>
-    filesize(TEST_SIZE, {
-      bits: true,
-      pad: true,
-      base: 2,
-      round: 3,
-      locale: "en-US",
-      separator: ",",
-      spacer: " ",
-      standard: "iec",
-      output: "object",
-      fullform: true,
-      precision: 2,
-      roundingMethod: "ceil",
-    }),
-  ),
+	benchmark("All options", () =>
+		filesize(TEST_SIZE, {
+			bits: true,
+			pad: true,
+			base: 2,
+			round: 3,
+			locale: "en-US",
+			separator: ",",
+			spacer: " ",
+			standard: "iec",
+			output: "object",
+			fullform: true,
+			precision: 2,
+			roundingMethod: "ceil",
+		}),
+	),
 );
 
 printResults(results);

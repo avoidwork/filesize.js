@@ -1,26 +1,26 @@
 import {
-  ARRAY,
-  BINARY_POWERS,
-  BIT,
-  BYTE,
-  DECIMAL_POWERS,
-  E,
-  EMPTY,
-  EXPONENT,
-  IEC,
-  JEDEC,
-  OBJECT,
-  PERIOD,
-  SI,
-  STRINGS,
-  ZERO,
+	ARRAY,
+	BINARY_POWERS,
+	BIT,
+	BYTE,
+	DECIMAL_POWERS,
+	E,
+	EMPTY,
+	EXPONENT,
+	IEC,
+	JEDEC,
+	OBJECT,
+	PERIOD,
+	SI,
+	STRINGS,
+	ZERO,
 } from "./constants.js";
 
 // Cached configuration lookup for better performance
 const STANDARD_CONFIGS = {
-  [SI]: { isDecimal: true, ceil: 1000, actualStandard: JEDEC },
-  [IEC]: { isDecimal: false, ceil: 1024, actualStandard: IEC },
-  [JEDEC]: { isDecimal: false, ceil: 1024, actualStandard: JEDEC },
+	[SI]: { isDecimal: true, ceil: 1000, actualStandard: JEDEC },
+	[IEC]: { isDecimal: false, ceil: 1024, actualStandard: IEC },
+	[JEDEC]: { isDecimal: false, ceil: 1024, actualStandard: JEDEC },
 };
 
 /**
@@ -30,18 +30,18 @@ const STANDARD_CONFIGS = {
  * @returns {Object} Configuration object
  */
 export function getBaseConfiguration(standard, base) {
-  // Use cached lookup table for better performance
-  if (STANDARD_CONFIGS[standard]) {
-    return STANDARD_CONFIGS[standard];
-  }
+	// Use cached lookup table for better performance
+	if (STANDARD_CONFIGS[standard]) {
+		return STANDARD_CONFIGS[standard];
+	}
 
-  // Base override
-  if (base === 2) {
-    return { isDecimal: false, ceil: 1024, actualStandard: IEC };
-  }
+	// Base override
+	if (base === 2) {
+		return { isDecimal: false, ceil: 1024, actualStandard: IEC };
+	}
 
-  // Default
-  return { isDecimal: true, ceil: 1000, actualStandard: JEDEC };
+	// Default
+	return { isDecimal: true, ceil: 1000, actualStandard: JEDEC };
 }
 
 /**
@@ -58,49 +58,49 @@ export function getBaseConfiguration(standard, base) {
  * @returns {string|Array|Object|number} Formatted result
  */
 export function handleZeroValue(
-  precision,
-  actualStandard,
-  bits,
-  symbols,
-  full,
-  fullforms,
-  output,
-  spacer,
-  symbol,
+	precision,
+	actualStandard,
+	bits,
+	symbols,
+	full,
+	fullforms,
+	output,
+	spacer,
+	symbol,
 ) {
-  const value = precision > 0 ? (0).toPrecision(precision) : 0;
+	const value = precision > 0 ? (0).toPrecision(precision) : 0;
 
-  if (output === EXPONENT) {
-    return 0;
-  }
+	if (output === EXPONENT) {
+		return 0;
+	}
 
-  // Set default symbol if not provided
-  if (!symbol) {
-    symbol = bits
-      ? STRINGS.symbol[actualStandard].bits[0]
-      : STRINGS.symbol[actualStandard].bytes[0];
-  }
+	// Set default symbol if not provided
+	if (!symbol) {
+		symbol = bits
+			? STRINGS.symbol[actualStandard].bits[0]
+			: STRINGS.symbol[actualStandard].bytes[0];
+	}
 
-  // Apply symbol customization
-  if (symbols[symbol]) {
-    symbol = symbols[symbol];
-  }
+	// Apply symbol customization
+	if (symbols[symbol]) {
+		symbol = symbols[symbol];
+	}
 
-  // Apply full form
-  if (full) {
-    symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
-  }
+	// Apply full form
+	if (full) {
+		symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+	}
 
-  // Return in requested format
-  if (output === ARRAY) {
-    return [value, symbol];
-  }
+	// Return in requested format
+	if (output === ARRAY) {
+		return [value, symbol];
+	}
 
-  if (output === OBJECT) {
-    return { value, symbol, exponent: 0, unit: symbol };
-  }
+	if (output === OBJECT) {
+		return { value, symbol, exponent: 0, unit: symbol };
+	}
 
-  return value + spacer + symbol;
+	return value + spacer + symbol;
 }
 
 /**
@@ -113,19 +113,19 @@ export function handleZeroValue(
  * @returns {Object} Object with val and e properties
  */
 export function calculateOptimizedValue(num, e, isDecimal, bits, ceil) {
-  const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
-  let result = num / d;
+	const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
+	let result = num / d;
 
-  if (bits) {
-    result *= 8;
-    // Handle auto-increment for bits
-    if (result >= ceil && e < 8) {
-      result /= ceil;
-      e++;
-    }
-  }
+	if (bits) {
+		result *= 8;
+		// Handle auto-increment for bits
+		if (result >= ceil && e < 8) {
+			result /= ceil;
+			e++;
+		}
+	}
 
-  return { result, e };
+	return { result, e };
 }
 
 /**
@@ -142,29 +142,29 @@ export function calculateOptimizedValue(num, e, isDecimal, bits, ceil) {
  * @returns {Object} Object with value and e properties
  */
 export function applyPrecisionHandling(
-  value,
-  precision,
-  e,
-  num,
-  isDecimal,
-  bits,
-  ceil,
-  roundingFunc,
-  round,
+	value,
+	precision,
+	e,
+	num,
+	isDecimal,
+	bits,
+	ceil,
+	roundingFunc,
+	round,
 ) {
-  let result = value.toPrecision(precision);
+	let result = value.toPrecision(precision);
 
-  // Handle scientific notation by recalculating with incremented exponent
-  if (result.includes(E) && e < 8) {
-    e++;
-    const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-    const p = round > 0 ? Math.pow(10, round) : 1;
-    result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(
-      precision,
-    );
-  }
+	// Handle scientific notation by recalculating with incremented exponent
+	if (result.includes(E) && e < 8) {
+		e++;
+		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
+		const p = round > 0 ? Math.pow(10, round) : 1;
+		result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(
+			precision,
+		);
+	}
 
-  return { value: result, e };
+	return { value: result, e };
 }
 
 /**
@@ -178,28 +178,28 @@ export function applyPrecisionHandling(
  * @returns {string|number} Formatted value
  */
 export function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
-  let result = value;
+	let result = value;
 
-  // Apply locale formatting
-  if (locale === true) {
-    result = result.toLocaleString();
-  } else if (locale.length > 0) {
-    result = result.toLocaleString(locale, localeOptions);
-  } else if (separator.length > 0) {
-    result = result.toString().replace(PERIOD, separator);
-  }
+	// Apply locale formatting
+	if (locale === true) {
+		result = result.toLocaleString();
+	} else if (locale.length > 0) {
+		result = result.toLocaleString(locale, localeOptions);
+	} else if (separator.length > 0) {
+		result = result.toString().replace(PERIOD, separator);
+	}
 
-  // Apply padding
-  if (pad && round > 0) {
-    const resultStr = result.toString();
-    const x = separator || (resultStr.match(/(\D)/g) || []).pop() || PERIOD;
-    const tmp = resultStr.split(x);
-    const s = tmp[1] || EMPTY;
-    const l = s.length;
-    const n = round - l;
+	// Apply padding
+	if (pad && round > 0) {
+		const resultStr = result.toString();
+		const x = separator || (resultStr.match(/(\D)/g) || []).pop() || PERIOD;
+		const tmp = resultStr.split(x);
+		const s = tmp[1] || EMPTY;
+		const l = s.length;
+		const n = round - l;
 
-    result = `${tmp[0]}${x}${s.padEnd(l + n, ZERO)}`;
-  }
+		result = `${tmp[0]}${x}${s.padEnd(l + n, ZERO)}`;
+	}
 
-  return result;
+	return result;
 }
