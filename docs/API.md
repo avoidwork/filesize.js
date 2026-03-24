@@ -209,12 +209,12 @@ filesize(1024, {bits: true, base: 2}) // "8 Kibit"
 
 Number base for calculations:
 - `-1` (default): Auto-detect based on standard
-- `2`: Binary (1024)
+- `2`: Binary (1024) - uses IEC symbols when combined with `standard: "iec"`
 - `10`: Decimal (1000)
 
 ```javascript
-filesize(1024, {base: 2}) // "1.02 kB" (uses JEDEC symbols)
-filesize(1024, {base: 10}) // "1.02 kB"
+filesize(1024, {base: 2}) // "1 KiB" (binary, IEC symbols)
+filesize(1024, {base: 10}) // "1.02 kB" (decimal, SI symbols)
 ```
 
 ### round
