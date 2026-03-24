@@ -209,7 +209,7 @@ filesize(1024, {bits: true, base: 2}) // "8 Kibit"
 
 Number base for calculations:
 - `-1` (default): Auto-detect based on standard
-- `2`: Binary (1024) - uses IEC symbols when combined with `standard: "iec"`
+- `2`: Binary (1024) - uses IEC symbols (KiB, MiB, GiB)
 - `10`: Decimal (1000)
 
 ```javascript

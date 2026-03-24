@@ -51,9 +51,9 @@ import {
  * @returns {string|Array|Object|number} Formatted file size based on output option
  * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
  * @example
- * filesize(1024) // "1 KB"
- * filesize(1024, {bits: true}) // "8 Kb"
- * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
+ * filesize(1024) // "1.02 kB"
+ * filesize(1024, {bits: true}) // "8.19 kbit"
+ * filesize(1024, {output: "object"}) // {value: 1.02, symbol: "kB", exponent: 1, unit: "kB"}
  */
 export function filesize(
 	arg,
@@ -220,7 +220,7 @@ export function filesize(
  * @param {Object} [options={}] - Configuration options (same as filesize)
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
- * const formatBytes = partial({round: 1, standard: "IEC"});
+ * const formatBytes = partial({round: 1, standard: "iec"});
  * formatBytes(1024) // "1.0 KiB"
  * formatBytes(2048) // "2.0 KiB"
  */
