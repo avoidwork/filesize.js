@@ -3,7 +3,8 @@
  * Tests the individual helper functions for better test coverage
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { 
 	getBaseConfiguration,
 	handleZeroValue,

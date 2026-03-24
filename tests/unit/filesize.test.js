@@ -3,7 +3,8 @@
  * Tests the main filesize function and partial function
  */
 
-import assert from 'assert';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { filesize, partial } from '../../src/filesize.js';
 
 describe('filesize', () => {

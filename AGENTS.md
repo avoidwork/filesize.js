@@ -5,23 +5,23 @@
 filesize.js is a lightweight, high-performance file size utility that converts bytes to human-readable strings. It supports multiple unit standards (SI, IEC, JEDEC), localization, and various output formats.
 
 **Key Facts:**
-- **Single source file**: `src/filesize.js` (214 lines)
-- **Helper functions**: `src/helpers.js` (180 lines)  
+- **Single source file**: `src/filesize.js` (198 lines)
+- **Helper functions**: `src/helpers.js` (181 lines)  
 - **Constants**: `src/constants.js` (81 lines)
 - **Zero dependencies**: Uses only native JavaScript APIs
 - **100% test coverage**: 139 tests passing
 
 ## Coding Conventions
 
-### From `.cursor/rules/javascript.mdc`
-
 - **JSDoc**: Use JSDoc standard for all functions and classes
 - **Naming**: 
   - Functions: camelCase (`handleZeroValue`, `applyPrecisionHandling`)
   - Constants: UPPER_SNAKE_CASE (`IEC`, `JEDEC`, `BINARY_POWERS`)
 - **Testing**: 
-  - Unit tests in `tests/unit/` using node-assert + mocha
-  - Integration tests in `tests/integration/` using node-assert + mocha
+  - Unit tests in `tests/unit/` using `node:test` + node:assert
+  - Use `describe()` and `it()` from `node:test`
+- **Linting**: oxlint (fast Rust-based linter)
+- **Formatting**: oxfmt (fast Rust-based formatter)
 - **Principles**: DRY, KISS, YAGNI, SOLID
 - **Security**: OWASP best practices
 
@@ -61,10 +61,9 @@ filesize.js/
 │   ├── helpers.js       # Helper functions (5 exported functions)
 │   └── constants.js     # Constants, symbols, lookup tables
 ├── tests/
-│   ├── unit/
-│   │   └── filesize-helpers.test.js  # Helper function tests
-│   └── integration/
-│       └── filesize.test.js          # Integration tests
+│   └── unit/
+│       └── filesize-helpers.test.js  # Helper function tests
+│       └── filesize.test.js          # Main function tests
 ├── dist/                # Built distributions (generated)
 ├── types/               # TypeScript definitions
 └── docs/                # Documentation
@@ -159,15 +158,15 @@ Do NOT destructure with defaults in `partial()` - let `filesize()` handle defaul
 ### Running Tests
 
 ```bash
-npm test              # Full test suite (lint + mocha)
-npm run mocha         # Tests only
+npm test              # Full test suite (lint + node:test)
 npm run test:watch    # Live test watching
 ```
 
 ### Test Structure
 
 ```javascript
-import assert from 'assert';
+import assert from 'node:assert';
+import { describe, it } from 'node:test';
 import { filesize } from '../../src/filesize.js';
 
 describe('Feature', () => {
@@ -182,7 +181,7 @@ describe('Feature', () => {
 
 - **100%** statement, branch, function, and line coverage required
 - No uncovered lines allowed
-- Use `c8` for coverage reports
+- Coverage reported by Node's built-in test runner with `--experimental-test-coverage`
 
 ## Build Process
 
@@ -298,6 +297,9 @@ Check the c8 report for uncovered lines. Add tests for missing branches.
 ### Linting Errors
 Run `npm run lint:fix` to auto-fix common issues.
 
+### Formatting
+Run `npm run format:fix` to format code with oxfmt.
+
 ## Quick Reference
 
 **Files to modify:**
@@ -309,6 +311,7 @@ Run `npm run lint:fix` to auto-fix common issues.
 - `npm test` - Run everything
 - `npm run build` - Build distributions
 - `npm run lint` - Check code style
+- `npm run format:fix` - Format code
 
 **Key constraints:**
 - No external dependencies
