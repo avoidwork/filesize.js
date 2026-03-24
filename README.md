@@ -137,8 +137,7 @@ try {
 ## Testing
 
 ```bash
-npm test              # Run all tests (lint + mocha)
-npm run mocha         # Tests only
+npm test              # Run all tests (lint + node:test)
 npm run test:watch    # Live test watching
 ```
 
@@ -174,8 +173,7 @@ filesize.js/
 │   ├── helpers.js       # Helper functions (181 lines)
 │   └── constants.js     # Constants (81 lines)
 ├── tests/
-│   ├── unit/
-│   └── integration/
+│   └── unit/
 ├── dist/                # Built distributions
 └── types/               # TypeScript definitions
 ```
