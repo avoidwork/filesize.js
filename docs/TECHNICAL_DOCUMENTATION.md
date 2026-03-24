@@ -207,7 +207,7 @@ When precision is specified ($p > 0$), the value is adjusted to show $p$ signifi
 3. Re-applies rounding and precision formatting
 4. This ensures output remains in standard decimal notation
 
-The precision parameter takes precedence over round when both are specified.
+The precision parameter is applied after rounding, providing significant digit control on top of the rounded value.
 
 ### Overflow Handling
 
@@ -445,7 +445,7 @@ Creates a partially applied function with preset options.
 | `separator` | string | `""` | Custom decimal separator |
 | `spacer` | string | `" "` | Value-unit separator |
 | `symbols` | Object | `{}` | Custom unit symbols |
-| `standard` | string | `""` | Unit standard (SI, IEC, JEDEC) |
+| `standard` | string | `""` | Unit standard (si, iec, jedec) |
 | `output` | string | `"string"` | Output format |
 | `fullform` | boolean | `false` | Use full unit names |
 | `fullforms` | Array | `[]` | Custom full unit names |
@@ -475,14 +475,14 @@ graph TD
 
 ```javascript
 // String output (default)
-filesize(1536) // "1.5 KB"
+filesize(1536) // "1.54 kB"
 
 // Array output
-filesize(1536, { output: "array" }) // [1.5, "KB"]
+filesize(1536, { output: "array" }) // [1.54, "kB"]
 
 // Object output
 filesize(1536, { output: "object" })
-// { value: 1.5, symbol: "KB", exponent: 1, unit: "KB" }
+// { value: 1.54, symbol: "kB", exponent: 1, unit: "kB" }
 
 // Exponent output
 filesize(1536, { output: "exponent" }) // 1
@@ -496,26 +496,30 @@ filesize(1536, { output: "exponent" }) // 1
 import { filesize } from 'filesize';
 
 // Simple conversion
-filesize(1024); // "1 KB"
-filesize(1536); // "1.5 KB" 
-filesize(1073741824); // "1 GB"
+filesize(1024); // "1.02 kB"
+filesize(1536); // "1.54 kB" 
+filesize(1073741824); // "1.07 GB"
 ```
 
 ### Advanced Configuration
 
 ```javascript
 // IEC binary standard
-filesize(1024, { standard: "IEC" }); // "1 KiB"
+filesize(1024, { standard: "iec" }); // "1 KiB"
+
+// JEDEC binary format (KB, MB, GB with binary calculation)
+filesize(1024, { standard: "jedec" }); // "1 KB"
+filesize(265318, { standard: "jedec" }); // "259.1 KB"
 
 // High precision
-filesize(1536, { round: 3 }); // "1.500 KB"
+filesize(1536, { round: 3 }); // "1.536 kB"
 
 // Bits instead of bytes
-filesize(1024, { bits: true }); // "8 Kb"
+filesize(1024, { bits: true }); // "8.19 kbit"
 
 // Object output for programmatic use
 filesize(1536, { output: "object" });
-// { value: 1.5, symbol: "KB", exponent: 1, unit: "KB" }
+// { value: 1.54, symbol: "kB", exponent: 1, unit: "kB" }
 ```
 
 ### Functional Programming Pattern
@@ -524,11 +528,11 @@ filesize(1536, { output: "object" });
 import { partial } from 'filesize';
 
 // Create specialized formatters
-const formatBinary = partial({ standard: "IEC", round: 1 });
+const formatBinary = partial({ standard: "iec", round: 1 });
 const formatPrecise = partial({ round: 4, pad: true });
 
-formatBinary(1024); // "1.0 KiB"
-formatPrecise(1536); // "1.5000 KB"
+formatBinary(1024); // "1 KiB"
+formatPrecise(1536); // "1.5360 kB"
 ```
 
 ## Modern Application Examples (2025)
@@ -541,7 +545,7 @@ import { filesize, partial } from 'filesize';
 import { useLocale } from '@/hooks/useLocale';
 
 const formatStorage = partial({
-  standard: "IEC",
+  standard: "iec",
   round: 1,
   output: "object"
 });
@@ -551,13 +555,13 @@ function StorageWidget({ usage, quota }) {
   
   const usageFormatted = filesize(usage, { 
     locale, 
-    standard: "IEC",
+    standard: "iec",
     localeOptions: { notation: "compact" }
   });
   
   const quotaFormatted = filesize(quota, { 
     locale, 
-    standard: "IEC" 
+    standard: "iec" 
   });
   
   const percentage = (usage / quota) * 100;
@@ -636,13 +640,13 @@ class DataUsageTracker {
     this.locale = locale;
     this.formatData = partial({
       bits: true,
-      standard: "IEC",
+      standard: "iec",
       locale: this.locale,
       round: 1
     });
     
     this.formatBytes = partial({
-      standard: "IEC", 
+      standard: "iec", 
       locale: this.locale,
       round: 2
     });
@@ -707,7 +711,7 @@ class CacheManager {
     return {
       bytes: totalSize,
       formatted: filesize(totalSize, {
-        standard: "IEC",
+        standard: "iec",
         round: 1
       })
     };
@@ -754,7 +758,7 @@ export function SystemMetrics() {
   const formatMetric = (value: number, options = {}) => 
     filesize(value, {
       locale,
-      standard: "IEC",
+      standard: "iec",
       round: 1,
       ...options
     });
@@ -839,13 +843,13 @@ graph TB
 ```javascript
 // Multi-language file size formatting
 const localizedFormatters = {
-  'en-US': partial({ locale: 'en-US', standard: "JEDEC" }),
-  'en-GB': partial({ locale: 'en-GB', standard: "IEC" }),
-  'de-DE': partial({ locale: 'de-DE', standard: "IEC", separator: ',' }),
-  'fr-FR': partial({ locale: 'fr-FR', standard: "SI" }),
-  'ja-JP': partial({ locale: 'ja-JP', standard: "IEC" }),
-  'zh-CN': partial({ locale: 'zh-CN', standard: "IEC" }),
-  'ar-SA': partial({ locale: 'ar-SA', standard: "IEC" })
+  'en-US': partial({ locale: 'en-US', standard: "jedec" }),
+  'en-GB': partial({ locale: 'en-GB', standard: "iec" }),
+  'de-DE': partial({ locale: 'de-DE', standard: "iec", separator: ',' }),
+  'fr-FR': partial({ locale: 'fr-FR', standard: "si" }),
+  'ja-JP': partial({ locale: 'ja-JP', standard: "iec" }),
+  'zh-CN': partial({ locale: 'zh-CN', standard: "iec" }),
+  'ar-SA': partial({ locale: 'ar-SA', standard: "iec" })
 };
 
 // Usage in internationalized app
@@ -855,9 +859,9 @@ function formatFileSize(bytes, userLocale = 'en-US') {
 }
 
 // Examples
-formatFileSize(1536, 'en-US'); // "1.5 KB"
-formatFileSize(1536, 'de-DE'); // "1,5 KB" (German decimal separator)
-formatFileSize(1536, 'fr-FR'); // "1,5 ko" (French locale)
+formatFileSize(1536, 'en-US'); // "1.54 kB"
+formatFileSize(1536, 'de-DE'); // "1,5 KiB" (German decimal separator)
+formatFileSize(1536, 'fr-FR'); // "1,54 kB" (French locale)
 ```
 
 ### Advanced Locale Configuration
@@ -867,7 +871,7 @@ formatFileSize(1536, 'fr-FR'); // "1,5 ko" (French locale)
 const regionConfigs = {
   europe: {
     locale: 'en-GB',
-    standard: 'IEC',
+    standard: 'iec',
     localeOptions: {
       minimumFractionDigits: 1,
       maximumFractionDigits: 2
@@ -876,7 +880,7 @@ const regionConfigs = {
   
   asia: {
     locale: 'ja-JP',
-    standard: 'IEC',
+    standard: 'iec',
     localeOptions: {
       notation: 'compact',
       compactDisplay: 'short'
@@ -885,7 +889,7 @@ const regionConfigs = {
   
   americas: {
     locale: 'en-US',
-    standard: 'JEDEC',
+    standard: 'jedec',
     localeOptions: {
       style: 'decimal'
     }
@@ -905,9 +909,9 @@ class LocalizedFileSize {
   
   formatWithContext(bytes, context = 'storage') {
     const contextOptions = {
-      storage: { standard: 'IEC' },
-      network: { bits: true, standard: 'SI' },
-      memory: { standard: 'IEC', round: 0 }
+      storage: { standard: 'iec' },
+      network: { bits: true, standard: 'si' },
+      memory: { standard: 'iec', round: 0 }
     };
     
     return filesize(bytes, {
@@ -966,7 +970,7 @@ graph TD
 ```javascript
 // 1. Formatter Reuse
 const commonFormatter = partial({
-  standard: "IEC",
+  standard: "iec",
   round: 1,
   locale: "en-US"
 });
@@ -1056,7 +1060,7 @@ export function useFilesize(options = {}) {
 // Usage
 function FileList({ files }) {
   const { format } = useFilesize({ 
-    standard: 'IEC', 
+    standard: 'iec', 
     locale: navigator.language 
   });
   
@@ -1133,7 +1137,7 @@ export class FilesizeService {
   }
   
   formatWithLocale(bytes: number | bigint, locale: string): string {
-    return this.format(bytes, { locale, standard: 'IEC' });
+    return this.format(bytes, { locale, standard: 'iec' });
   }
 }
 ```
@@ -1152,7 +1156,7 @@ function filesizeMiddleware(options = {}) {
 }
 
 // Usage
-app.use(filesizeMiddleware({ standard: 'IEC', locale: 'en-US' }));
+app.use(filesizeMiddleware({ standard: 'iec', locale: 'en-US' }));
 
 app.get('/api/files', (req, res) => {
   const files = getFiles().map(file => ({
