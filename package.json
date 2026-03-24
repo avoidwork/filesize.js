@@ -56,6 +56,8 @@
     "@rollup/plugin-terser": "^1.0.0",
     "auto-changelog": "^2.5.0",
     "husky": "^9.1.7",
+    "oxfmt": "^0.42.0",
+    "oxlint": "^1.57.0",
     "rollup": "^4.52.0"
   },
   "keywords": [
