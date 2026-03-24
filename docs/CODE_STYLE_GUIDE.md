@@ -82,9 +82,8 @@ src/
 └── helpers.js
 
 tests/
-├── unit/
-│   └── filesize-helpers.test.js
-└── integration/
+└── unit/
+    ├── filesize-helpers.test.js
     └── filesize.test.js
 ```
 
@@ -260,10 +259,11 @@ export function partial (options = {}) {
 
 ### Test Structure
 
-Use node-assert with mocha:
+Use `node:test` with `node:assert`:
 
 ```javascript
 import assert from "node:assert";
+import { describe, it } from "node:test";
 import { filesize } from "../../src/filesize.js";
 
 describe("filesize()", () => {
@@ -340,8 +340,7 @@ npm run lint:fix # Auto-fix issues
 ### Testing
 
 ```bash
-npm test         # Full test suite (lint + mocha)
-npm run mocha    # Tests only
+npm test         # Full test suite (lint + node:test)
 npm run test:watch # Live test watching
 ```
 
