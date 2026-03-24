@@ -40,7 +40,7 @@
     "lint": "npx oxlint *.js src/*.js tests/**/*.js",
     "format": "oxfmt check *.js src/*.js tests/**/*.js",
     "format:fix": "oxfmt format *.js src/*.js tests/**/*.js",
-    "fix": "npm run format:fix",
+    "fix": "npx oxlint --fix *.js benchmarks src tests && npx oxfmt *.js benchmarks src tests/unit --write",
     "test": "npm run lint && node --test --experimental-test-coverage tests/**/*.js",
     "test:watch": "node --test --watch tests/**/*.js",
     "rollup": "rollup --config",
