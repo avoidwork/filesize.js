@@ -1,7 +1,7 @@
 /**
  * filesize
  *
- * @copyright 2025 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
  * @version 11.0.13
  */
@@ -129,32 +129,38 @@ function getBaseConfiguration (standard, base) {
  * @param {string} spacer - Spacer character
  * @returns {string|Array|Object|number} Formatted result
  */
-function handleZeroValue (precision, actualStandard, bits, symbols, full, fullforms, output, spacer) {
-	const result = [];
-	result[0] = precision > 0 ? (0).toPrecision(precision) : 0;
-	const u = result[1] = STRINGS.symbol[actualStandard][bits ? BITS : BYTES][0];
+function handleZeroValue (precision, actualStandard, bits, symbols, full, fullforms, output, spacer, symbol) {
+	const value = precision > 0 ? (0).toPrecision(precision) : 0;
 
 	if (output === EXPONENT) {
 		return 0;
 	}
 
+	// Set default symbol if not provided
+	if (!symbol) {
+		symbol = bits ? STRINGS.symbol[actualStandard].bits[0] : STRINGS.symbol[actualStandard].bytes[0];
+	}
+
 	// Apply symbol customization
-	if (symbols[result[1]]) {
-		result[1] = symbols[result[1]];
+	if (symbols[symbol]) {
+		symbol = symbols[symbol];
 	}
 
 	// Apply full form
 	if (full) {
-		result[1] = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+		symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
 	}
 
 	// Return in requested format
-	return output === ARRAY ? result : output === OBJECT ? {
-		value: result[0],
-		symbol: result[1],
-		exponent: 0,
-		unit: u
-	} : result.join(spacer);
+	if (output === ARRAY) {
+		return [value, symbol];
+	}
+
+	if (output === OBJECT) {
+		return {value, symbol, exponent: 0, unit: symbol};
+	}
+
+	return value + spacer + symbol;
 }
 
 /**
