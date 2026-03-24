@@ -1,223 +1,140 @@
 # Code Style Guide
 
-## Table of Contents
-
-1. [Overview](#overview)
-2. [General Principles](#general-principles)
-3. [Code Formatting](#code-formatting)
-4. [Naming Conventions](#naming-conventions)
-5. [Function and Class Design](#function-and-class-design)
-6. [Documentation Standards](#documentation-standards)
-7. [Error Handling](#error-handling)
-8. [Module Structure](#module-structure)
-9. [Testing Standards](#testing-standards)
-10. [Security Guidelines](#security-guidelines)
-11. [Performance Considerations](#performance-considerations)
-12. [Tools and Linting](#tools-and-linting)
-
 ## Overview
 
-This style guide establishes coding standards for the filesize.js project, following Node.js community best practices and ensuring code maintainability, readability, and security.
+This style guide establishes coding standards for filesize.js, following Node.js community best practices and the project's existing patterns.
 
 ## General Principles
 
-### Core Development Principles
-
-- **DRY (Don't Repeat Yourself)**: Eliminate code duplication through abstraction and modularization
+- **DRY (Don't Repeat Yourself)**: Eliminate code duplication
 - **KISS (Keep It Simple, Stupid)**: Favor simplicity over complexity
-- **YAGNI (You Aren't Gonna Need It)**: Implement features only when necessary
-- **SOLID Principles**: Follow Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion principles
-
-### Code Quality Standards
-
-- Write self-documenting code with clear intent
-- Prioritize code readability over cleverness
-- Use meaningful names that express intent
-- Keep functions small and focused
-- Write testable code with minimal dependencies
+- **YAGNI (You Aren't Gonna Need It)**: Implement only when necessary
+- **SOLID Principles**: Follow single responsibility, etc.
 
 ## Code Formatting
 
-### Indentation and Spacing
+### Indentation
+
+Use **tabs** for indentation:
 
 ```javascript
-// Use tabs for indentation (project standard)
-function exampleFunction(param1, param2) {
-	const result = param1 + param2;
+export function filesize (arg, {
+	bits = false,
+	pad = false
+} = {}) {
+	const result = [];
 	return result;
 }
-
-// Space around operators
-const sum = a + b;
-const isValid = value > 0 && value < 100;
-
-// Space after commas in arrays and objects
-const array = [1, 2, 3, 4];
-const obj = { key1: "value1", key2: "value2" };
 ```
 
-### Line Length and Breaks
+### Line Length
 
 - Maximum line length: 120 characters
 - Break long parameter lists across multiple lines
-- Use consistent indentation for wrapped lines
-
-```javascript
-// Good: Long parameter list
-function processData({
-	inputData,
-	outputFormat,
-	processingOptions,
-	validationRules
-}) {
-	// Function implementation
-}
-
-// Good: Long conditional
-if (condition1 && 
-	condition2 && 
-	condition3) {
-	// Action
-}
-```
 
 ### Trailing Commas
 
-Use trailing commas in multi-line arrays and objects for cleaner diffs:
+Use trailing commas in multi-line arrays/objects:
 
 ```javascript
 const config = {
 	option1: "value1",
 	option2: "value2",
-	option3: "value3", // Trailing comma
 };
 ```
 
 ## Naming Conventions
 
-### Variables and Functions
+### Functions and Variables
 
-- Use **camelCase** for all variables and functions
-- Use descriptive names that clearly indicate purpose
-- Avoid abbreviations unless they are widely understood
+Use **camelCase**:
 
 ```javascript
 // Good
 const userAccountBalance = getUserBalance();
 const isValidEmail = validateEmailFormat(email);
 
-// Bad
-const usrAccBal = getUsrBal();
-const isValidEml = validateEmlFmt(eml);
+// From filesize.js
+export function handleZeroValue (precision, actualStandard, bits) {
+	// Implementation
+}
 ```
 
 ### Constants
 
-- Use **UPPER_SNAKE_CASE** for all constants
-- Group related constants together
-- Use meaningful prefixes for constant categories
+Use **UPPER_SNAKE_CASE**:
 
 ```javascript
-// Good
-const MAX_FILE_SIZE = 1024 * 1024;
-const ERROR_INVALID_INPUT = "Invalid input provided";
-const HTTP_STATUS_OK = 200;
-
-// Export constants from dedicated module
-export const STANDARDS = {
-	IEC: "iec",
-	JEDEC: "jedec",
-	SI: "si"
-};
+// From constants.js
+export const INVALID_NUMBER = "Invalid number";
+export const IEC = "iec";
+export const BINARY_POWERS = [1, 1024, 1048576];
 ```
 
 ### Files and Directories
 
-- Use **kebab-case** for file and directory names
-- Use descriptive names that indicate file purpose
-- Group related files in logical directories
+Use **kebab-case** for file/directory names. The project uses simple descriptive names:
 
 ```
 src/
 ├── constants.js
 ├── filesize.js
-├── utils/
-│   ├── validation-helpers.js
-│   └── formatting-utils.js
+└── helpers.js
+
 tests/
 ├── unit/
-│   ├── filesize.test.js
-│   └── constants.test.js
+│   └── filesize-helpers.test.js
 └── integration/
-    └── full-workflow.test.js
+    └── filesize.test.js
 ```
 
-## Function and Class Design
+## Function Design
 
-### Function Structure
+### Small, Focused Functions
 
-- Keep functions small (ideally under 20 lines)
-- Single responsibility per function
-- Pure functions when possible (no side effects)
-- Use default parameters for optional arguments
+Keep functions small with single responsibility:
 
 ```javascript
 /**
- * Calculates the file size with specified formatting options
- * @param {number} bytes - The size in bytes
- * @param {Object} [options={}] - Formatting options
- * @param {string} [options.standard="jedec"] - Unit standard to use
- * @param {number} [options.precision=2] - Decimal places
- * @returns {string} Formatted file size string
+ * Optimized base configuration lookup
+ * @param {string} standard - Standard type
+ * @param {number} base - Base number
+ * @returns {Object} Configuration object
  */
-function formatFileSize(bytes, { 
-	standard = "jedec", 
-	precision = 2 
-} = {}) {
-	// Implementation
+export function getBaseConfiguration (standard, base) {
+	if (STANDARD_CONFIGS[standard]) {
+		return STANDARD_CONFIGS[standard];
+	}
+
+	if (base === 2) {
+		return {isDecimal: false, ceil: 1024, actualStandard: IEC};
+	}
+
+	return {isDecimal: true, ceil: 1000, actualStandard: JEDEC};
 }
 ```
 
-### Parameter Handling
+### Default Parameters
 
-- Use destructuring for options objects
-- Provide sensible defaults
-- Validate critical parameters
+Use default parameters for optional arguments:
 
 ```javascript
-// Good: Clear parameter destructuring with defaults
-function processFile({
-	inputPath,
-	outputPath = "./output",
-	format = "json",
-	compress = false
-} = {}) {
-	if (!inputPath) {
-		throw new TypeError("inputPath is required");
-	}
-	// Process file
+export function partial (options = {}) {
+	return arg => filesize(arg, options);
 }
 ```
 
-### Return Values
+### Early Returns
 
-- Be consistent with return types
-- Return early for error conditions
-- Use descriptive return objects when returning multiple values
+Return early for error conditions:
 
 ```javascript
-// Good: Consistent return pattern
-function parseFileSize(input) {
-	if (typeof input !== "string") {
-		return { success: false, error: "Input must be a string" };
-	}
-	
-	const parsed = parseSize(input);
-	return { 
-		success: true, 
-		value: parsed.value, 
-		unit: parsed.unit 
-	};
+if (typeof arg !== "bigint" && isNaN(arg)) {
+	throw new TypeError(INVALID_NUMBER);
+}
+
+if (typeof roundingFunc !== FUNCTION) {
+	throw new TypeError(INVALID_ROUND);
 }
 ```
 
@@ -225,386 +142,217 @@ function parseFileSize(input) {
 
 ### JSDoc Requirements
 
-All public functions and classes must have comprehensive JSDoc comments:
+All exported functions must have JSDoc:
 
 ```javascript
 /**
- * Converts bytes to human-readable format with specified options
- * @param {number|bigint} input - Number of bytes to convert
+ * Converts a file size in bytes to a human-readable string
+ * @param {number|string|bigint} arg - The file size in bytes
  * @param {Object} [options={}] - Configuration options
- * @param {boolean} [options.binary=false] - Use binary (1024) vs decimal (1000) calculation
- * @param {number} [options.precision=2] - Number of decimal places
- * @param {string} [options.standard="jedec"] - Unit standard (jedec, iec, si)
- * @param {string} [options.locale=""] - Locale for number formatting
- * @returns {string|Object|Array} Formatted file size
- * @throws {TypeError} When input is not a valid number
- * @throws {RangeError} When precision is negative
+ * @param {boolean} [options.bits=false] - Calculate bits instead of bytes
+ * @param {number} [options.round=2] - Decimal places to round to
+ * @returns {string|Array|Object|number} Formatted file size
+ * @throws {TypeError} When arg is not a valid number
  * @example
- * // Basic usage
- * formatBytes(1024) // "1 KB"
- * 
- * // With options
- * formatBytes(1024, { binary: true, precision: 1 }) // "1.0 KiB"
- * 
- * // Object output
- * formatBytes(1024, { output: "object" }) 
- * // { value: 1, unit: "KB", symbol: "KB" }
+ * filesize(1024) // "1.02 kB"
  */
-function formatBytes(input, options = {}) {
+export function filesize (arg, options = {}) {
 	// Implementation
 }
 ```
 
-### Inline Comments
+### Comment Style
 
-- Use comments sparingly for complex logic
-- Explain "why" not "what"
-- Keep comments up-to-date with code changes
+Use `//` for inline comments. Explain "why" not "what":
 
 ```javascript
-// Calculate exponent based on logarithm
-// This handles edge cases where Math.log returns unexpected values
-const exponent = Math.max(0, Math.floor(Math.log(bytes) / Math.log(base)));
+// Fast path for zero
+if (num === 0) {
+	return handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer);
+}
+
+// Optimized exponent calculation using pre-computed log values
+if (e === -1 || isNaN(e)) {
+	e = isDecimal ? Math.floor(Math.log(num) / LOG_10_1000) : Math.floor(Math.log(num) / LOG_2_1024);
+}
 ```
-
-### README Documentation
-
-- Include clear installation instructions
-- Provide comprehensive API documentation
-- Include practical examples
-- Document all configuration options
 
 ## Error Handling
 
-### Error Types and Messages
+### Specific Error Types
 
-- Use specific error types for different error conditions
-- Provide clear, actionable error messages
-- Include context in error messages
+Use specific error types with clear messages:
 
 ```javascript
-// Good: Specific error handling
-function validateInput(value) {
-	if (typeof value !== "number" && typeof value !== "bigint") {
-		throw new TypeError(
-			`Expected number or bigint, received ${typeof value}`
-		);
-	}
-	
-	if (value < 0) {
-		throw new RangeError(
-			`Value must be non-negative, received ${value}`
-		);
-	}
+if (typeof arg !== "bigint" && isNaN(arg)) {
+	throw new TypeError(INVALID_NUMBER);
+}
+
+if (typeof roundingFunc !== FUNCTION) {
+	throw new TypeError(INVALID_ROUND);
 }
 ```
 
 ### Error Constants
 
-Define error messages as constants to ensure consistency:
+Define error messages as constants:
 
 ```javascript
 // constants.js
-export const ERRORS = {
-	INVALID_NUMBER: "Invalid number: expected number or bigint",
-	INVALID_PRECISION: "Invalid precision: must be non-negative integer",
-	INVALID_STANDARD: "Invalid standard: must be 'jedec', 'iec', or 'si'",
-	INVALID_ROUNDING: "Invalid rounding method: method does not exist on Math object"
-};
-```
-
-### Graceful Degradation
-
-- Provide fallback behavior when possible
-- Log warnings for recoverable errors
-- Fail fast for critical errors
-
-```javascript
-function formatWithLocale(value, locale, options) {
-	try {
-		return value.toLocaleString(locale, options);
-	} catch (error) {
-		// Fallback to default formatting
-		console.warn(`Locale formatting failed: ${error.message}`);
-		return value.toString();
-	}
-}
+export const INVALID_NUMBER = "Invalid number";
+export const INVALID_ROUND = "Invalid rounding method";
 ```
 
 ## Module Structure
 
-### ES6 Module Standards
+### ES6 Modules
 
-- Use ES6 import/export syntax
-- Prefer named exports over default exports for utilities
-- Use default exports for main functionality
+Use ES6 import/export syntax:
 
 ```javascript
-// constants.js - Named exports for related constants
-export const BYTE_SIZES = {
-	KILOBYTE: 1024,
-	MEGABYTE: 1024 * 1024,
-	GIGABYTE: 1024 * 1024 * 1024
-};
+// Import grouped by source, alphabetized
+import {
+	ARRAY,
+	BIT,
+	BITS,
+	BYTE,
+	BYTES,
+	EMPTY,
+	EXPONENT,
+	FUNCTION,
+	INVALID_NUMBER,
+	INVALID_ROUND,
+	LOG_10_1000,
+	LOG_2_1024,
+	OBJECT,
+	ROUND,
+	S,
+	SI_KBIT,
+	SI_KBYTE,
+	SPACE,
+	STRING,
+	STRINGS,
+} from "./constants.js";
+import {
+	applyNumberFormatting,
+	applyPrecisionHandling,
+	calculateOptimizedValue,
+	getBaseConfiguration,
+	handleZeroValue
+} from "./helpers.js";
+```
 
-export const STANDARDS = {
-	IEC: "iec",
-	JEDEC: "jedec"
-};
+### Named Exports
 
-// filesize.js - Default export for main function
-import { BYTE_SIZES, STANDARDS } from "./constants.js";
+Prefer named exports for utilities:
 
-export default function filesize(bytes, options) {
+```javascript
+export function filesize (arg, options = {}) {
 	// Implementation
 }
 
-// Also provide named export
-export { filesize };
-```
-
-### File Organization
-
-- Separate concerns into different modules
-- Keep related functionality together
-- Use barrel exports for clean public APIs
-
-```javascript
-// index.js - Barrel export
-export { default as filesize, filesize } from "./filesize.js";
-export { partial } from "./partial.js";
-export * from "./constants.js";
+export function partial (options = {}) {
+	return arg => filesize(arg, options);
+}
 ```
 
 ## Testing Standards
 
 ### Test Structure
 
-- Use descriptive test names that explain behavior
-- Group related tests with `describe` blocks
-- Use `beforeEach`/`afterEach` for setup and cleanup
+Use node-assert with mocha:
 
 ```javascript
 import assert from "node:assert";
-import { filesize } from "../src/filesize.js";
+import { filesize } from "../../src/filesize.js";
 
 describe("filesize()", () => {
-	describe("basic functionality", () => {
-		it("should convert bytes to KB correctly", () => {
-			const result = filesize(1024);
-			assert.strictEqual(result, "1 KB");
-		});
-		
-		it("should handle zero bytes", () => {
-			const result = filesize(0);
-			assert.strictEqual(result, "0 B");
-		});
-	});
-	
-	describe("error handling", () => {
-		it("should throw TypeError for invalid input", () => {
-			assert.throws(
-				() => filesize("invalid"),
-				{ name: "TypeError", message: /Invalid number/ }
-			);
-		});
+	it("should convert bytes to human readable format", () => {
+		const result = filesize(1024);
+		assert.strictEqual(result, "1.02 kB");
 	});
 });
 ```
 
-### Test Types
+### Coverage Requirements
 
-#### Unit Tests (`tests/unit/`)
-- Test individual functions in isolation
-- Mock external dependencies
-- Focus on function behavior and edge cases
-- Use node:assert for assertions
-
-#### Integration Tests (`tests/integration/`)
-- Test complete workflows
-- Test module interactions
-- Use real dependencies when appropriate
-- Validate end-to-end functionality
-
-### Test Coverage
-
-- Aim for 90%+ code coverage
-- Cover all public API methods
-- Test error conditions and edge cases
-- Use c8 for coverage reporting
-
-```javascript
-// Example comprehensive test
-describe("filesize with options", () => {
-	const testCases = [
-		{ input: 1024, options: { binary: true }, expected: "1 KiB" },
-		{ input: 1000, options: { binary: false }, expected: "1 KB" },
-		{ input: 1536, options: { precision: 1 }, expected: "1.5 KB" }
-	];
-	
-	testCases.forEach(({ input, options, expected }) => {
-		it(`should return "${expected}" for ${input} bytes with options ${JSON.stringify(options)}`, () => {
-			assert.strictEqual(filesize(input, options), expected);
-		});
-	});
-});
-```
+- **100%** statement, branch, function, and line coverage
+- No uncovered lines allowed
 
 ## Security Guidelines
 
 ### Input Validation
 
-Following OWASP security guidelines:
-
-- Validate all inputs at entry points
-- Sanitize user-provided data
-- Use type checking for security-critical operations
+Validate all inputs at entry points:
 
 ```javascript
-function secureFilesize(input, options = {}) {
-	// Input validation
-	if (typeof input !== "number" && typeof input !== "bigint") {
-		throw new TypeError("Input must be a number or bigint");
-	}
-	
-	// Validate numeric ranges
-	if (typeof input === "number" && !Number.isFinite(input)) {
-		throw new RangeError("Input must be a finite number");
-	}
-	
-	// Validate options object
-	if (options !== null && typeof options !== "object") {
-		throw new TypeError("Options must be an object");
-	}
-	
-	return formatFilesize(input, options);
+if (typeof arg !== "bigint" && isNaN(arg)) {
+	throw new TypeError(INVALID_NUMBER);
 }
 ```
 
-### Dependency Security
+### No External Dependencies
 
-- Regularly audit dependencies with `npm audit`
-- Use specific version numbers in package.json
-- Review security advisories for dependencies
-- Minimize dependency count
-
-### Data Sanitization
-
-- Escape output for display contexts
-- Validate object properties before use
-- Use allow-lists for string values when possible
-
-```javascript
-const ALLOWED_STANDARDS = ["jedec", "iec", "si"];
-
-function validateStandard(standard) {
-	if (!ALLOWED_STANDARDS.includes(standard)) {
-		throw new Error(`Invalid standard: ${standard}`);
-	}
-	return standard;
-}
-```
+The project has zero external dependencies - use only native JavaScript APIs.
 
 ## Performance Considerations
 
-### Optimization Guidelines
+### Pre-computed Lookup Tables
 
-- Profile before optimizing
-- Prefer readable code over premature optimization
-- Cache expensive calculations when appropriate
-- Use appropriate data structures for the task
+Use lookup tables instead of runtime calculations:
 
 ```javascript
-// Good: Efficient object lookup instead of array iteration
-const UNIT_MULTIPLIERS = {
-	B: 1,
-	KB: 1024,
-	MB: 1024 * 1024,
-	GB: 1024 * 1024 * 1024
-};
+// Pre-computed lookup tables for performance optimization
+export const BINARY_POWERS = [
+	1, // 2^0
+	1024, // 2^10
+	1048576, // 2^20
+	// ...
+];
 
-function getMultiplier(unit) {
-	return UNIT_MULTIPLIERS[unit] || 1;
+// Pre-computed log values for faster exponent calculation
+export const LOG_2_1024 = Math.log(1024);
+export const LOG_10_1000 = Math.log(1000);
+```
+
+### Fast Paths
+
+Optimize common cases:
+
+```javascript
+// Fast path for zero
+if (num === 0) {
+	return handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer);
 }
 ```
 
-### Memory Management
+## Tools
 
-- Avoid memory leaks with proper cleanup
-- Use `const` and `let` appropriately
-- Minimize object creation in hot paths
+### Linting
 
-```javascript
-// Good: Reuse objects when possible
-const formatOptions = {
-	minimumFractionDigits: 0,
-	maximumFractionDigits: 2
-};
+Run before committing:
 
-function formatNumber(value, precision = 2) {
-	formatOptions.maximumFractionDigits = precision;
-	return value.toLocaleString("en-US", formatOptions);
-}
+```bash
+npm run lint     # Check code style
+npm run lint:fix # Auto-fix issues
 ```
 
-## Tools and Linting
+### Testing
 
-### ESLint Configuration
+```bash
+npm test         # Full test suite (lint + mocha)
+npm run mocha    # Tests only
+npm run test:watch # Live test watching
+```
 
-The project uses ESLint for code quality enforcement. Key rules include:
+### Building
 
-- Consistent indentation (tabs)
-- Semicolon usage
-- Quote style consistency
-- Unused variable detection
-- Function complexity limits
-
-### Development Workflow
-
-1. **Linting**: Run `npm run lint` before committing
-2. **Auto-fixing**: Use `npm run fix` for automatic fixes
-3. **Testing**: Run `npm test` for full test suite
-4. **Coverage**: Review coverage reports with c8
-
-### Pre-commit Hooks
-
-The project uses Husky for pre-commit hooks:
-
-- Lint all staged files
-- Run tests
-- Validate commit message format
-
-### Recommended VS Code Extensions
-
-- ESLint
-- Prettier (if configured)
-- JavaScript (ES6) code snippets
-- Path Intellisense
-- GitLens
-
-## Code Review Guidelines
-
-### Review Checklist
-
-- [ ] Code follows established patterns
-- [ ] Functions have appropriate JSDoc documentation
-- [ ] Error handling is comprehensive
-- [ ] Tests cover new functionality
-- [ ] No security vulnerabilities introduced
-- [ ] Performance implications considered
-- [ ] Breaking changes documented
-
-### Review Process
-
-1. **Self-review**: Author reviews their own changes first
-2. **Peer review**: At least one other developer reviews
-3. **Testing**: All tests pass in CI/CD
-4. **Documentation**: Updates made to relevant docs
+```bash
+npm run build         # Build all distributions
+npm run build:watch   # Watch mode
+npm run build:analyze # Bundle size analysis
+```
 
 ---
 
-## Conclusion
-
-This style guide serves as the foundation for consistent, maintainable, and secure code in the filesize.js project. Regular updates to this guide should reflect evolving best practices and project needs.
-
-For questions or suggestions regarding this style guide, please open an issue in the project repository. 
+This style guide reflects the actual patterns used in the filesize.js codebase.
