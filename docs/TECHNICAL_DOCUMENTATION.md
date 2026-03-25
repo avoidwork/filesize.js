@@ -1044,7 +1044,7 @@ The library implements the following security measures:
 4. **No path traversal** - No file system operations
 5. **No XSS** - Returns plain strings, no HTML/JS generation
 6. **No SSRF** - No network requests
-7. **No ReDoS** - Regex `/(\D)/g` is simple, no catastrophic backtracking
+7. **No ReDoS** - Regex `/[.,]/g` is simple, no catastrophic backtracking
 8. **Input validation** - Validates number input and rounding method
 
 ### Security Considerations
