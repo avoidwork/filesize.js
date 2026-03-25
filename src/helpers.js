@@ -139,6 +139,7 @@ export function calculateOptimizedValue(num, e, isDecimal, bits, ceil) {
  * @param {number} ceil - Ceiling value
  * @param {Function} roundingFunc - Rounding function
  * @param {number} round - Round value
+ * @param {number} exponent - Forced exponent (-1 for auto)
  * @returns {Object} Object with value and e properties
  */
 export function applyPrecisionHandling(
@@ -151,11 +152,12 @@ export function applyPrecisionHandling(
 	ceil,
 	roundingFunc,
 	round,
+	exponent,
 ) {
 	let result = value.toPrecision(precision);
 
 	// Handle scientific notation by recalculating with incremented exponent
-	if (result.includes(E) && e < 8) {
+	if (result.includes(E) && e < 8 && exponent === -1) {
 		e++;
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
 		const p = round > 0 ? Math.pow(10, round) : 1;

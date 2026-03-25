@@ -170,6 +170,7 @@ export function filesize(
 			ceil,
 			roundingFunc,
 			round,
+			exponent,
 		);
 		result[0] = precisionResult.value;
 		e = precisionResult.e;
