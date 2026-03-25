@@ -135,6 +135,17 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(1000, { pad: true, round: 2 }), "1.00 kB");
 			assert.strictEqual(filesize(1536, { pad: true, round: 1 }), "1.5 kB");
 		});
+
+		it("should pad decimal places for negative numbers", () => {
+			assert.strictEqual(filesize(-1000, { pad: true, round: 2 }), "-1.00 kB");
+			assert.strictEqual(filesize(-1536, { pad: true, round: 2 }), "-1.54 kB");
+			assert.strictEqual(filesize(-1024, { pad: true, round: 3 }), "-1.024 kB");
+		});
+
+		it("should pad decimal places with locale formatting for negative numbers", () => {
+			assert.strictEqual(filesize(-1536, { locale: "de", pad: true, round: 2 }), "-1,54 kB");
+			assert.strictEqual(filesize(-1000, { locale: "en-US", pad: true, round: 2 }), "-1.00 kB");
+		});
 	});
 
 	describe("Custom separators and spacers", () => {

@@ -192,7 +192,7 @@ export function applyNumberFormatting(value, locale, localeOptions, separator, p
 	// Apply padding
 	if (pad && round > 0) {
 		const resultStr = result.toString();
-		const x = separator || (resultStr.match(/(\D)/g) || []).pop() || PERIOD;
+		const x = separator || (resultStr.slice(1).match(/(\D)/g) || []).pop() || PERIOD;
 		const tmp = resultStr.split(x);
 		const s = tmp[1] || EMPTY;
 		const l = s.length;
