@@ -1050,7 +1050,7 @@ The library implements the following security measures:
 ### Security Considerations
 
 - The `symbols` option allows user-controlled objects. While currently safe (read-only access), if you ever add write operations to user-provided objects, use `Object.create(null)` or `Object.hasOwn()` checks to prevent prototype pollution.
-- On Node.js versions prior to 17, `partial()` uses `JSON.parse(JSON.stringify())` for deep cloning, which cannot serialize `NaN`, `Infinity`, or functions. The library throws a clear error in these cases rather than silently losing data.
+- The `partial()` function uses destructuring to extract and freeze primitive option values at creation time. This approach is simpler than deep cloning while maintaining immutability for all option types. Mutations to the original options object after calling `partial()` will not affect the created formatter.
 
 **The library is secure as-is and requires no additional configuration.**
 
