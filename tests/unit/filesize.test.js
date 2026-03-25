@@ -146,6 +146,17 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(-1536, { locale: "de", pad: true, round: 2 }), "-1,54 kB");
 			assert.strictEqual(filesize(-1000, { locale: "en-US", pad: true, round: 2 }), "-1.00 kB");
 		});
+
+		it("should pad decimal places with locale formatting and grouping separators", () => {
+			// German locale: comma as decimal separator, dot as grouping separator
+			// 1,234,567 bytes = 1.23 MB (no grouping in result)
+			assert.strictEqual(filesize(1234567, { locale: "de-DE", pad: true, round: 2 }), "1,23 MB");
+			// Test with pad and existing decimals
+			assert.strictEqual(filesize(1536, { locale: "de-DE", pad: true, round: 3 }), "1,536 kB");
+			// English locale with larger numbers
+			assert.strictEqual(filesize(1234567, { locale: "en-US", pad: true, round: 2 }), "1.23 MB");
+			assert.strictEqual(filesize(1234567890, { locale: "en-US", pad: true, round: 2 }), "1.23 GB");
+		});
 	});
 
 	describe("Custom separators and spacers", () => {
