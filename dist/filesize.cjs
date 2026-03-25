@@ -470,8 +470,9 @@ function filesize(
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
  * const formatBytes = partial({round: 1, standard: "iec"});
- * formatBytes(1024) // "1.0 KiB"
- * formatBytes(2048) // "2.0 KiB"
+ * formatBytes(1024) // "1 KiB"
+ * formatBytes(2048) // "2 KiB"
+ * formatBytes(1536) // "1.5 KiB"
  */
 // Partial application for functional programming
 function partial(options = {}) {
