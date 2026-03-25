@@ -474,9 +474,22 @@ function filesize(
  * formatBytes(2048) // "2 KiB"
  * formatBytes(1536) // "1.5 KiB"
  */
+/**
+ * Deep clone an object for immutability in partial()
+ * Uses structuredClone if available (Node 17+), falls back to JSON for compatibility
+ * @param {Object} obj - Object to clone
+ * @returns {Object} Cloned object
+ */
+function deepClone(obj) {
+	if (typeof structuredClone === "function") {
+		return structuredClone(obj);
+	}
+	return JSON.parse(JSON.stringify(obj));
+}
+
 // Partial application for functional programming
 function partial(options = {}) {
-	const frozen = { ...options };
+	const frozen = deepClone(options);
 	return (arg) => filesize(arg, frozen);
 }
 

@@ -866,18 +866,30 @@ describe("partial", () => {
 			assert.strictEqual(format(1536), "1.5 KiB");
 		});
 
-		it("should share nested objects (shallow clone behavior)", () => {
-			// Note: partial() uses a shallow clone, so nested objects are shared
+		it("should not share mutable objects between different partial functions", () => {
 			const sharedSymbols = { kB: "shared_kB" };
-			const format = partial({ symbols: sharedSymbols });
+			const format1 = partial({ symbols: sharedSymbols });
+			const format2 = partial({ symbols: sharedSymbols });
 
-			// Initial call works
-			assert.strictEqual(format(1000), "1 shared_kB");
+			// Both should work initially
+			assert.strictEqual(format1(1000), "1 shared_kB");
+			assert.strictEqual(format2(1000), "1 shared_kB");
 
-			// Modifying the shared object affects the partial function
-			// This is expected behavior for performance reasons
+			// Modify the shared object after creating partial functions
 			sharedSymbols.kB = "modified_kB";
-			assert.strictEqual(format(1000), "1 modified_kB");
+
+			// Both partial functions should use their deep-cloned copies
+			assert.strictEqual(format1(1000), "1 shared_kB");
+			assert.strictEqual(format2(1000), "1 shared_kB");
+		});
+
+		it("should not affect other partial functions when modifying one", () => {
+			const format1 = partial({ symbols: { kB: "first_kB" } });
+			const format2 = partial({ symbols: { kB: "second_kB" } });
+
+			// Both should work independently
+			assert.strictEqual(format1(1000), "1 first_kB");
+			assert.strictEqual(format2(1000), "1 second_kB");
 		});
 	});
 });
