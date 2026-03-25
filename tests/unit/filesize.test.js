@@ -547,6 +547,19 @@ describe("filesize", () => {
 			const result = filesize(1000, { exponent: NaN });
 			assert.strictEqual(result, "1 kB");
 		});
+
+		it("should handle NaN exponent with precision", () => {
+			// NaN exponent should behave like auto (-1) and allow scientific notation normalization
+			const result = filesize(1e15, { exponent: NaN, precision: 2 });
+			assert(typeof result === "string");
+			assert(!result.includes("e"), "Should not contain scientific notation");
+		});
+
+		it("should handle NaN exponent with auto-increment", () => {
+			// NaN exponent should allow auto-increment when result equals ceil (1024)
+			const result = filesize(1024, { exponent: NaN, standard: "iec" });
+			assert.strictEqual(result, "1 KiB");
+		});
 	});
 
 	describe("Error handling", () => {

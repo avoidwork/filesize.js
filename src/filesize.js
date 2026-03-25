@@ -153,7 +153,9 @@ export function filesize(
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
 
-	if (result[0] === ceil && e < 8 && exponent === -1) {
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
+	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;
 		e++;
 	}

@@ -144,7 +144,7 @@ describe("Helper Functions", () => {
 			assert.deepStrictEqual(result, { value: "1.5", e: 1 });
 		});
 
-		it("should handle scientific notation with increment", () => {
+		it("should handle scientific notation with increment when exponent is -1", () => {
 			// Test with a large number that would produce scientific notation
 			const result = applyPrecisionHandling(
 				1000000000000,
@@ -157,6 +157,24 @@ describe("Helper Functions", () => {
 				Math.round,
 				2,
 				-1,
+			);
+			assert(typeof result.value === "string");
+			assert(typeof result.e === "number");
+		});
+
+		it("should handle scientific notation with increment when exponent is NaN", () => {
+			// Test that NaN also triggers auto-increment like -1
+			const result = applyPrecisionHandling(
+				1000000000000,
+				1,
+				3,
+				1e15,
+				true,
+				false,
+				1000,
+				Math.round,
+				2,
+				NaN,
 			);
 			assert(typeof result.value === "string");
 			assert(typeof result.e === "number");
