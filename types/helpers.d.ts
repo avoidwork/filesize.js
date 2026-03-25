@@ -93,6 +93,7 @@ export function calculateOptimizedValue(
  * @param ceil - Ceiling value
  * @param roundingFunc - Rounding function
  * @param round - Round value
+ * @param exponent - Forced exponent (-1 for auto)
  * @returns Object with value and e properties
  */
 export function applyPrecisionHandling(
@@ -104,7 +105,8 @@ export function applyPrecisionHandling(
   bits: boolean,
   ceil: number,
   roundingFunc: (x: number) => number,
-  round: number
+  round: number,
+  exponent: number
 ): PrecisionHandlingResult;
 
 /**
