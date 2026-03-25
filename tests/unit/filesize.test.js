@@ -849,4 +849,35 @@ describe("partial", () => {
 			assert.strictEqual(emptyOptions(1000), "1 kB");
 		});
 	});
+
+	describe("Immutability", () => {
+		it("should not be affected by mutations to top-level primitive options", () => {
+			const opts = { standard: "iec", round: 1 };
+			const format = partial(opts);
+
+			// First call should work normally
+			assert.strictEqual(format(1536), "1.5 KiB");
+
+			// Mutate the original options object
+			opts.standard = "jedec";
+			opts.round = 0;
+
+			// The partial function should still use the cloned primitive values
+			assert.strictEqual(format(1536), "1.5 KiB");
+		});
+
+		it("should share nested objects (shallow clone behavior)", () => {
+			// Note: partial() uses a shallow clone, so nested objects are shared
+			const sharedSymbols = { kB: "shared_kB" };
+			const format = partial({ symbols: sharedSymbols });
+
+			// Initial call works
+			assert.strictEqual(format(1000), "1 shared_kB");
+
+			// Modifying the shared object affects the partial function
+			// This is expected behavior for performance reasons
+			sharedSymbols.kB = "modified_kB";
+			assert.strictEqual(format(1000), "1 modified_kB");
+		});
+	});
 });

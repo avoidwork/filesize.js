@@ -227,5 +227,6 @@ export function filesize(
  */
 // Partial application for functional programming
 export function partial(options = {}) {
-	return (arg) => filesize(arg, options);
+	const frozen = { ...options };
+	return (arg) => filesize(arg, frozen);
 }

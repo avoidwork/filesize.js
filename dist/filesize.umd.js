@@ -470,5 +470,6 @@ function filesize(
  */
 // Partial application for functional programming
 function partial(options = {}) {
-	return (arg) => filesize(arg, options);
+	const frozen = { ...options };
+	return (arg) => filesize(arg, frozen);
 }exports.filesize=filesize;exports.partial=partial;}));
