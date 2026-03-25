@@ -78,15 +78,10 @@ const umdOutBase = {
 };
 
 const minOutBase = {
+	...defaultOutBase,
 	banner: bannerShort,
-	name: pkg.name,
 	plugins: [terser(terserOptions)],
 	sourcemap: true,
-	generatedCode: {
-		constBindings: true,
-		arrowFunctions: true,
-		objectShorthand: true,
-	},
 };
 
 export default [
@@ -112,7 +107,7 @@ export default [
 				...esmOutBase,
 				...minOutBase,
 				file: `dist/${pkg.name}.min.js`,
-				plugins: [terser(terserOptions), ensureNewline()],
+				plugins: [...minOutBase.plugins, ensureNewline()],
 			},
 			{
 				...umdOutBase,
@@ -125,7 +120,7 @@ export default [
 				...minOutBase,
 				file: `dist/${pkg.name}.umd.min.js`,
 				name: "filesize",
-				plugins: [terser(terserOptions), ensureNewline()],
+				plugins: [...minOutBase.plugins, ensureNewline()],
 			},
 		],
 	},
