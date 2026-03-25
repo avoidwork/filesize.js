@@ -155,6 +155,11 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(1536, { locale: "de-DE", pad: true, round: 3 }), "1,536 kB");
 			// German locale with padding that adds decimal places
 			assert.strictEqual(filesize(1536, { locale: "de", pad: true, round: 4 }), "1,5360 kB");
+			// German locale with grouping separator in integer part (1.234.567,89 kB)
+			assert.strictEqual(
+				filesize(1234567890, { locale: "de", exponent: 1, pad: true, round: 2 }),
+				"1.234.567,89 kB",
+			);
 			// English locale with larger numbers
 			assert.strictEqual(filesize(1234567, { locale: "en-US", pad: true, round: 2 }), "1.23 MB");
 			assert.strictEqual(filesize(1234567890, { locale: "en-US", pad: true, round: 2 }), "1.23 GB");
