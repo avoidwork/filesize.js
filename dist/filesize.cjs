@@ -183,16 +183,17 @@ function handleZeroValue(
  * @param {boolean} isDecimal - Whether to use decimal powers
  * @param {boolean} bits - Whether to calculate bits
  * @param {number} ceil - Ceiling value for auto-increment
- * @returns {Object} Object with val and e properties
+ * @param {boolean} autoExponent - Whether exponent is auto (-1 or NaN)
+ * @returns {Object} Object with result and e properties
  */
-function calculateOptimizedValue(num, e, isDecimal, bits, ceil) {
+function calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
 	const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
 	let result = num / d;
 
 	if (bits) {
 		result *= 8;
-		// Handle auto-increment for bits
-		if (result >= ceil && e < 8) {
+		// Handle auto-increment for bits (only when exponent is auto)
+		if (autoExponent && result >= ceil && e < 8) {
 			result /= ceil;
 			e++;
 		}
@@ -388,6 +389,8 @@ function filesize(
 		e = 8;
 	}
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	if (output === EXPONENT) {
 		return e;
 	}
@@ -399,6 +402,7 @@ function filesize(
 		isDecimal,
 		bits,
 		ceil,
+		autoExponent,
 	);
 	val = valueResult;
 	e = valueExponent;
@@ -406,8 +410,6 @@ function filesize(
 	// Optimize rounding calculation
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
-
-	const autoExponent = exponent === -1 || isNaN(exponent);
 
 	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;
