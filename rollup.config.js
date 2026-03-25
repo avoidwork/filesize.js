@@ -22,15 +22,18 @@ const bannerShort = `/*!
 function ensureNewline() {
 	return {
 		name: "ensure-newline",
-		renderChunk(code, map) {
-			if (code.endsWith("\n")) {
-				return null;
+		generateBundle(_, bundle) {
+			for (const fileName in bundle) {
+				const chunk = bundle[fileName];
+				if (chunk.type === "asset") {
+					let source = chunk.source;
+					if (typeof source === "string" && !source.endsWith("\n")) {
+						chunk.source = source + "\n";
+					}
+				} else if (chunk.type === "chunk" && chunk.code && !chunk.code.endsWith("\n")) {
+					chunk.code += "\n";
+				}
 			}
-
-			return {
-				code: code + "\n",
-				map: map || null,
-			};
 		},
 	};
 }
