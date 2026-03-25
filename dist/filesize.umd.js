@@ -1,7 +1,7 @@
 /**
  * filesize
  *
- * @copyright 2025 Jason Mulligan <jason.mulligan@avoidwork.com>
+ * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
  * @version 11.0.13
  */
@@ -45,17 +45,17 @@ const STRINGS = {
 	symbol: {
 		iec: {
 			bits: ["bit", "Kibit", "Mibit", "Gibit", "Tibit", "Pibit", "Eibit", "Zibit", "Yibit"],
-			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"]
+			bytes: ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"],
 		},
 		jedec: {
 			bits: ["bit", "Kbit", "Mbit", "Gbit", "Tbit", "Pbit", "Ebit", "Zbit", "Ybit"],
-			bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
-		}
+			bytes: ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"],
+		},
 	},
 	fullform: {
 		iec: ["", "kibi", "mebi", "gibi", "tebi", "pebi", "exbi", "zebi", "yobi"],
-		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"]
-	}
+		jedec: ["", "kilo", "mega", "giga", "tera", "peta", "exa", "zetta", "yotta"],
+	},
 };
 
 // Pre-computed lookup tables for performance optimization
@@ -68,7 +68,7 @@ const BINARY_POWERS = [
 	1125899906842624, // 2^50
 	1152921504606846976, // 2^60
 	1180591620717411303424, // 2^70
-	1208925819614629174706176 // 2^80
+	1208925819614629174706176, // 2^80
 ];
 
 const DECIMAL_POWERS = [
@@ -80,16 +80,16 @@ const DECIMAL_POWERS = [
 	1000000000000000, // 10^15
 	1000000000000000000, // 10^18
 	1000000000000000000000, // 10^21
-	1000000000000000000000000 // 10^24
+	1000000000000000000000000, // 10^24
 ];
 
 // Pre-computed log values for faster exponent calculation
 const LOG_2_1024 = Math.log(1024);
 const LOG_10_1000 = Math.log(1000);// Cached configuration lookup for better performance
 const STANDARD_CONFIGS = {
-	[SI]: {isDecimal: true, ceil: 1000, actualStandard: JEDEC},
-	[IEC]: {isDecimal: false, ceil: 1024, actualStandard: IEC},
-	[JEDEC]: {isDecimal: false, ceil: 1024, actualStandard: JEDEC}
+	[SI]: { isDecimal: true, ceil: 1000, actualStandard: JEDEC },
+	[IEC]: { isDecimal: false, ceil: 1024, actualStandard: IEC },
+	[JEDEC]: { isDecimal: false, ceil: 1024, actualStandard: JEDEC },
 };
 
 /**
@@ -98,7 +98,7 @@ const STANDARD_CONFIGS = {
  * @param {number} base - Base number
  * @returns {Object} Configuration object
  */
-function getBaseConfiguration (standard, base) {
+function getBaseConfiguration(standard, base) {
 	// Use cached lookup table for better performance
 	if (STANDARD_CONFIGS[standard]) {
 		return STANDARD_CONFIGS[standard];
@@ -106,11 +106,11 @@ function getBaseConfiguration (standard, base) {
 
 	// Base override
 	if (base === 2) {
-		return {isDecimal: false, ceil: 1024, actualStandard: IEC};
+		return { isDecimal: false, ceil: 1024, actualStandard: IEC };
 	}
 
 	// Default
-	return {isDecimal: true, ceil: 1000, actualStandard: JEDEC};
+	return { isDecimal: true, ceil: 1000, actualStandard: JEDEC };
 }
 
 /**
@@ -123,34 +123,53 @@ function getBaseConfiguration (standard, base) {
  * @param {Array} fullforms - Custom full forms
  * @param {string} output - Output format
  * @param {string} spacer - Spacer character
+ * @param {string} [symbol] - Symbol to use (defaults based on bits/standard)
  * @returns {string|Array|Object|number} Formatted result
  */
-function handleZeroValue (precision, actualStandard, bits, symbols, full, fullforms, output, spacer) {
-	const result = [];
-	result[0] = precision > 0 ? (0).toPrecision(precision) : 0;
-	const u = result[1] = STRINGS.symbol[actualStandard][bits ? BITS : BYTES][0];
+function handleZeroValue(
+	precision,
+	actualStandard,
+	bits,
+	symbols,
+	full,
+	fullforms,
+	output,
+	spacer,
+	symbol,
+) {
+	const value = precision > 0 ? (0).toPrecision(precision) : 0;
 
 	if (output === EXPONENT) {
 		return 0;
 	}
 
+	// Set default symbol if not provided
+	if (!symbol) {
+		symbol = bits
+			? STRINGS.symbol[actualStandard].bits[0]
+			: STRINGS.symbol[actualStandard].bytes[0];
+	}
+
 	// Apply symbol customization
-	if (symbols[result[1]]) {
-		result[1] = symbols[result[1]];
+	if (symbols[symbol]) {
+		symbol = symbols[symbol];
 	}
 
 	// Apply full form
 	if (full) {
-		result[1] = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+		symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
 	}
 
 	// Return in requested format
-	return output === ARRAY ? result : output === OBJECT ? {
-		value: result[0],
-		symbol: result[1],
-		exponent: 0,
-		unit: u
-	} : result.join(spacer);
+	if (output === ARRAY) {
+		return [value, symbol];
+	}
+
+	if (output === OBJECT) {
+		return { value, symbol, exponent: 0, unit: symbol };
+	}
+
+	return value + spacer + symbol;
 }
 
 /**
@@ -160,22 +179,23 @@ function handleZeroValue (precision, actualStandard, bits, symbols, full, fullfo
  * @param {boolean} isDecimal - Whether to use decimal powers
  * @param {boolean} bits - Whether to calculate bits
  * @param {number} ceil - Ceiling value for auto-increment
- * @returns {Object} Object with val and e properties
+ * @param {boolean} autoExponent - Whether exponent is auto (-1 or NaN)
+ * @returns {Object} Object with result and e properties
  */
-function calculateOptimizedValue (num, e, isDecimal, bits, ceil) {
+function calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
 	const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
 	let result = num / d;
 
 	if (bits) {
 		result *= 8;
-		// Handle auto-increment for bits
-		if (result >= ceil && e < 8) {
+		// Handle auto-increment for bits (only when exponent is auto)
+		if (autoExponent && result >= ceil && e < 8) {
 			result /= ceil;
 			e++;
 		}
 	}
 
-	return {result, e};
+	return { result, e };
 }
 
 /**
@@ -189,20 +209,36 @@ function calculateOptimizedValue (num, e, isDecimal, bits, ceil) {
  * @param {number} ceil - Ceiling value
  * @param {Function} roundingFunc - Rounding function
  * @param {number} round - Round value
+ * @param {number} exponent - Forced exponent (-1 for auto)
  * @returns {Object} Object with value and e properties
  */
-function applyPrecisionHandling (value, precision, e, num, isDecimal, bits, ceil, roundingFunc, round) {
+function applyPrecisionHandling(
+	value,
+	precision,
+	e,
+	num,
+	isDecimal,
+	bits,
+	ceil,
+	roundingFunc,
+	round,
+	exponent,
+) {
 	let result = value.toPrecision(precision);
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	// Handle scientific notation by recalculating with incremented exponent
-	if (result.includes(E) && e < 8) {
+	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
-		const {result: valueResult} = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
+		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
 		const p = round > 0 ? Math.pow(10, round) : 1;
-		result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(precision);
+		result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(
+			precision,
+		);
 	}
 
-	return {value: result, e};
+	return { value: result, e };
 }
 
 /**
@@ -215,7 +251,7 @@ function applyPrecisionHandling (value, precision, e, num, isDecimal, bits, ceil
  * @param {number} round - Round value
  * @returns {string|number} Formatted value
  */
-function applyNumberFormatting (value, locale, localeOptions, separator, pad, round) {
+function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
 	let result = value;
 
 	// Apply locale formatting
@@ -230,9 +266,10 @@ function applyNumberFormatting (value, locale, localeOptions, separator, pad, ro
 	// Apply padding
 	if (pad && round > 0) {
 		const resultStr = result.toString();
-		const x = separator || ((resultStr.match(/(\D)/g) || []).pop() || PERIOD);
+		const x = separator || (resultStr.slice(1).match(/[.,]/g) || []).pop() || PERIOD;
 		const tmp = resultStr.split(x);
 		const s = tmp[1] || EMPTY;
+
 		const l = s.length;
 		const n = round - l;
 
@@ -263,28 +300,31 @@ function applyNumberFormatting (value, locale, localeOptions, separator, pad, ro
  * @returns {string|Array|Object|number} Formatted file size based on output option
  * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
  * @example
- * filesize(1024) // "1 KB"
- * filesize(1024, {bits: true}) // "8 Kb"
- * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
+ * filesize(1024) // "1.02 kB"
+ * filesize(1024, {bits: true}) // "8.19 kbit"
+ * filesize(1024, {output: "object"}) // {value: 1.02, symbol: "kB", exponent: 1, unit: "kB"}
  */
-function filesize (arg, {
-	bits = false,
-	pad = false,
-	base = -1,
-	round = 2,
-	locale = EMPTY,
-	localeOptions = {},
-	separator = EMPTY,
-	spacer = SPACE,
-	symbols = {},
-	standard = EMPTY,
-	output = STRING,
-	fullform = false,
-	fullforms = [],
-	exponent = -1,
-	roundingMethod = ROUND,
-	precision = 0
-} = {}) {
+function filesize(
+	arg,
+	{
+		bits = false,
+		pad = false,
+		base = -1,
+		round = 2,
+		locale = EMPTY,
+		localeOptions = {},
+		separator = EMPTY,
+		spacer = SPACE,
+		symbols = {},
+		standard = EMPTY,
+		output = STRING,
+		fullform = false,
+		fullforms = [],
+		exponent = -1,
+		roundingMethod = ROUND,
+		precision = 0,
+	} = {},
+) {
 	let e = exponent,
 		num = Number(arg),
 		result = [],
@@ -292,7 +332,7 @@ function filesize (arg, {
 		u = EMPTY;
 
 	// Optimized base & standard configuration lookup
-	const {isDecimal, ceil, actualStandard} = getBaseConfiguration(standard, base);
+	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
 
 	const full = fullform === true,
 		neg = num < 0,
@@ -313,12 +353,23 @@ function filesize (arg, {
 
 	// Fast path for zero
 	if (num === 0) {
-		return handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer);
+		return handleZeroValue(
+			precision,
+			actualStandard,
+			bits,
+			symbols,
+			full,
+			fullforms,
+			output,
+			spacer,
+		);
 	}
 
 	// Optimized exponent calculation using pre-computed log values
 	if (e === -1 || isNaN(e)) {
-		e = isDecimal ? Math.floor(Math.log(num) / LOG_10_1000) : Math.floor(Math.log(num) / LOG_2_1024);
+		e = isDecimal
+			? Math.floor(Math.log(num) / LOG_10_1000)
+			: Math.floor(Math.log(num) / LOG_2_1024);
 		if (e < 0) {
 			e = 0;
 		}
@@ -332,12 +383,21 @@ function filesize (arg, {
 		e = 8;
 	}
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	if (output === EXPONENT) {
 		return e;
 	}
 
 	// Calculate value with optimized lookup and bits handling
-	const {result: valueResult, e: valueExponent} = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
+	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
+		num,
+		e,
+		isDecimal,
+		bits,
+		ceil,
+		autoExponent,
+	);
 	val = valueResult;
 	e = valueExponent;
 
@@ -345,21 +405,32 @@ function filesize (arg, {
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
 
-	if (result[0] === ceil && e < 8 && exponent === -1) {
+	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;
 		e++;
 	}
 
 	// Apply precision handling
 	if (precision > 0) {
-		const precisionResult = applyPrecisionHandling(result[0], precision, e, num, isDecimal, bits, ceil, roundingFunc, round);
+		const precisionResult = applyPrecisionHandling(
+			result[0],
+			precision,
+			e,
+			num,
+			isDecimal,
+			bits,
+			ceil,
+			roundingFunc,
+			round,
+			exponent,
+		);
 		result[0] = precisionResult.value;
 		e = precisionResult.e;
 	}
 
 	// Cache symbol lookup
 	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
-	u = result[1] = (isDecimal && e === 1) ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
+	u = result[1] = isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
 
 	// Decorating a 'diff'
 	if (neg) {
@@ -375,7 +446,9 @@ function filesize (arg, {
 	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
 	if (full) {
-		result[1] = fullforms[e] || STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+		result[1] =
+			fullforms[e] ||
+			STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
 	}
 
 	// Optimized return logic
@@ -388,7 +461,7 @@ function filesize (arg, {
 			value: result[0],
 			symbol: result[1],
 			exponent: e,
-			unit: u
+			unit: u,
 		};
 	}
 
@@ -397,7 +470,7 @@ function filesize (arg, {
 
 /**
  * Creates a partially applied version of filesize with preset options
- * @param {Object} [options={}] - Default options to apply to the returned function
+ * @param {Object} [options={}] - Configuration options (same as filesize)
  * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
  * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
  * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
@@ -416,12 +489,12 @@ function filesize (arg, {
  * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
- * const formatBytes = partial({round: 1, standard: "IEC"});
- * formatBytes(1024) // "1.0 KiB"
- * formatBytes(2048) // "2.0 KiB"
+ * const formatBytes = partial({round: 1, standard: "iec"});
+ * formatBytes(1024) // "1 KiB"
+ * formatBytes(2048) // "2 KiB"
+ * formatBytes(1536) // "1.5 KiB"
  */
-// Partial application for functional programming
-function partial ({
+function partial({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -437,24 +510,25 @@ function partial ({
 	fullforms = [],
 	exponent = -1,
 	roundingMethod = ROUND,
-	precision = 0
+	precision = 0,
 } = {}) {
-	return arg => filesize(arg, {
-		bits,
-		pad,
-		base,
-		round,
-		locale,
-		localeOptions,
-		separator,
-		spacer,
-		symbols,
-		standard,
-		output,
-		fullform,
-		fullforms,
-		exponent,
-		roundingMethod,
-		precision
-	});
+	return (arg) =>
+		filesize(arg, {
+			bits,
+			pad,
+			base,
+			round,
+			locale,
+			localeOptions,
+			separator,
+			spacer,
+			symbols,
+			standard,
+			output,
+			fullform,
+			fullforms,
+			exponent,
+			roundingMethod,
+			precision,
+		});
 }exports.filesize=filesize;exports.partial=partial;}));

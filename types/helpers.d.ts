@@ -48,6 +48,7 @@ export function getBaseConfiguration(standard: string, base: number): BaseConfig
  * @param fullforms - Custom full forms
  * @param output - Output format
  * @param spacer - Spacer character
+ * @param symbol - Symbol to use (optional, defaults based on bits/standard)
  * @returns Formatted result
  */
 export function handleZeroValue(
@@ -58,7 +59,8 @@ export function handleZeroValue(
   full: boolean,
   fullforms: string[],
   output: string,
-  spacer: string
+  spacer: string,
+  symbol?: string
 ): string | [number | string, string] | { value: number | string; symbol: string; exponent: number; unit: string } | number;
 
 /**
@@ -68,6 +70,7 @@ export function handleZeroValue(
  * @param isDecimal - Whether to use decimal powers
  * @param bits - Whether to calculate bits
  * @param ceil - Ceiling value for auto-increment
+ * @param autoExponent - Whether exponent is auto (-1 or NaN)
  * @returns Object with result and e properties
  */
 export function calculateOptimizedValue(
@@ -75,7 +78,8 @@ export function calculateOptimizedValue(
   e: number,
   isDecimal: boolean,
   bits: boolean,
-  ceil: number
+  ceil: number,
+  autoExponent?: boolean
 ): OptimizedValueResult;
 
 /**
@@ -89,6 +93,7 @@ export function calculateOptimizedValue(
  * @param ceil - Ceiling value
  * @param roundingFunc - Rounding function
  * @param round - Round value
+ * @param exponent - Forced exponent (-1 for auto)
  * @returns Object with value and e properties
  */
 export function applyPrecisionHandling(
@@ -100,7 +105,8 @@ export function applyPrecisionHandling(
   bits: boolean,
   ceil: number,
   roundingFunc: (x: number) => number,
-  round: number
+  round: number,
+  exponent: number
 ): PrecisionHandlingResult;
 
 /**

@@ -25,7 +25,7 @@ import {
 	applyPrecisionHandling,
 	calculateOptimizedValue,
 	getBaseConfiguration,
-	handleZeroValue
+	handleZeroValue,
 } from "./helpers.js";
 
 /**
@@ -51,28 +51,31 @@ import {
  * @returns {string|Array|Object|number} Formatted file size based on output option
  * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
  * @example
- * filesize(1024) // "1 KB"
- * filesize(1024, {bits: true}) // "8 Kb"
- * filesize(1024, {output: "object"}) // {value: 1, symbol: "KB", exponent: 1, unit: "KB"}
+ * filesize(1024) // "1.02 kB"
+ * filesize(1024, {bits: true}) // "8.19 kbit"
+ * filesize(1024, {output: "object"}) // {value: 1.02, symbol: "kB", exponent: 1, unit: "kB"}
  */
-export function filesize (arg, {
-	bits = false,
-	pad = false,
-	base = -1,
-	round = 2,
-	locale = EMPTY,
-	localeOptions = {},
-	separator = EMPTY,
-	spacer = SPACE,
-	symbols = {},
-	standard = EMPTY,
-	output = STRING,
-	fullform = false,
-	fullforms = [],
-	exponent = -1,
-	roundingMethod = ROUND,
-	precision = 0
-} = {}) {
+export function filesize(
+	arg,
+	{
+		bits = false,
+		pad = false,
+		base = -1,
+		round = 2,
+		locale = EMPTY,
+		localeOptions = {},
+		separator = EMPTY,
+		spacer = SPACE,
+		symbols = {},
+		standard = EMPTY,
+		output = STRING,
+		fullform = false,
+		fullforms = [],
+		exponent = -1,
+		roundingMethod = ROUND,
+		precision = 0,
+	} = {},
+) {
 	let e = exponent,
 		num = Number(arg),
 		result = [],
@@ -80,7 +83,7 @@ export function filesize (arg, {
 		u = EMPTY;
 
 	// Optimized base & standard configuration lookup
-	const {isDecimal, ceil, actualStandard} = getBaseConfiguration(standard, base);
+	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
 
 	const full = fullform === true,
 		neg = num < 0,
@@ -101,12 +104,23 @@ export function filesize (arg, {
 
 	// Fast path for zero
 	if (num === 0) {
-		return handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer);
+		return handleZeroValue(
+			precision,
+			actualStandard,
+			bits,
+			symbols,
+			full,
+			fullforms,
+			output,
+			spacer,
+		);
 	}
 
 	// Optimized exponent calculation using pre-computed log values
 	if (e === -1 || isNaN(e)) {
-		e = isDecimal ? Math.floor(Math.log(num) / LOG_10_1000) : Math.floor(Math.log(num) / LOG_2_1024);
+		e = isDecimal
+			? Math.floor(Math.log(num) / LOG_10_1000)
+			: Math.floor(Math.log(num) / LOG_2_1024);
 		if (e < 0) {
 			e = 0;
 		}
@@ -120,12 +134,21 @@ export function filesize (arg, {
 		e = 8;
 	}
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	if (output === EXPONENT) {
 		return e;
 	}
 
 	// Calculate value with optimized lookup and bits handling
-	const {result: valueResult, e: valueExponent} = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
+	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
+		num,
+		e,
+		isDecimal,
+		bits,
+		ceil,
+		autoExponent,
+	);
 	val = valueResult;
 	e = valueExponent;
 
@@ -133,21 +156,32 @@ export function filesize (arg, {
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
 
-	if (result[0] === ceil && e < 8 && exponent === -1) {
+	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;
 		e++;
 	}
 
 	// Apply precision handling
 	if (precision > 0) {
-		const precisionResult = applyPrecisionHandling(result[0], precision, e, num, isDecimal, bits, ceil, roundingFunc, round);
+		const precisionResult = applyPrecisionHandling(
+			result[0],
+			precision,
+			e,
+			num,
+			isDecimal,
+			bits,
+			ceil,
+			roundingFunc,
+			round,
+			exponent,
+		);
 		result[0] = precisionResult.value;
 		e = precisionResult.e;
 	}
 
 	// Cache symbol lookup
 	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
-	u = result[1] = (isDecimal && e === 1) ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
+	u = result[1] = isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
 
 	// Decorating a 'diff'
 	if (neg) {
@@ -163,7 +197,9 @@ export function filesize (arg, {
 	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
 	if (full) {
-		result[1] = fullforms[e] || STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+		result[1] =
+			fullforms[e] ||
+			STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
 	}
 
 	// Optimized return logic
@@ -176,7 +212,7 @@ export function filesize (arg, {
 			value: result[0],
 			symbol: result[1],
 			exponent: e,
-			unit: u
+			unit: u,
 		};
 	}
 
@@ -185,7 +221,7 @@ export function filesize (arg, {
 
 /**
  * Creates a partially applied version of filesize with preset options
- * @param {Object} [options={}] - Default options to apply to the returned function
+ * @param {Object} [options={}] - Configuration options (same as filesize)
  * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
  * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
  * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
@@ -204,12 +240,12 @@ export function filesize (arg, {
  * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
- * const formatBytes = partial({round: 1, standard: "IEC"});
- * formatBytes(1024) // "1.0 KiB"
- * formatBytes(2048) // "2.0 KiB"
+ * const formatBytes = partial({round: 1, standard: "iec"});
+ * formatBytes(1024) // "1 KiB"
+ * formatBytes(2048) // "2 KiB"
+ * formatBytes(1536) // "1.5 KiB"
  */
-// Partial application for functional programming
-export function partial ({
+export function partial({
 	bits = false,
 	pad = false,
 	base = -1,
@@ -225,24 +261,25 @@ export function partial ({
 	fullforms = [],
 	exponent = -1,
 	roundingMethod = ROUND,
-	precision = 0
+	precision = 0,
 } = {}) {
-	return arg => filesize(arg, {
-		bits,
-		pad,
-		base,
-		round,
-		locale,
-		localeOptions,
-		separator,
-		spacer,
-		symbols,
-		standard,
-		output,
-		fullform,
-		fullforms,
-		exponent,
-		roundingMethod,
-		precision
-	});
+	return (arg) =>
+		filesize(arg, {
+			bits,
+			pad,
+			base,
+			round,
+			locale,
+			localeOptions,
+			separator,
+			spacer,
+			symbols,
+			standard,
+			output,
+			fullform,
+			fullforms,
+			exponent,
+			roundingMethod,
+			precision,
+		});
 }
