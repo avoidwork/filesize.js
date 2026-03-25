@@ -228,13 +228,25 @@ export function filesize(
 /**
  * Deep clone an object for immutability in partial()
  * Uses structuredClone if available (Node 17+), falls back to JSON for compatibility
+ * Throws if JSON fallback would lose data (NaN, Infinity, functions, etc.)
  * @param {Object} obj - Object to clone
  * @returns {Object} Cloned object
+ * @throws {Error} If options contain non-JSON-serializable values
  */
 const deepClone =
 	typeof structuredClone === "function"
 		? (obj) => structuredClone(obj)
-		: (obj) => JSON.parse(JSON.stringify(obj));
+		: (obj) => {
+				const json = JSON.stringify(obj);
+				const cloned = JSON.parse(json);
+				// Check for data loss: NaN, Infinity, -Infinity become null
+				if (json.includes(":null")) {
+					throw new Error(
+						"partial() options contain non-JSON-serializable values (NaN, Infinity, etc.). Upgrade to Node 17+ for full support.",
+					);
+				}
+				return cloned;
+			};
 
 // Partial application for functional programming
 export function partial(options = {}) {
