@@ -224,11 +224,11 @@ filesize.js/
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guidelines](https://github.com/avoidwork/filesize.js/blob/main/CONTRIBUTING.md) for details.
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
+See [CHANGELOG.md](https://github.com/avoidwork/filesize.js/blob/main/CHANGELOG.md) for a history of changes.
 
 ## License
 
