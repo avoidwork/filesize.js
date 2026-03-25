@@ -5,11 +5,11 @@
 filesize.js is a lightweight, high-performance file size utility that converts bytes to human-readable strings. It supports multiple unit standards (SI, IEC, JEDEC), localization, and various output formats.
 
 **Key Facts:**
-- **Single source file**: `src/filesize.js` (255 lines)
-- **Helper functions**: `src/helpers.js` (205 lines)  
+- **Single source file**: `src/filesize.js` (285 lines)
+- **Helper functions**: `src/helpers.js` (215 lines)  
 - **Constants**: `src/constants.js` (81 lines)
 - **Zero dependencies**: Uses only native JavaScript APIs
-- **100% test coverage**: 145 tests passing
+- **100% test coverage**: 149 tests passing
 
 ## Coding Conventions
 
@@ -275,6 +275,36 @@ filesize(BigInt(1024)); // "1.02 kB"
 filesize(BigInt("10000000000000000000")); // Works with huge numbers
 ```
 
+### Auto-Exponent Pattern
+
+When checking if the exponent should auto-calculate, use a named variable for clarity and coverage:
+```javascript
+const autoExponent = exponent === -1 || isNaN(exponent);
+
+if (result[0] === ceil && e < 8 && autoExponent) {
+  // Auto-increment logic
+}
+```
+
+This pattern is used in:
+- `filesize.js`: rounding-based auto-increment
+- `filesize.js`: precision handling
+- `helpers.js`: `calculateOptimizedValue()` bits auto-increment
+- `helpers.js`: `applyPrecisionHandling()` scientific notation fix
+
+### Forced Exponent Behavior
+
+When `exponent` is explicitly set (not `-1` or `NaN`):
+- Bits auto-increment is **disabled** in `calculateOptimizedValue()`
+- Scientific notation normalization is **disabled** in `applyPrecisionHandling()`
+- Rounding-based auto-increment is **disabled** in `filesize()`
+
+Example:
+```javascript
+filesize(1024, { exponent: 0, bits: true }); // "8192 bit" (not auto-incremented to kbit)
+filesize(1024, { exponent: 0 });             // "1024 B" (not auto-incremented to kB)
+```
+
 ### Security
 
 The library follows OWASP best practices and is secure for production use:
@@ -293,6 +323,10 @@ The library follows OWASP best practices and is secure for production use:
 - The `symbols` option allows user-controlled objects but only reads from them (safe)
 
 **See `docs/TECHNICAL_DOCUMENTATION.md` for full security details.**
+
+## Build System
+
+The `ensureNewline()` plugin in `rollup.config.js` uses `generateBundle()` (not `renderChunk()`) to add trailing newlines. This preserves sourcemaps in minified builds by modifying the bundle after sourcemap generation.
 
 ## Documentation Standards
 
