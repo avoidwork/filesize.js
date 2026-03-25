@@ -48,6 +48,7 @@ export function getBaseConfiguration(standard: string, base: number): BaseConfig
  * @param fullforms - Custom full forms
  * @param output - Output format
  * @param spacer - Spacer character
+ * @param symbol - Symbol to use (optional, defaults based on bits/standard)
  * @returns Formatted result
  */
 export function handleZeroValue(
@@ -58,7 +59,8 @@ export function handleZeroValue(
   full: boolean,
   fullforms: string[],
   output: string,
-  spacer: string
+  spacer: string,
+  symbol?: string
 ): string | [number | string, string] | { value: number | string; symbol: string; exponent: number; unit: string } | number;
 
 /**
