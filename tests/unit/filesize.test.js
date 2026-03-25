@@ -880,25 +880,8 @@ describe("partial", () => {
 			opts.standard = "jedec";
 			opts.round = 0;
 
-			// The partial function should still use the cloned primitive values
+			// The partial function should still use the destructured primitive values
 			assert.strictEqual(format(1536), "1.5 KiB");
-		});
-
-		it("should not share mutable objects between different partial functions", () => {
-			const sharedSymbols = { kB: "shared_kB" };
-			const format1 = partial({ symbols: sharedSymbols });
-			const format2 = partial({ symbols: sharedSymbols });
-
-			// Both should work initially
-			assert.strictEqual(format1(1000), "1 shared_kB");
-			assert.strictEqual(format2(1000), "1 shared_kB");
-
-			// Modify the shared object after creating partial functions
-			sharedSymbols.kB = "modified_kB";
-
-			// Both partial functions should use their deep-cloned copies
-			assert.strictEqual(format1(1000), "1 shared_kB");
-			assert.strictEqual(format2(1000), "1 shared_kB");
 		});
 
 		it("should not affect other partial functions when modifying one", () => {
@@ -908,27 +891,6 @@ describe("partial", () => {
 			// Both should work independently
 			assert.strictEqual(format1(1000), "1 first_kB");
 			assert.strictEqual(format2(1000), "1 second_kB");
-		});
-
-		it("should throw error for non-JSON-serializable values when structuredClone is unavailable", () => {
-			// Note: This test will pass on Node 17+ (structuredClone available)
-			// On older Node versions, it should throw an error for NaN/Infinity
-			if (typeof structuredClone === "function") {
-				// structuredClone supports NaN and Infinity, so this should work
-				const format = partial({ exponent: NaN });
-				// The function should be created successfully
-				assert.strictEqual(typeof format, "function");
-			} else {
-				// On older Node without structuredClone, JSON fallback should throw
-				assert.throws(
-					() => partial({ exponent: NaN }),
-					/partial\(\) options contain non-JSON-serializable values/,
-				);
-				assert.throws(
-					() => partial({ exponent: Infinity }),
-					/partial\(\) options contain non-JSON-serializable values/,
-				);
-			}
 		});
 	});
 });
