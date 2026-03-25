@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/**/*.js", "tests/**/*.js"],
+      "rules": {
+        "no-console": "error"
+      }
+    }
+  ]
+}
