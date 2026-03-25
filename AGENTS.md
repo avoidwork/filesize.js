@@ -115,29 +115,29 @@ Input → Validation → Standard Normalization → Exponent Calculation
 
 ### Modifying `partial()`
 
-**Important**: `partial()` must deep clone options for immutability:
+**Important**: `partial()` uses destructuring to freeze option values for immutability:
 ```javascript
-const deepClone =
-  typeof structuredClone === "function"
-    ? (obj) => structuredClone(obj)
-    : (obj) => {
-        const json = JSON.stringify(obj);
-        const cloned = JSON.parse(json);
-        if (json.includes(":null")) {
-          throw new Error("partial() options contain non-JSON-serializable values.");
-        }
-        return cloned;
-      };
-
-export function partial(options = {}) {
-  const frozen = deepClone(options);
-  return (arg) => filesize(arg, frozen);
+export function partial({
+  bits = false,
+  pad = false,
+  base = -1,
+  round = 2,
+  // ... other options
+} = {}) {
+  return (arg) =>
+    filesize(arg, {
+      bits,
+      pad,
+      base,
+      round,
+      // ... same options
+    });
 }
 ```
 
-- Uses `structuredClone` on Node 17+ for full support (NaN, Infinity, etc.)
-- Falls back to JSON on older Node, throws error for non-serializable values
-- Prevents mutations to original options from affecting created formatters
+- Destructuring extracts and freezes primitive values at creation time
+- Prevents mutations to original options object from affecting created formatters
+- Simpler than deep cloning while maintaining immutability for all option types
 
 ## API Reference
 
@@ -252,9 +252,9 @@ try {
 }
 
 try {
-  partial({ exponent: NaN }); // On Node <17, throws error about non-JSON-serializable values
+  partial({ exponent: NaN }); // Works - NaN is preserved via destructuring
 } catch (error) {
-  // Error: "partial() options contain non-JSON-serializable values..."
+  // No error - destructuring handles all primitive values
 }
 ```
 
@@ -290,6 +290,7 @@ The library follows OWASP best practices and is secure for production use:
 **Security Considerations:**
 - The `symbols` option allows user-controlled objects but only reads from them (safe)
 - On Node.js <17, `partial()` uses JSON cloning which cannot serialize `NaN`/`Infinity` - throws clear error instead of silent data loss
+- The `symbols` option allows user-controlled objects but only reads from them (safe)
 
 **See `docs/TECHNICAL_DOCUMENTATION.md` for full security details.**
 
