@@ -228,33 +228,13 @@ export function filesize(
 /**
  * Deep clone an object for immutability in partial()
  * Uses structuredClone if available (Node 17+), falls back to JSON for compatibility
- * Optimized with type-based memoization to avoid repeated typeof checks
  * @param {Object} obj - Object to clone
  * @returns {Object} Cloned object
  */
-const deepClone = (() => {
-	const hasStructuredClone = typeof structuredClone === "function";
-	const cache = new Map();
-
-	const getCloneFunc = (type) => {
-		if (cache.has(type)) {
-			return cache.get(type);
-		}
-
-		const cloneFunc = hasStructuredClone
-			? (obj) => structuredClone(obj)
-			: (obj) => JSON.parse(JSON.stringify(obj));
-
-		cache.set(type, cloneFunc);
-		return cloneFunc;
-	};
-
-	return (obj) => {
-		const type = typeof obj;
-		const cloneFunc = getCloneFunc(type);
-		return cloneFunc(obj);
-	};
-})();
+const deepClone =
+	typeof structuredClone === "function"
+		? (obj) => structuredClone(obj)
+		: (obj) => JSON.parse(JSON.stringify(obj));
 
 // Partial application for functional programming
 export function partial(options = {}) {
