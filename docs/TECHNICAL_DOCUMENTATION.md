@@ -1027,6 +1027,33 @@ self.onmessage = function(e) {
 };
 ```
 
+## Security
+
+filesize.js is designed with security best practices and is safe to use in production environments.
+
+### ✅ Secure Patterns
+
+The library implements the following security measures:
+
+1. **No `eval` or `Function` constructor** - No code injection risk
+2. **No prototype pollution** - All object accesses use safe patterns:
+   - `symbols[result[1]]` only **reads** from user input, never writes
+   - `deepClone` uses `structuredClone`/`JSON.parse` which don't pollute prototypes
+   - No `__proto__`, `constructor`, or `Object.prototype` manipulation
+3. **No command injection** - No shell execution
+4. **No path traversal** - No file system operations
+5. **No XSS** - Returns plain strings, no HTML/JS generation
+6. **No SSRF** - No network requests
+7. **No ReDoS** - Regex `/(\D)/g` is simple, no catastrophic backtracking
+8. **Input validation** - Validates number input and rounding method
+
+### Security Considerations
+
+- The `symbols` option allows user-controlled objects. While currently safe (read-only access), if you ever add write operations to user-provided objects, use `Object.create(null)` or `Object.hasOwn()` checks to prevent prototype pollution.
+- On Node.js versions prior to 17, `partial()` uses `JSON.parse(JSON.stringify())` for deep cloning, which cannot serialize `NaN`, `Infinity`, or functions. The library throws a clear error in these cases rather than silently losing data.
+
+**The library is secure as-is and requires no additional configuration.**
+
 ## Integration Patterns
 
 ### Framework-Specific Integrations

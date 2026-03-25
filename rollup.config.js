@@ -18,6 +18,16 @@ const bannerShort = `/*!
  @version ${pkg.version}
 */`;
 
+// Plugin to ensure output files end with a newline
+function ensureNewline() {
+	return {
+		name: "ensure-newline",
+		renderChunk(code) {
+			return code.endsWith("\n") ? null : code + "\n";
+		},
+	};
+}
+
 // Optimized terser configuration for better compression
 const terserOptions = {
 	compress: {
@@ -91,26 +101,31 @@ export default [
 			{
 				...cjOutBase,
 				file: `dist/${pkg.name}.cjs`,
+				plugins: [ensureNewline()],
 			},
 			{
 				...esmOutBase,
 				file: `dist/${pkg.name}.js`,
+				plugins: [ensureNewline()],
 			},
 			{
 				...esmOutBase,
 				...minOutBase,
 				file: `dist/${pkg.name}.min.js`,
+				plugins: [ensureNewline()],
 			},
 			{
 				...umdOutBase,
 				file: `dist/${pkg.name}.umd.js`,
 				name: "filesize",
+				plugins: [ensureNewline()],
 			},
 			{
 				...umdOutBase,
 				...minOutBase,
 				file: `dist/${pkg.name}.umd.min.js`,
 				name: "filesize",
+				plugins: [ensureNewline()],
 			},
 		],
 	},

@@ -5,11 +5,11 @@
 filesize.js is a lightweight, high-performance file size utility that converts bytes to human-readable strings. It supports multiple unit standards (SI, IEC, JEDEC), localization, and various output formats.
 
 **Key Facts:**
-- **Single source file**: `src/filesize.js` (198 lines)
-- **Helper functions**: `src/helpers.js` (181 lines)  
+- **Single source file**: `src/filesize.js` (255 lines)
+- **Helper functions**: `src/helpers.js` (205 lines)  
 - **Constants**: `src/constants.js` (81 lines)
 - **Zero dependencies**: Uses only native JavaScript APIs
-- **100% test coverage**: 139 tests passing
+- **100% test coverage**: 145 tests passing
 
 ## Coding Conventions
 
@@ -115,14 +115,29 @@ Input → Validation → Standard Normalization → Exponent Calculation
 
 ### Modifying `partial()`
 
-**Important**: Keep `partial()` simple:
+**Important**: `partial()` must deep clone options for immutability:
 ```javascript
-export function partial (options = {}) {
-  return arg => filesize(arg, options);
+const deepClone =
+  typeof structuredClone === "function"
+    ? (obj) => structuredClone(obj)
+    : (obj) => {
+        const json = JSON.stringify(obj);
+        const cloned = JSON.parse(json);
+        if (json.includes(":null")) {
+          throw new Error("partial() options contain non-JSON-serializable values.");
+        }
+        return cloned;
+      };
+
+export function partial(options = {}) {
+  const frozen = deepClone(options);
+  return (arg) => filesize(arg, frozen);
 }
 ```
 
-Do NOT destructure with defaults in `partial()` - let `filesize()` handle defaults.
+- Uses `structuredClone` on Node 17+ for full support (NaN, Infinity, etc.)
+- Falls back to JSON on older Node, throws error for non-serializable values
+- Prevents mutations to original options from affecting created formatters
 
 ## API Reference
 
@@ -235,7 +250,23 @@ try {
 } catch (error) {
   // TypeError: "Invalid number"
 }
+
+try {
+  partial({ exponent: NaN }); // On Node <17, throws error about non-JSON-serializable values
+} catch (error) {
+  // Error: "partial() options contain non-JSON-serializable values..."
+}
 ```
+
+### Padding with Negative Numbers
+
+When using `pad: true` with negative numbers, the decimal separator detection must skip the minus sign:
+```javascript
+// Correct: slice(1) to skip minus sign
+const x = separator || (resultStr.slice(1).match(/(\D)/g) || []).pop() || PERIOD;
+```
+
+Without this, `-1.00` would split on `-` instead of `.`, producing incorrect output like `-10 kB` instead of `-1.00 kB`.
 
 ### BigInt Support
 
@@ -243,6 +274,24 @@ try {
 filesize(BigInt(1024)); // "1.02 kB"
 filesize(BigInt("10000000000000000000")); // Works with huge numbers
 ```
+
+### Security
+
+The library follows OWASP best practices and is secure for production use:
+
+**Secure Patterns:**
+- No `eval`, `Function` constructor, or command injection
+- No prototype pollution (read-only symbol access, deep cloning in `partial()`)
+- No XSS (returns plain strings only, no HTML/JS generation)
+- No SSRF (no network requests)
+- No ReDoS (simple regex, no catastrophic backtracking)
+- Input validation on all user-provided values
+
+**Security Considerations:**
+- The `symbols` option allows user-controlled objects but only reads from them (safe)
+- On Node.js <17, `partial()` uses JSON cloning which cannot serialize `NaN`/`Infinity` - throws clear error instead of silent data loss
+
+**See `docs/TECHNICAL_DOCUMENTATION.md` for full security details.**
 
 ## Documentation Standards
 
@@ -299,6 +348,9 @@ Run `npm run lint:fix` to auto-fix common issues.
 
 ### Formatting
 Run `npm run format:fix` to format code with oxfmt.
+
+### Build Output Files
+Ensure output files end with newlines (configured in `rollup.config.js` with `ensureNewline()` plugin).
 
 ## Quick Reference
 
