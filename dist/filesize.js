@@ -261,9 +261,10 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
 	// Apply padding
 	if (pad && round > 0) {
 		const resultStr = result.toString();
-		const x = separator || (resultStr.slice(1).match(/(\D)/g) || []).pop() || PERIOD;
+		const x = separator || (resultStr.slice(1).match(/[.,]/g) || []).pop() || PERIOD;
 		const tmp = resultStr.split(x);
 		const s = tmp[1] || EMPTY;
+
 		const l = s.length;
 		const n = round - l;
 
@@ -461,6 +462,22 @@ function filesize(
 /**
  * Creates a partially applied version of filesize with preset options
  * @param {Object} [options={}] - Configuration options (same as filesize)
+ * @param {boolean} [options.bits=false] - If true, calculates bits instead of bytes
+ * @param {boolean} [options.pad=false] - If true, pads decimal places to match round parameter
+ * @param {number} [options.base=-1] - Number base (2 for binary, 10 for decimal, -1 for auto)
+ * @param {number} [options.round=2] - Number of decimal places to round to
+ * @param {string|boolean} [options.locale=""] - Locale for number formatting, true for system locale
+ * @param {Object} [options.localeOptions={}] - Additional options for locale formatting
+ * @param {string} [options.separator=""] - Custom decimal separator
+ * @param {string} [options.spacer=" "] - String to separate value and unit
+ * @param {Object} [options.symbols={}] - Custom unit symbols
+ * @param {string} [options.standard=""] - Unit standard to use (SI, IEC, JEDEC)
+ * @param {string} [options.output="string"] - Output format: "string", "array", "object", or "exponent"
+ * @param {boolean} [options.fullform=false] - If true, uses full unit names instead of abbreviations
+ * @param {Array} [options.fullforms=[]] - Custom full unit names
+ * @param {number} [options.exponent=-1] - Force specific exponent (-1 for auto)
+ * @param {string} [options.roundingMethod="round"] - Math rounding method to use
+ * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
  * @returns {Function} A function that takes a file size and returns formatted output
  * @example
  * const formatBytes = partial({round: 1, standard: "iec"});
@@ -468,31 +485,41 @@ function filesize(
  * formatBytes(2048) // "2 KiB"
  * formatBytes(1536) // "1.5 KiB"
  */
-/**
- * Deep clone an object for immutability in partial()
- * Uses structuredClone if available (Node 17+), falls back to JSON for compatibility
- * Throws if JSON fallback would lose data (NaN, Infinity, functions, etc.)
- * @param {Object} obj - Object to clone
- * @returns {Object} Cloned object
- * @throws {Error} If options contain non-JSON-serializable values
- */
-const deepClone =
-	typeof structuredClone === "function"
-		? (obj) => structuredClone(obj)
-		: (obj) => {
-				const json = JSON.stringify(obj);
-				const cloned = JSON.parse(json);
-				// Check for data loss: NaN, Infinity, -Infinity become null
-				if (json.includes(":null")) {
-					throw new Error(
-						"partial() options contain non-JSON-serializable values (NaN, Infinity, etc.). Upgrade to Node 17+ for full support.",
-					);
-				}
-				return cloned;
-			};
-
-// Partial application for functional programming
-function partial(options = {}) {
-	const frozen = deepClone(options);
-	return (arg) => filesize(arg, frozen);
+function partial({
+	bits = false,
+	pad = false,
+	base = -1,
+	round = 2,
+	locale = EMPTY,
+	localeOptions = {},
+	separator = EMPTY,
+	spacer = SPACE,
+	symbols = {},
+	standard = EMPTY,
+	output = STRING,
+	fullform = false,
+	fullforms = [],
+	exponent = -1,
+	roundingMethod = ROUND,
+	precision = 0,
+} = {}) {
+	return (arg) =>
+		filesize(arg, {
+			bits,
+			pad,
+			base,
+			round,
+			locale,
+			localeOptions,
+			separator,
+			spacer,
+			symbols,
+			standard,
+			output,
+			fullform,
+			fullforms,
+			exponent,
+			roundingMethod,
+			precision,
+		});
 }export{filesize,partial};

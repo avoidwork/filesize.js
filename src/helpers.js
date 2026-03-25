@@ -195,6 +195,7 @@ export function applyNumberFormatting(value, locale, localeOptions, separator, p
 		const x = separator || (resultStr.slice(1).match(/[.,]/g) || []).pop() || PERIOD;
 		const tmp = resultStr.split(x);
 		const s = tmp[1] || EMPTY;
+
 		const l = s.length;
 		const n = round - l;
 
