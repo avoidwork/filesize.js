@@ -7,10 +7,34 @@
 
 A lightweight, high-performance file size utility that converts bytes to human-readable strings. Zero dependencies. 100% test coverage.
 
+## Why filesize.js?
+
+- **Zero dependencies** - Pure JavaScript, no external packages
+- **100% test coverage** - Reliable, well-tested codebase
+- **TypeScript ready** - Full type definitions included
+- **Multiple standards** - SI, IEC, and JEDEC support
+- **Localization** - Intl API for international formatting
+- **BigInt support** - Handle extremely large file sizes
+- **Functional API** - Partial application for reusable formatters
+- **Browser & Node.js** - Works everywhere
+
 ## Installation
 
 ```bash
 npm install filesize
+```
+
+## TypeScript
+
+Fully typed with TypeScript definitions included:
+
+```typescript
+import { filesize, partial } from 'filesize';
+
+const result: string = filesize(1024);
+const formatted: { value: number; symbol: string; exponent: number; unit: string } = filesize(1024, { output: 'object' });
+
+const formatter: (arg: number | bigint) => string = partial({ standard: 'iec' });
 ```
 
 ## Usage
@@ -141,7 +165,7 @@ npm test              # Run all tests (lint + node:test)
 npm run test:watch    # Live test watching
 ```
 
-**100% test coverage** with 139 tests:
+**100% test coverage** with 149 tests:
 
 ```
 --------------|---------|----------|---------|---------|-------------------
@@ -169,8 +193,8 @@ npm run lint:fix    # Auto-fix linting issues
 ```
 filesize.js/
 ├── src/
-│   ├── filesize.js      # Main implementation (198 lines)
-│   ├── helpers.js       # Helper functions (181 lines)
+│   ├── filesize.js      # Main implementation (285 lines)
+│   ├── helpers.js       # Helper functions (215 lines)
 │   └── constants.js     # Constants (81 lines)
 ├── tests/
 │   └── unit/
@@ -188,6 +212,23 @@ filesize.js/
 1. Cache `partial()` formatters for reuse
 2. Avoid locale formatting in performance-critical code
 3. Use `object` output for fastest structured data access
+
+## Browser Usage
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/filesize@11/dist/filesize.umd.min.js"></script>
+<script>
+  filesize(1024); // "1.02 kB"
+</script>
+```
+
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a history of changes.
 
 ## License
 
