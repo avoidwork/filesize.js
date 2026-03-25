@@ -229,8 +229,10 @@ function applyPrecisionHandling(
 ) {
 	let result = value.toPrecision(precision);
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	// Handle scientific notation by recalculating with incremented exponent
-	if (result.includes(E) && e < 8 && exponent === -1) {
+	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
 		const p = round > 0 ? Math.pow(10, round) : 1;
@@ -405,7 +407,9 @@ function filesize(
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
 
-	if (result[0] === ceil && e < 8 && exponent === -1) {
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
+	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;
 		e++;
 	}
