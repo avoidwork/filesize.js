@@ -140,7 +140,7 @@ describe("Helper Functions", () => {
 
 	describe("applyPrecisionHandling", () => {
 		it("should apply precision without scientific notation", () => {
-			const result = applyPrecisionHandling(1.5, 2, 1, 1024, false, false, 1024, Math.round, 2);
+			const result = applyPrecisionHandling(1.5, 2, 1, 1024, false, false, 1024, Math.round, 2, -1);
 			assert.deepStrictEqual(result, { value: "1.5", e: 1 });
 		});
 
@@ -156,13 +156,31 @@ describe("Helper Functions", () => {
 				1000,
 				Math.round,
 				2,
+				-1,
 			);
 			assert(typeof result.value === "string");
 			assert(typeof result.e === "number");
 		});
 
+		it("should not increment when exponent is forced", () => {
+			// Test that forced exponent prevents auto-increment
+			const result = applyPrecisionHandling(
+				1000000000000,
+				1,
+				3,
+				1e15,
+				true,
+				false,
+				1000,
+				Math.round,
+				2,
+				5,
+			);
+			assert.deepStrictEqual(result, { value: "1e+12", e: 3 });
+		});
+
 		it("should not increment when e >= 8", () => {
-			const result = applyPrecisionHandling(1.5, 2, 8, 1024, false, false, 1024, Math.round, 2);
+			const result = applyPrecisionHandling(1.5, 2, 8, 1024, false, false, 1024, Math.round, 2, -1);
 			assert.deepStrictEqual(result, { value: "1.5", e: 8 });
 		});
 	});
