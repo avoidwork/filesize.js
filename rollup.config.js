@@ -22,8 +22,15 @@ const bannerShort = `/*!
 function ensureNewline() {
 	return {
 		name: "ensure-newline",
-		renderChunk(code) {
-			return code.endsWith("\n") ? null : code + "\n";
+		renderChunk(code, map) {
+			if (code.endsWith("\n")) {
+				return null;
+			}
+
+			return {
+				code: code + "\n",
+				map: map || null,
+			};
 		},
 	};
 }
