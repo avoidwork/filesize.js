@@ -134,6 +134,8 @@ export function filesize(
 		e = 8;
 	}
 
+	const autoExponent = exponent === -1 || isNaN(exponent);
+
 	if (output === EXPONENT) {
 		return e;
 	}
@@ -145,6 +147,7 @@ export function filesize(
 		isDecimal,
 		bits,
 		ceil,
+		autoExponent,
 	);
 	val = valueResult;
 	e = valueExponent;
@@ -152,8 +155,6 @@ export function filesize(
 	// Optimize rounding calculation
 	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
 	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
-
-	const autoExponent = exponent === -1 || isNaN(exponent);
 
 	if (result[0] === ceil && e < 8 && autoExponent) {
 		result[0] = 1;

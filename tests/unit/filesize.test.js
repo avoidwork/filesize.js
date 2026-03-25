@@ -39,6 +39,12 @@ describe("filesize", () => {
 		it("should handle zero with bits option", () => {
 			assert.strictEqual(filesize(0, { bits: true }), "0 bit");
 		});
+
+		it("should respect forced exponent with bits", () => {
+			// Forced exponent should prevent auto-increment
+			assert.strictEqual(filesize(1024, { exponent: 0, bits: true }), "8192 bit");
+			assert.strictEqual(filesize(1024, { exponent: 1, bits: true }), "8.19 kbit");
+		});
 	});
 
 	describe("Zero value edge cases", () => {

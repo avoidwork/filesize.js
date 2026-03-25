@@ -70,6 +70,7 @@ export function handleZeroValue(
  * @param isDecimal - Whether to use decimal powers
  * @param bits - Whether to calculate bits
  * @param ceil - Ceiling value for auto-increment
+ * @param autoExponent - Whether exponent is auto (-1 or NaN)
  * @returns Object with result and e properties
  */
 export function calculateOptimizedValue(
@@ -77,7 +78,8 @@ export function calculateOptimizedValue(
   e: number,
   isDecimal: boolean,
   bits: boolean,
-  ceil: number
+  ceil: number,
+  autoExponent?: boolean
 ): OptimizedValueResult;
 
 /**
