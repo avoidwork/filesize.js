@@ -112,7 +112,7 @@ export default [
 				...esmOutBase,
 				...minOutBase,
 				file: `dist/${pkg.name}.min.js`,
-				plugins: [ensureNewline()],
+				plugins: [terser(terserOptions), ensureNewline()],
 			},
 			{
 				...umdOutBase,
@@ -125,7 +125,7 @@ export default [
 				...minOutBase,
 				file: `dist/${pkg.name}.umd.min.js`,
 				name: "filesize",
-				plugins: [ensureNewline()],
+				plugins: [terser(terserOptions), ensureNewline()],
 			},
 		],
 	},
