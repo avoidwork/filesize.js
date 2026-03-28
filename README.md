@@ -1,5 +1,4 @@
-# filesize.js
-
+# filesize
 [![npm version](https://badge.fury.io/js/filesize.svg)](https://www.npmjs.com/package/filesize)
 [![Node.js Version](https://img.shields.io/node/v/filesize.svg)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)

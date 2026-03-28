@@ -2,7 +2,7 @@
 
 ## Overview
 
-This style guide establishes coding standards for filesize.js, following Node.js community best practices and the project's existing patterns.
+This style guide establishes coding standards for filesize, following Node.js community best practices and the project's existing patterns.
 
 ## General Principles
 
@@ -54,7 +54,7 @@ Use **camelCase**:
 const userAccountBalance = getUserBalance();
 const isValidEmail = validateEmailFormat(email);
 
-// From filesize.js
+// From filesize
 export function handleZeroValue (precision, actualStandard, bits) {
 	// Implementation
 }
@@ -354,4 +354,4 @@ npm run build:analyze # Bundle size analysis
 
 ---
 
-This style guide reflects the actual patterns used in the filesize.js codebase.
+This style guide reflects the actual patterns used in the filesize codebase.

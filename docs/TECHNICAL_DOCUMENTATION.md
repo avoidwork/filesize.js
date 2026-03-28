@@ -16,7 +16,7 @@
 
 ## Overview
 
-**filesize.js** is a modern JavaScript library that converts numeric byte values into human-readable file size strings with extensive customization options. The library supports multiple unit standards, localization, and various output formats, making it ideal for modern web applications, mobile apps, and cloud platforms.
+**filesize* is a modern JavaScript library that converts numeric byte values into human-readable file size strings with extensive customization options. The library supports multiple unit standards, localization, and various output formats, making it ideal for modern web applications, mobile apps, and cloud platforms.
 
 ### Key Features
 
@@ -77,9 +77,9 @@ graph TB
 
 ```mermaid
 graph LR
-    subgraph "filesize.js Library"
+    subgraph "filesize Library"
         A[constants.js<br/>Constants & Symbols] 
-        B[filesize.js<br/>Core Logic]
+        B[filesize<br/>Core Logic]
         C[Types<br/>TypeScript Definitions]
     end
     
@@ -99,7 +99,7 @@ graph LR
 
 ## Mathematical Foundation
 
-The filesize.js library implements several mathematical algorithms to convert raw byte values into human-readable format with appropriate units. This section describes the core mathematical formulas and their implementations.
+The filesize library implements several mathematical algorithms to convert raw byte values into human-readable format with appropriate units. This section describes the core mathematical formulas and their implementations.
 
 ### Fundamental Conversion Formula
 
@@ -1029,7 +1029,7 @@ self.onmessage = function(e) {
 
 ## Security
 
-filesize.js is designed with security best practices and is safe to use in production environments.
+filesize is designed with security best practices and is safe to use in production environments.
 
 ### ✅ Secure Patterns
 
@@ -1339,6 +1339,6 @@ function robustFilesize(bytes, options = {}, fallback = 'Unknown size') {
 
 ## Conclusion
 
-This technical documentation provides a comprehensive guide to integrating filesize.js into modern applications. The library's flexibility, performance optimizations, and internationalization support make it ideal for 2025's global, multi-platform applications.
+This technical documentation provides a comprehensive guide to integrating filesize into modern applications. The library's flexibility, performance optimizations, and internationalization support make it ideal for 2025's global, multi-platform applications.
 
-For additional support, examples, or contributions, visit the [project repository](https://github.com/avoidwork/filesize.js) or refer to the [API documentation](./API_REFERENCE.md). 
+For additional support, examples, or contributions, visit the [project repository](https://github.com/avoidwork/filesize.js) or refer to the [API documentation](./API.md). 
