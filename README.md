@@ -6,7 +6,7 @@
 
 A lightweight, high-performance file size utility that converts bytes to human-readable strings. Zero dependencies. 100% test coverage.
 
-## Why filesize.js?
+## Why filesize?
 
 - **Zero dependencies** - Pure JavaScript, no external packages
 - **100% test coverage** - Reliable, well-tested codebase
