@@ -127,3 +127,116 @@ export function applyNumberFormatting(
   pad: boolean,
   round: number
 ): string | number;
+
+/**
+ * Result of exponent calculation and precision adjustment
+ */
+export interface ExponentCalculationResult {
+  /** The computed exponent value */
+  e: number;
+  /** The possibly adjusted precision value */
+  precision: number;
+}
+
+/**
+ * Calculates exponent from the input value using pre-computed log values and clamps to supported range
+ * Also adjusts precision when exponent exceeds the lookup table bounds
+ * @param num - Input file size in bytes
+ * @param e - Current exponent value
+ * @param exponent - Original user-provided exponent option (-1 for auto)
+ * @param isDecimal - Whether to use decimal (SI) base
+ * @param precision - Current precision value (modified when e > 8)
+ * @returns Object with computed e value and possibly adjusted precision
+ */
+export function calculateExponent(
+  num: number,
+  e: number,
+  exponent: number,
+  isDecimal: boolean,
+  precision: number
+): ExponentCalculationResult;
+
+/**
+ * Applies rounding to the raw calculated value and handles auto-increment ceiling
+ * @param val - Raw value before rounding
+ * @param ceil - Ceiling threshold (1000 for SI, 1024 for IEC)
+ * @param e - Current exponent value
+ * @param round - Number of decimal places
+ * @param roundingFunc - Rounding method (Math.round, Math.floor, Math.ceil)
+ * @param autoExponent - Whether exponent is auto-calculated (-1 or NaN)
+ * @returns Object with rounded value and possibly incremented exponent
+ */
+export function applyRounding(
+  val: number,
+  ceil: number,
+  e: number,
+  round: number,
+  roundingFunc: (x: number) => number,
+  autoExponent: boolean
+): { value: number; e: number };
+
+/**
+ * Resolves the unit symbol for the given standard, bits mode, and exponent
+ * Handles SI standard special case where exponent 1 always uses "kB" or "kbit"
+ * @param actualStandard - The resolved standard (iec, jedec)
+ * @param bits - Whether formatting bit values
+ * @param e - Current exponent index
+ * @param isDecimal - Whether using decimal (SI) base
+ * @returns The resolved unit symbol string
+ */
+export function resolveSymbol(
+  actualStandard: string,
+  bits: boolean,
+  e: number,
+  isDecimal: boolean
+): string;
+
+/**
+ * Decorates the result: applies negation, custom symbols, number formatting, and full form names
+ * Mutates the result array in-place for both value (index 0) and symbol (index 1)
+ * @param result - Result array with numeric value at [0] and string symbol at [1]
+ * @param neg - Whether the original input was negative
+ * @param symbols - Custom symbol override map
+ * @param locale - Locale string for formatting
+ * @param localeOptions - Additional locale formatting options
+ * @param separator - Custom decimal separator
+ * @param pad - Whether zero-pad decimals
+ * @param round - Target decimal count for padding
+ * @param full - Whether to use full unit names
+ * @param fullforms - Custom full unit name overrides
+ * @param actualStandard - Unit standard for full form lookup
+ * @param e - Current exponent index
+ * @param bits - Whether formatting bit values
+ */
+export function decorateResult(
+  result: number[],
+  neg: boolean,
+  symbols: Record<string, string>,
+  locale: string | boolean,
+  localeOptions: Record<string, unknown>,
+  separator: string,
+  pad: boolean,
+  round: number,
+  full: boolean,
+  fullforms: string[],
+  actualStandard: string,
+  e: number,
+  bits: boolean
+): void;
+
+/**
+ * Formats the computed result array into the requested output type
+ * @param result - Result array with formatted value at [0] and symbol at [1]
+ * @param e - Current exponent
+ * @param u - Original resolved symbol (before custom override)
+ * @param output - Output type (ARRAY, OBJECT, STRING, EXPONENT)
+ * @param spacer - String separator between value and unit
+ * @returns Formatted result in requested type
+ */
+export function formatOutput(
+  result: number[],
+  e: number,
+  u: string,
+  output: string,
+  spacer: string
+): string | number[] | { value: number | string; symbol: string; exponent: number; unit: string } | number;
