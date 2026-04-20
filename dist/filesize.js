@@ -224,6 +224,10 @@ function applyPrecisionHandling(
 	round,
 	exponent,
 ) {
+	if (typeof value === "string") {
+		value = parseFloat(value);
+	}
+
 	let result = value.toPrecision(precision);
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
@@ -469,20 +473,30 @@ function filesize(
 	} = {},
 ) {
 	let e = exponent,
-		num = Number(arg),
+		num,
 		result = [],
 		val = 0,
 		u = EMPTY;
+
+	if (typeof arg === "bigint") {
+		num = Number(arg);
+	} else {
+		num = Number(arg);
+
+		if (isNaN(arg)) {
+			throw new TypeError(INVALID_NUMBER);
+		}
+
+		if (!isFinite(num)) {
+			throw new TypeError(INVALID_NUMBER);
+		}
+	}
 
 	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
 
 	const full = fullform === true,
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
-
-	if (typeof arg !== "bigint" && isNaN(arg)) {
-		throw new TypeError(INVALID_NUMBER);
-	}
 
 	if (typeof roundingFunc !== FUNCTION) {
 		throw new TypeError(INVALID_ROUND);
@@ -608,18 +622,24 @@ function partial({
 	base = -1,
 	round = 2,
 	locale = EMPTY,
-	localeOptions = {},
 	separator = EMPTY,
 	spacer = SPACE,
-	symbols = {},
 	standard = EMPTY,
 	output = STRING,
 	fullform = false,
-	fullforms = [],
 	exponent = -1,
 	roundingMethod = ROUND,
 	precision = 0,
+	localeOptions = {},
+	symbols = {},
+	fullforms = [],
 } = {}) {
+	const cloned = {
+		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
+		symbols: JSON.parse(JSON.stringify(symbols)),
+		fullforms: JSON.parse(JSON.stringify(fullforms)),
+	};
+
 	return (arg) =>
 		filesize(arg, {
 			bits,
@@ -627,14 +647,14 @@ function partial({
 			base,
 			round,
 			locale,
-			localeOptions,
+			localeOptions: cloned.localeOptions,
 			separator,
 			spacer,
-			symbols,
+			symbols: cloned.symbols,
 			standard,
 			output,
 			fullform,
-			fullforms,
+			fullforms: cloned.fullforms,
 			exponent,
 			roundingMethod,
 			precision,

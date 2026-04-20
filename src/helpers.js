@@ -163,6 +163,10 @@ export function applyPrecisionHandling(
 	round,
 	exponent,
 ) {
+	if (typeof value === "string") {
+		value = parseFloat(value);
+	}
+
 	let result = value.toPrecision(precision);
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
