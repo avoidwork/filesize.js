@@ -80,12 +80,18 @@ Input → Validation → Standard Normalization → Exponent Calculation
 
 ### Key Components
 
-1. **`filesize(arg, options)`**: Main conversion function
-2. **`partial(options)`**: Creates pre-configured function
+1. **`filesize(arg, options)`**: Orchestrator — delegates validation, exponent, value calc, rounding, formatting, and output dispatch
+2. **`partial(options)`**: Creates pre-configured formatter with immutable frozen options
 3. **`handleZeroValue()`**: Special handling for zero input
-4. **`calculateOptimizedValue()`**: Core conversion logic
-5. **`applyPrecisionHandling()`**: Precision + scientific notation fix
+4. **`calculateOptimizedValue()`**: Core conversion logic with bits handling
+5. **`applyPrecisionHandling()`**: Precision + scientific notation correction
 6. **`applyNumberFormatting()`**: Locale, separator, padding
+7. **`getBaseConfiguration()`**: Cached base/standard lookup table
+8. **`calculateExponent()`**: Log-based exponent calculation with clamping
+9. **`applyRounding()`**: Rounding + auto-increment ceiling adjustment
+10. **`resolveSymbol()`**: Symbol table lookup with SI override for e=1
+11. **`decorateResult()`**: Negation, custom symbols, full form assembly
+12. **`formatOutput()`**: Array/object/string output dispatch
 
 ### Standard Selection
 
