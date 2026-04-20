@@ -28,6 +28,14 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(-1000), "-1 kB");
 			assert.strictEqual(filesize(-1000000), "-1 MB");
 		});
+
+		it("should throw TypeError for Infinity", () => {
+			assert.throws(() => filesize(Infinity), TypeError);
+		});
+
+		it("should throw TypeError for -Infinity", () => {
+			assert.throws(() => filesize(-Infinity), TypeError);
+		});
 	});
 
 	describe("Bits option", () => {
@@ -217,6 +225,22 @@ describe("filesize", () => {
 				filesize(1000, { fullform: true, fullforms: customFullforms }),
 				"1 thousand-byte",
 			);
+		});
+
+		it("should handle bits fullform singular", () => {
+			assert.strictEqual(filesize(0.125, { bits: true, fullform: true }), "1 bit");
+		});
+
+		it("should handle bits fullform plural", () => {
+			assert.strictEqual(filesize(0.25, { bits: true, fullform: true }), "2 bits");
+		});
+
+		it("should handle fullform with precision (string value path)", () => {
+			assert.strictEqual(
+				filesize(1058223158, { standard: "iec", precision: 3, fullform: true }),
+				"0.990 gibibytes",
+			);
+			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
 		});
 	});
 
@@ -448,6 +472,20 @@ describe("filesize", () => {
 				filesize(1058223158, { base: 2, standard: "iec", precision: 3 }),
 				"0.990 GiB",
 			);
+		});
+
+		it("should return string value in object output when precision > 0", () => {
+			const result = filesize(1234567890, { precision: 2, output: "object" });
+			assert.strictEqual(typeof result.value, "string");
+			assert.strictEqual(result.value, "1.2");
+		});
+
+		it("should skip padding when round is 0", () => {
+			assert.strictEqual(filesize(1000, { pad: true, round: 0 }), "1 kB");
+		});
+
+		it("should fall back to JEDEC default for unknown standard", () => {
+			assert.strictEqual(filesize(1024, { standard: "foobar" }), "1.02 kB");
 		});
 	});
 
@@ -910,6 +948,36 @@ describe("partial", () => {
 			// Both should work independently
 			assert.strictEqual(format1(1000), "1 first_kB");
 			assert.strictEqual(format2(1000), "1 second_kB");
+		});
+
+		it("should not be affected by mutations to localeOptions reference", () => {
+			const opts = { localeOptions: { useGrouping: true } };
+			const format = partial(opts);
+
+			assert.strictEqual(typeof format(1234567), "string");
+
+			opts.localeOptions.useGrouping = false;
+			assert.strictEqual(typeof format(1234567), "string");
+		});
+
+		it("should not be affected by mutations to symbols reference", () => {
+			const opts = { symbols: { kB: "original_kB" } };
+			const format = partial(opts);
+
+			assert.strictEqual(format(1000), "1 original_kB");
+
+			opts.symbols.kB = "mutated_kB";
+			assert.strictEqual(format(1000), "1 original_kB");
+		});
+
+		it("should not be affected by mutations to fullforms reference", () => {
+			const opts = { fullforms: ["custom"], fullform: true };
+			const format = partial(opts);
+
+			assert.strictEqual(format(1), "1 custom");
+
+			opts.fullforms[0] = "mutated";
+			assert.strictEqual(format(1), "1 custom");
 		});
 	});
 });

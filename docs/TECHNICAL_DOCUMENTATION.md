@@ -78,23 +78,29 @@ graph TB
 ```mermaid
 graph LR
     subgraph "filesize Library"
-        A[constants.js<br/>Constants & Symbols] 
-        B[filesize<br/>Core Logic]
-        C[Types<br/>TypeScript Definitions]
+        A[constants.js<br/>Constants & Symbols]
+        B[filesize.js<br/>Orchestrator<br/>17 LOC pipeline]
+        C[helpers.js<br/>10 Delegate Functions]
+        D[Types<br/>TypeScript Definitions]
     end
     
     subgraph "External Dependencies"
-        D[Math Object<br/>Rounding Functions]
-        E[Intl API<br/>Localization]
+        E[Math Object<br/>Rounding Functions]
+        F[Intl API<br/>Localization]
     end
     
     A --> B
-    B --> D
+    A --> C
+    B --> C
     B --> E
+    B --> F
+    C --> E
+    C --> F
     
     style A fill:#d97706,stroke:#b45309,stroke-width:2px,color:#ffffff
     style B fill:#166534,stroke:#15803d,stroke-width:2px,color:#ffffff
-    style C fill:#1e40af,stroke:#1e3a8a,stroke-width:2px,color:#ffffff
+    style C fill:#1e40af,stroke:#15803d,stroke-width:2px,color:#ffffff
+    style D fill:#7c2d12,stroke:#92400e,stroke-width:2px,color:#ffffff
 ```
 
 ## Mathematical Foundation
@@ -331,7 +337,7 @@ flowchart TD
     Validate -->|Yes| ValidateRounding{Valid Rounding Method?}
     
     ValidateRounding -->|No| Error
-    ValidateRounding -->|Yes| Normalize[Normalize Base & Standard]
+    ValidateRounding -->|Yes| Normalize[Normalize Base & Standard<br/>getBaseConfiguration]
     
     Normalize --> HandleNegative{Input < 0?}
     HandleNegative -->|Yes| FlipSign[Store negative flag, use absolute value]
@@ -339,7 +345,7 @@ flowchart TD
     FlipSign --> CheckZero
     
     CheckZero -->|Yes| ZeroCase[Use handleZeroValue helper]
-    CheckZero -->|No| CalcExp[Calculate Exponent using logarithms]
+    CheckZero -->|No| CalcExp[Calculate Exponent<br/>calculateExponent delegate]
     
     CalcExp --> CheckExp{Exponent > 8?}
     CheckExp -->|Yes| LimitExp[Limit to 8, Adjust Precision]
@@ -347,30 +353,30 @@ flowchart TD
     LimitExp --> CheckExpOutput
     
     CheckExpOutput -->|Yes| ReturnExp[Return exponent value]
-    CheckExpOutput -->|No| CalcValue[Calculate value using optimized lookup<br/>Includes bits conversion if needed]
+    CheckExpOutput -->|No| CalcValue[Calculate value<br/>calculateOptimizedValue]
     
-    CalcValue --> Round[Apply Rounding with power of 10]
-    Round --> CheckOverflow{Value >= ceil & e < 8?}
-    CheckOverflow -->|Yes| Increment[Set value=1, increment exponent]
+    CalcValue --> Round[Apply Rounding<br/>applyRounding delegate]
+    Round --> CheckOverflow{Value = ceil<br/>Auto-increment?}
+    CheckOverflow -->|Yes| Increment[Set value=1,<br/>increment exponent]
     CheckOverflow -->|No| CheckPrecision{Precision > 0?}
     Increment --> CheckPrecision
     
-    CheckPrecision -->|Yes| ApplyPrecision[Apply precision handling<br/>Handle scientific notation]
-    CheckPrecision -->|No| GetSymbol[Lookup symbol from table]
+    CheckPrecision -->|Yes| ApplyPrecision[Apply precision<br/>applyPrecisionHandling]
+    CheckPrecision -->|No| GetSymbol[Resolve symbol<br/>resolveSymbol delegate]
     ApplyPrecision --> GetSymbol
     
     GetSymbol --> RestoreSign{Was negative?}
-    RestoreSign -->|Yes| ApplyNegative[Apply negative sign to value]
+    RestoreSign -->|Yes| ApplyNegative[Negate value]
     RestoreSign -->|No| CheckCustomSymbols{Custom symbols?}
     ApplyNegative --> CheckCustomSymbols
     
     CheckCustomSymbols -->|Yes| ApplySymbols[Apply custom symbols]
-    CheckCustomSymbols -->|No| FormatNumber[Apply number formatting<br/>locale, separator, padding]
+    CheckCustomSymbols -->|No| FormatNumber[Apply number formatting<br/>locale/separator/padding]
     ApplySymbols --> FormatNumber
     
     FormatNumber --> CheckFullForm{Full form enabled?}
     CheckFullForm -->|Yes| ExpandUnit[Use full unit names]
-    CheckFullForm -->|No| GenerateOutput[Generate output based on format]
+    CheckFullForm -->|No| GenerateOutput[Generate output by type]
     ExpandUnit --> GenerateOutput
     
     ZeroCase --> GenerateOutput
@@ -431,6 +437,74 @@ Creates a partially applied function with preset options.
 - `options` (Object): Default configuration
 
 **Returns:** Function
+
+### Delegate Functions
+
+The library uses a pipeline of delegate functions to maintain a single `filesize()` orchestrator. This follows the **Single Responsibility Principle** — each delegate handles one concern.
+
+#### `calculateExponent(num, e, exponent, isDecimal, precision)`
+
+Calculates the exponent from the input value using `Math.log()`. Handles clamping (max 8), zero floor, and precision adjustment when exponent exceeds bounds.
+
+**Key behavior:**
+- Auto-calculation (`e === -1` or `isNaN(e)`): uses logarithmic formula
+- Clamps to `[0, 8]` range
+- Adjusts precision count when `e > 8` (ensures meaningful digits for beyond-YiB values)
+
+#### `applyRounding(val, ceil, e, round, roundingFunc, autoExponent)`
+
+Applies rounding via a power-of-10 scale factor and handles auto-increment ceiling.
+
+**Key behavior:**
+- Scales value by `10^round`, rounds, then divides back
+- Auto-increments exponent when rounded value equals `ceil` (only in auto mode)
+- Returns: `{ value, e }`
+
+#### `resolveSymbol(actualStandard, bits, e, isDecimal)`
+
+Resolves the unit symbol from the symbol table. Handles SI special case where exponent 1 always uses `kB`/`kbit` regardless of standard.
+
+**Returns:** `string` — resolved symbol
+
+#### `decorateResult(result, neg, symbols, locale, localeOptions, separator, pad, round, full, fullforms, actualStandard, e, bits)`
+
+Mutates the `result` array in-place. Applies negation, custom symbol overrides, locale/separator/padding formatting, and full form expansion.
+
+**Mutations:**
+- `result[0]` → negated value + formatted number
+- `result[1]` → potentially customized symbol + full unit name
+
+#### `formatOutput(result, e, u, output, spacer)`
+
+Dispatches the formatted result array into the requested output type. Handles `ARRAY`, `OBJECT`, and `STRING` (exponent is excluded — handled via early return in `filesize()`).
+
+**Key distinction:** `u` holds the **original** symbol before custom overrides; `result[1]` holds the **possibly overridden** symbol. The `OBJECT` output uses both:
+- `symbol`: `result[1]` — what appears in string/array output
+- `unit`: `u` — the base unit before customization
+
+#### `applyPrecisionHandling(value, precision, e, num, isDecimal, bits, ceil, roundingFunc, round, exponent)`
+
+Handles significant digit formatting via `Number.prototype.toPrecision()`. Corrects scientific notation by recalculating with incremented exponent.
+
+**Key behavior:**
+- `toPrecision()` can produce strings like `"1e+21"` — if detected and `e < 8`, recalculates with `e + 1`
+- Only auto-increments in auto-exponent mode
+
+#### `applyNumberFormatting(value, locale, localeOptions, separator, pad, round)`
+
+Applies locale-based formatting (`toLocaleString()`), custom decimal separator replacement, and zero-padding. Separators and decimals are resolved via the padding separator heuristic (skips leading minus sign for negative numbers).
+
+#### `calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent)`
+
+Divides by pre-computed power table. For bits mode, multiplies by 8 and auto-increments if result exceeds `ceil` (only in auto-exponent mode).
+
+#### `handleZeroValue(precision, actualStandard, bits, symbols, full, fullforms, output, spacer, symbol?)`
+
+Fast-path handling for zero input. Generates `0` (or `0.toPrecision(n)`) with appropriate base unit symbol and output formatting.
+
+#### `getBaseConfiguration(standard, base)`
+
+Cached lookup returning `{ isDecimal, ceil, actualStandard }`. Supports `"si"`, `"iec"`, `"jedec"` constants and base override `2`.
 
 ### Configuration Options
 

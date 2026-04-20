@@ -137,7 +137,12 @@ function handleZeroValue(
 	spacer,
 	symbol,
 ) {
-	const value = precision > 0 ? (0).toPrecision(precision) : 0;
+	let value;
+	if (precision > 0) {
+		value = (0).toPrecision(precision);
+	} else {
+		value = 0;
+	}
 
 	if (output === EXPONENT) {
 		return 0;
@@ -157,7 +162,16 @@ function handleZeroValue(
 
 	// Apply full form
 	if (full) {
-		symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+		if (fullforms[0]) {
+			symbol = fullforms[0];
+		} else {
+			symbol = STRINGS.fullform[actualStandard][0];
+			if (bits) {
+				symbol += BIT;
+			} else {
+				symbol += BYTE;
+			}
+		}
 	}
 
 	// Return in requested format
@@ -183,7 +197,12 @@ function handleZeroValue(
  * @returns {Object} Object with result and e properties
  */
 function calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
-	const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
+	let d;
+	if (isDecimal) {
+		d = DECIMAL_POWERS[e];
+	} else {
+		d = BINARY_POWERS[e];
+	}
 	let result = num / d;
 
 	if (bits) {
@@ -224,6 +243,10 @@ function applyPrecisionHandling(
 	round,
 	exponent,
 ) {
+	if (typeof value === "string") {
+		value = parseFloat(value);
+	}
+
 	let result = value.toPrecision(precision);
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
@@ -232,10 +255,19 @@ function applyPrecisionHandling(
 	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-		const p = round > 0 ? Math.pow(10, round) : 1;
-		result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(
-			precision,
-		);
+		let p;
+		if (round > 0) {
+			p = Math.pow(10, round);
+		} else {
+			p = 1;
+		}
+		let computed;
+		if (p === 1) {
+			computed = roundingFunc(valueResult);
+		} else {
+			computed = roundingFunc(valueResult * p) / p;
+		}
+		result = computed.toPrecision(precision);
 	}
 
 	return { value: result, e };
@@ -277,6 +309,198 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
 	}
 
 	return result;
+}
+
+/**
+ * Calculates exponent from the input value using pre-computed log values and clamps to supported range
+ * Also adjusts precision when exponent exceeds the lookup table bounds
+ * @param {number} num - Input file size in bytes
+ * @param {number} e - Current exponent value
+ * @param {number} exponent - Original user-provided exponent option (-1 for auto)
+ * @param {boolean} isDecimal - Whether to use decimal (SI) base
+ * @param {number} precision - Current precision value (modified when e > 8)
+ * @returns {Object} Object with computed e value and possibly adjusted precision
+ */
+function calculateExponent(num, e, exponent, isDecimal, precision) {
+	if (e === -1 || isNaN(e)) {
+		if (isDecimal) {
+			e = Math.floor(Math.log(num) / LOG_10_1000);
+		} else {
+			e = Math.floor(Math.log(num) / LOG_2_1024);
+		}
+		if (e < 0) {
+			e = 0;
+		}
+	}
+
+	if (e > 8) {
+		if (precision > 0) {
+			precision += 8 - e;
+		}
+		return { e: 8, precision };
+	}
+
+	return { e, precision };
+}
+
+/**
+ * Applies rounding to the raw calculated value and handles auto-increment ceiling
+ * @param {number} val - Raw value before rounding
+ * @param {number} ceil - Ceiling threshold (1000 for SI, 1024 for IEC)
+ * @param {number} e - Current exponent value
+ * @param {number} round - Number of decimal places
+ * @param {Function} roundingFunc - Rounding method (Math.round, Math.floor, Math.ceil)
+ * @param {boolean} autoExponent - Whether exponent is auto-calculated (-1 or NaN)
+ * @returns {Object} Object with rounded value and possibly incremented exponent
+ */
+function applyRounding(val, ceil, e, round, roundingFunc, autoExponent) {
+	let p;
+	if (e > 0 && round > 0) {
+		p = Math.pow(10, round);
+	} else {
+		p = 1;
+	}
+	let r;
+	if (p === 1) {
+		r = roundingFunc(val);
+	} else {
+		r = roundingFunc(val * p) / p;
+	}
+
+	if (r === ceil && e < 8 && autoExponent) {
+		r = 1;
+		e++;
+	}
+
+	return { value: r, e };
+}
+
+/**
+ * Resolves the unit symbol for the given standard, bits mode, and exponent
+ * Handles SI standard special case where exponent 1 always uses "kB" or "kbit"
+ * @param {string} actualStandard - The resolved standard (iec, jedec)
+ * @param {boolean} bits - Whether formatting bit values
+ * @param {number} e - Current exponent index
+ * @param {boolean} isDecimal - Whether using decimal (SI) base
+ * @returns {string} The resolved unit symbol string
+ */
+function resolveSymbol(actualStandard, bits, e, isDecimal) {
+	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
+	let result;
+	if (isDecimal && e === 1) {
+		if (bits) {
+			result = SI_KBIT;
+		} else {
+			result = SI_KBYTE;
+		}
+	} else {
+		result = symbolTable[e];
+	}
+	return result;
+}
+
+/**
+ * Decorates the result: applies negation, custom symbols, number formatting, and full form names
+ * Mutates the result array in-place for both value (index 0) and symbol (index 1)
+ * @param {Array} result - Result array with numeric value at [0] and string symbol at [1]
+ * @param {boolean} neg - Whether the original input was negative
+ * @param {Object} symbols - Custom symbol override map
+ * @param {string|boolean} locale - Locale string for formatting
+ * @param {Object} localeOptions - Additional locale formatting options
+ * @param {string} separator - Custom decimal separator
+ * @param {boolean} pad - Whether zero-pad decimals
+ * @param {number} round - Target decimal count for padding
+ * @param {boolean} full - Whether to use full unit names
+ * @param {Array} fullforms - Custom full unit name overrides
+ * @param {string} actualStandard - Unit standard for full form lookup
+ * @param {number} e - Current exponent index
+ * @param {boolean} bits - Whether formatting bit values
+ * @returns {void} Mutates result array in place
+ */
+function decorateResult(
+	result,
+	neg,
+	symbols,
+	locale,
+	localeOptions,
+	separator,
+	pad,
+	round,
+	full,
+	fullforms,
+	actualStandard,
+	e,
+	bits,
+) {
+	if (neg) {
+		result[0] = -result[0];
+	}
+
+	if (symbols[result[1]]) {
+		result[1] = symbols[result[1]];
+	}
+
+	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
+
+	if (full) {
+		let unit;
+		if (bits) {
+			unit = BIT;
+		} else {
+			unit = BYTE;
+		}
+		let val;
+		if (typeof result[0] === "string") {
+			val = parseFloat(result[0]);
+		} else {
+			val = result[0];
+		}
+		// Determine singular/plural suffix
+		let suffix;
+		if (val === 1) {
+			suffix = EMPTY;
+		} else {
+			suffix = S;
+		}
+		// Determine symbol — custom fullforms are the complete name, defaults get unit+suffix
+		if (fullforms[e]) {
+			result[1] = fullforms[e];
+		} else {
+			result[1] = STRINGS.fullform[actualStandard][e] + unit + suffix;
+		}
+	}
+}
+
+/**
+ * Formats the computed result array into the requested output type
+ * @param {Array} result - Result array with formatted value at [0] and symbol at [1]
+ * @param {number} e - Current exponent
+ * @param {string} u - Original resolved symbol (before custom override)
+ * @param {string} output - Output type (ARRAY, OBJECT, STRING)
+ * @param {string} spacer - String separator between value and unit
+ * @returns {string|Array|Object|number} Formatted result in requested type
+ */
+function formatOutput(result, e, u, output, spacer) {
+	if (output === ARRAY) {
+		return result;
+	}
+
+	if (output === OBJECT) {
+		return {
+			value: result[0],
+			symbol: result[1],
+			exponent: e,
+			unit: u,
+		};
+	}
+
+	let formatted;
+	if (spacer === SPACE) {
+		formatted = `${result[0]} ${result[1]}`;
+	} else {
+		formatted = result.join(spacer);
+	}
+	return formatted;
 }/**
  * Converts a file size in bytes to a human-readable string with appropriate units
  * @param {number|string|bigint} arg - The file size in bytes to convert
@@ -326,32 +550,39 @@ function filesize(
 	} = {},
 ) {
 	let e = exponent,
-		num = Number(arg),
+		num,
 		result = [],
 		val = 0,
 		u = EMPTY;
 
-	// Optimized base & standard configuration lookup
+	if (typeof arg === "bigint") {
+		num = Number(arg);
+	} else {
+		num = Number(arg);
+
+		if (isNaN(arg)) {
+			throw new TypeError(INVALID_NUMBER);
+		}
+
+		if (!isFinite(num)) {
+			throw new TypeError(INVALID_NUMBER);
+		}
+	}
+
 	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
 
 	const full = fullform === true,
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
-	if (typeof arg !== "bigint" && isNaN(arg)) {
-		throw new TypeError(INVALID_NUMBER);
-	}
-
 	if (typeof roundingFunc !== FUNCTION) {
 		throw new TypeError(INVALID_ROUND);
 	}
 
-	// Flipping a negative number to determine the size
 	if (neg) {
 		num = -num;
 	}
 
-	// Fast path for zero
 	if (num === 0) {
 		return handleZeroValue(
 			precision,
@@ -365,31 +596,21 @@ function filesize(
 		);
 	}
 
-	// Optimized exponent calculation using pre-computed log values
-	if (e === -1 || isNaN(e)) {
-		e = isDecimal
-			? Math.floor(Math.log(num) / LOG_10_1000)
-			: Math.floor(Math.log(num) / LOG_2_1024);
-		if (e < 0) {
-			e = 0;
-		}
-	}
-
-	// Exceeding supported length, time to reduce & multiply
-	if (e > 8) {
-		if (precision > 0) {
-			precision += 8 - e;
-		}
-		e = 8;
-	}
-
+	// Exponent calculation + clamp + precision adjustment
+	const { e: calculatedE, precision: precisionAdjusted } = calculateExponent(
+		num,
+		e,
+		exponent,
+		isDecimal,
+		precision,
+	);
+	e = calculatedE;
 	const autoExponent = exponent === -1 || isNaN(exponent);
 
 	if (output === EXPONENT) {
 		return e;
 	}
 
-	// Calculate value with optimized lookup and bits handling
 	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
 		num,
 		e,
@@ -401,20 +622,16 @@ function filesize(
 	val = valueResult;
 	e = valueExponent;
 
-	// Optimize rounding calculation
-	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
-	result[0] = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
+	// Rounding + auto-increment ceiling
+	const rounded = applyRounding(val, ceil, e, round, roundingFunc, autoExponent);
+	result[0] = rounded.value;
+	e = rounded.e;
 
-	if (result[0] === ceil && e < 8 && autoExponent) {
-		result[0] = 1;
-		e++;
-	}
-
-	// Apply precision handling
-	if (precision > 0) {
+	// Precision handling
+	if (precisionAdjusted > 0) {
 		const precisionResult = applyPrecisionHandling(
 			result[0],
-			precision,
+			precisionAdjusted,
 			e,
 			num,
 			isDecimal,
@@ -428,44 +645,26 @@ function filesize(
 		e = precisionResult.e;
 	}
 
-	// Cache symbol lookup
-	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
-	u = result[1] = isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
+	u = resolveSymbol(actualStandard, bits, e, isDecimal);
+	result[1] = u;
 
-	// Decorating a 'diff'
-	if (neg) {
-		result[0] = -result[0];
-	}
+	decorateResult(
+		result,
+		neg,
+		symbols,
+		locale,
+		localeOptions,
+		separator,
+		pad,
+		round,
+		full,
+		fullforms,
+		actualStandard,
+		e,
+		bits,
+	);
 
-	// Applying custom symbol
-	if (symbols[result[1]]) {
-		result[1] = symbols[result[1]];
-	}
-
-	// Apply locale, separator, and padding formatting
-	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
-
-	if (full) {
-		result[1] =
-			fullforms[e] ||
-			STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
-	}
-
-	// Optimized return logic
-	if (output === ARRAY) {
-		return result;
-	}
-
-	if (output === OBJECT) {
-		return {
-			value: result[0],
-			symbol: result[1],
-			exponent: e,
-			unit: u,
-		};
-	}
-
-	return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
+	return formatOutput(result, e, u, output, spacer);
 }
 
 /**
@@ -500,18 +699,24 @@ function partial({
 	base = -1,
 	round = 2,
 	locale = EMPTY,
-	localeOptions = {},
 	separator = EMPTY,
 	spacer = SPACE,
-	symbols = {},
 	standard = EMPTY,
 	output = STRING,
 	fullform = false,
-	fullforms = [],
 	exponent = -1,
 	roundingMethod = ROUND,
 	precision = 0,
+	localeOptions = {},
+	symbols = {},
+	fullforms = [],
 } = {}) {
+	const cloned = {
+		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
+		symbols: JSON.parse(JSON.stringify(symbols)),
+		fullforms: JSON.parse(JSON.stringify(fullforms)),
+	};
+
 	return (arg) =>
 		filesize(arg, {
 			bits,
@@ -519,14 +724,14 @@ function partial({
 			base,
 			round,
 			locale,
-			localeOptions,
+			localeOptions: cloned.localeOptions,
 			separator,
 			spacer,
-			symbols,
+			symbols: cloned.symbols,
 			standard,
 			output,
 			fullform,
-			fullforms,
+			fullforms: cloned.fullforms,
 			exponent,
 			roundingMethod,
 			precision,

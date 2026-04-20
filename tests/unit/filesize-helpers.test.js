@@ -11,6 +11,7 @@ import {
 	calculateOptimizedValue,
 	applyPrecisionHandling,
 	applyNumberFormatting,
+	applyRounding,
 } from "../../src/helpers.js";
 
 describe("Helper Functions", () => {
@@ -243,5 +244,75 @@ describe("Helper Functions", () => {
 			const result = applyNumberFormatting(1.5, "", {}, "", true, 0);
 			assert.strictEqual(result, 1.5);
 		});
+
+		it("should handle string value input without crashing", () => {
+			const result = applyNumberFormatting("1.5", "en-US", {}, "", false, 2);
+			assert.strictEqual(result, "1.5");
+		});
+	});
+
+	describe("applyRounding ceil boundary", () => {
+		it("should trigger auto-increment when result equals ceil", () => {
+			const result = applyRounding(1000, 1000, 0, 0, Math.round, true);
+			assert.deepStrictEqual(result, { value: 1, e: 1 });
+		});
+	});
+});
+
+describe("handleZeroValue with explicit symbol", () => {
+	it("should use provided symbol for string output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, false, [], "string", " ", "CustomB");
+		assert.strictEqual(result, "0 CustomB");
+	});
+
+	it("should use provided symbol for array output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, false, [], "array", " ", "CustomB");
+		assert.deepStrictEqual(result, [0, "CustomB"]);
+	});
+
+	it("should use provided symbol for object output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, false, [], "object", " ", "CustomB");
+		assert.deepStrictEqual(result, { value: 0, symbol: "CustomB", exponent: 0, unit: "CustomB" });
+	});
+
+	it("should use provided symbol for exponent output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, false, [], "exponent", " ", "CustomB");
+		assert.strictEqual(result, 0);
+	});
+});
+
+describe("applyPrecisionHandling with string value", () => {
+	it("should parse string value and apply precision", () => {
+		const result = applyPrecisionHandling("1.5", 2, 1, 1024, false, false, 1024, Math.round, 2, -1);
+		assert.deepStrictEqual(result, { value: "1.5", e: 1 });
+	});
+
+	it("should handle string from toPrecision output", () => {
+		const result = applyPrecisionHandling(
+			"1.2345",
+			3,
+			1,
+			1024,
+			false,
+			false,
+			1024,
+			Math.round,
+			2,
+			-1,
+		);
+		assert.strictEqual(typeof result.value, "string");
+		assert.strictEqual(typeof result.e, "number");
+	});
+});
+
+describe("handleZeroValue with fullform and custom fullforms", () => {
+	it("should use custom fullforms for string output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, true, ["my byte"], "string", " ");
+		assert.strictEqual(result, "0 my byte");
+	});
+
+	it("should use custom fullforms for object output", () => {
+		const result = handleZeroValue(0, "jedec", false, {}, true, ["my byte"], "object", " ");
+		assert.deepStrictEqual(result, { value: 0, symbol: "my byte", exponent: 0, unit: "my byte" });
 	});
 });
