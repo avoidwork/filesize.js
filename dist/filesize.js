@@ -290,7 +290,7 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
  * @returns {Object} Object with computed e value and possibly adjusted precision
  */
 function calculateExponent(num, e, exponent, isDecimal, precision) {
-	if (e === -1 || isNaN(exponent)) {
+	if (e === -1 || isNaN(e)) {
 		e = isDecimal
 			? Math.floor(Math.log(num) / LOG_10_1000)
 			: Math.floor(Math.log(num) / LOG_2_1024);
@@ -303,7 +303,7 @@ function calculateExponent(num, e, exponent, isDecimal, precision) {
 		if (precision > 0) {
 			precision += 8 - e;
 		}
-		e = 8;
+		return { e: 8, precision };
 	}
 
 	return { e, precision };

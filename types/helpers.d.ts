@@ -229,7 +229,7 @@ export function decorateResult(
  * @param result - Result array with formatted value at [0] and symbol at [1]
  * @param e - Current exponent
  * @param u - Original resolved symbol (before custom override)
- * @param output - Output type (ARRAY, OBJECT, STRING, EXPONENT)
+ * @param output - Output type (ARRAY, OBJECT, STRING)
  * @param spacer - String separator between value and unit
  * @returns Formatted result in requested type
  */
