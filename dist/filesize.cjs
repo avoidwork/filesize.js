@@ -393,9 +393,10 @@ function decorateResult(
 	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
 	if (full) {
+		const unit = bits ? BIT : BYTE;
+		const val = typeof result[0] === "string" ? parseFloat(result[0]) : result[0];
 		result[1] =
-			fullforms[e] ||
-			STRINGS.fullform[actualStandard][e] + (bits ? BIT : BYTE) + (result[0] === 1 ? EMPTY : S);
+			fullforms[e] || STRINGS.fullform[actualStandard][e] + unit + (val === 1 ? EMPTY : S);
 	}
 }
 
