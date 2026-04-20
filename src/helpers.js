@@ -339,7 +339,7 @@ export function decorateResult(
  * @param {Array} result - Result array with formatted value at [0] and symbol at [1]
  * @param {number} e - Current exponent
  * @param {string} u - Original resolved symbol (before custom override)
- * @param {number} output - Output type (ARRAY, OBJECT, STRING)
+ * @param {string} output - Output type (ARRAY, OBJECT, STRING)
  * @param {string} spacer - String separator between value and unit
  * @returns {string|Array|Object|number} Formatted result in requested type
  */

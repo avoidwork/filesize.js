@@ -193,8 +193,9 @@ export function resolveSymbol(
 
 /**
  * Decorates the result: applies negation, custom symbols, number formatting, and full form names
- * Mutates the result array in-place for both value (index 0) and symbol (index 1)
- * @param result - Result array with numeric value at [0] and string symbol at [1]
+ * Mutates the result array in-place; result[0] becomes string | number via applyNumberFormatting(),
+ * result[1] may be updated for custom symbols or full form names
+ * @param result - Result array with value at [0] (string | number) and symbol at [1] (string)
  * @param neg - Whether the original input was negative
  * @param symbols - Custom symbol override map
  * @param locale - Locale string for formatting
@@ -209,7 +210,7 @@ export function resolveSymbol(
  * @param bits - Whether formatting bit values
  */
 export function decorateResult(
-  result: number[],
+  result: (number | string)[],
   neg: boolean,
   symbols: Record<string, string>,
   locale: string | boolean,
@@ -226,7 +227,7 @@ export function decorateResult(
 
 /**
  * Formats the computed result array into the requested output type
- * @param result - Result array with formatted value at [0] and symbol at [1]
+ * @param result - Result array with formatted value at [0] (string | number) and symbol at [1] (string)
  * @param e - Current exponent
  * @param u - Original resolved symbol (before custom override)
  * @param output - Output type (ARRAY, OBJECT, STRING)
@@ -234,9 +235,9 @@ export function decorateResult(
  * @returns Formatted result in requested type
  */
 export function formatOutput(
-  result: number[],
+  result: (string | number)[],
   e: number,
   u: string,
   output: string,
   spacer: string
-): string | number[] | { value: number | string; symbol: string; exponent: number; unit: string } | number;
+): string | (string | number)[] | { value: string | number; symbol: string; exponent: number; unit: string };
