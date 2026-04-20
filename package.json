@@ -1,7 +1,7 @@
 {
   "name": "filesize",
   "description": "Lightweight, zero-dependency JavaScript utility to convert bytes to human-readable strings with localization support",
-  "version": "11.0.15",
+  "version": "11.0.16",
   "homepage": "https://filesizejs.com",
   "author": "Jason Mulligan <jason.mulligan@avoidwork.com>",
   "repository": {
