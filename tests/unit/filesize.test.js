@@ -234,6 +234,14 @@ describe("filesize", () => {
 		it("should handle bits fullform plural", () => {
 			assert.strictEqual(filesize(0.25, { bits: true, fullform: true }), "2 bits");
 		});
+
+		it("should handle fullform with precision (string value path)", () => {
+			assert.strictEqual(
+				filesize(1058223158, { standard: "iec", precision: 3, fullform: true }),
+				"0.990 gibibytes",
+			);
+			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
+		});
 	});
 
 	describe("Base and exponent options", () => {

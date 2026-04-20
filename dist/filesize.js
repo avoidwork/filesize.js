@@ -137,7 +137,12 @@ function handleZeroValue(
 	spacer,
 	symbol,
 ) {
-	const value = precision > 0 ? (0).toPrecision(precision) : 0;
+	let value;
+	if (precision > 0) {
+		value = (0).toPrecision(precision);
+	} else {
+		value = 0;
+	}
 
 	if (output === EXPONENT) {
 		return 0;
@@ -157,7 +162,16 @@ function handleZeroValue(
 
 	// Apply full form
 	if (full) {
-		symbol = fullforms[0] || STRINGS.fullform[actualStandard][0] + (bits ? BIT : BYTE);
+		if (fullforms[0]) {
+			symbol = fullforms[0];
+		} else {
+			symbol = STRINGS.fullform[actualStandard][0];
+			if (bits) {
+				symbol += BIT;
+			} else {
+				symbol += BYTE;
+			}
+		}
 	}
 
 	// Return in requested format
@@ -183,7 +197,12 @@ function handleZeroValue(
  * @returns {Object} Object with result and e properties
  */
 function calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
-	const d = isDecimal ? DECIMAL_POWERS[e] : BINARY_POWERS[e];
+	let d;
+	if (isDecimal) {
+		d = DECIMAL_POWERS[e];
+	} else {
+		d = BINARY_POWERS[e];
+	}
 	let result = num / d;
 
 	if (bits) {
@@ -236,10 +255,19 @@ function applyPrecisionHandling(
 	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-		const p = round > 0 ? Math.pow(10, round) : 1;
-		result = (p === 1 ? roundingFunc(valueResult) : roundingFunc(valueResult * p) / p).toPrecision(
-			precision,
-		);
+		let p;
+		if (round > 0) {
+			p = Math.pow(10, round);
+		} else {
+			p = 1;
+		}
+		let computed;
+		if (p === 1) {
+			computed = roundingFunc(valueResult);
+		} else {
+			computed = roundingFunc(valueResult * p) / p;
+		}
+		result = computed.toPrecision(precision);
 	}
 
 	return { value: result, e };
@@ -295,9 +323,11 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
  */
 function calculateExponent(num, e, exponent, isDecimal, precision) {
 	if (e === -1 || isNaN(e)) {
-		e = isDecimal
-			? Math.floor(Math.log(num) / LOG_10_1000)
-			: Math.floor(Math.log(num) / LOG_2_1024);
+		if (isDecimal) {
+			e = Math.floor(Math.log(num) / LOG_10_1000);
+		} else {
+			e = Math.floor(Math.log(num) / LOG_2_1024);
+		}
 		if (e < 0) {
 			e = 0;
 		}
@@ -324,8 +354,18 @@ function calculateExponent(num, e, exponent, isDecimal, precision) {
  * @returns {Object} Object with rounded value and possibly incremented exponent
  */
 function applyRounding(val, ceil, e, round, roundingFunc, autoExponent) {
-	const p = e > 0 && round > 0 ? Math.pow(10, round) : 1;
-	let r = p === 1 ? roundingFunc(val) : roundingFunc(val * p) / p;
+	let p;
+	if (e > 0 && round > 0) {
+		p = Math.pow(10, round);
+	} else {
+		p = 1;
+	}
+	let r;
+	if (p === 1) {
+		r = roundingFunc(val);
+	} else {
+		r = roundingFunc(val * p) / p;
+	}
 
 	if (r === ceil && e < 8 && autoExponent) {
 		r = 1;
@@ -346,7 +386,17 @@ function applyRounding(val, ceil, e, round, roundingFunc, autoExponent) {
  */
 function resolveSymbol(actualStandard, bits, e, isDecimal) {
 	const symbolTable = STRINGS.symbol[actualStandard][bits ? BITS : BYTES];
-	return isDecimal && e === 1 ? (bits ? SI_KBIT : SI_KBYTE) : symbolTable[e];
+	let result;
+	if (isDecimal && e === 1) {
+		if (bits) {
+			result = SI_KBIT;
+		} else {
+			result = SI_KBYTE;
+		}
+	} else {
+		result = symbolTable[e];
+	}
+	return result;
 }
 
 /**
@@ -393,10 +443,31 @@ function decorateResult(
 	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
 
 	if (full) {
-		const unit = bits ? BIT : BYTE;
-		const val = typeof result[0] === "string" ? parseFloat(result[0]) : result[0];
-		result[1] =
-			fullforms[e] || STRINGS.fullform[actualStandard][e] + unit + (val === 1 ? EMPTY : S);
+		let unit;
+		if (bits) {
+			unit = BIT;
+		} else {
+			unit = BYTE;
+		}
+		let val;
+		if (typeof result[0] === "string") {
+			val = parseFloat(result[0]);
+		} else {
+			val = result[0];
+		}
+		// Determine singular/plural suffix
+		let suffix;
+		if (val === 1) {
+			suffix = EMPTY;
+		} else {
+			suffix = S;
+		}
+		// Determine symbol — custom fullforms are the complete name, defaults get unit+suffix
+		if (fullforms[e]) {
+			result[1] = fullforms[e];
+		} else {
+			result[1] = STRINGS.fullform[actualStandard][e] + unit + suffix;
+		}
 	}
 }
 
@@ -423,7 +494,13 @@ function formatOutput(result, e, u, output, spacer) {
 		};
 	}
 
-	return spacer === SPACE ? `${result[0]} ${result[1]}` : result.join(spacer);
+	let formatted;
+	if (spacer === SPACE) {
+		formatted = `${result[0]} ${result[1]}`;
+	} else {
+		formatted = result.join(spacer);
+	}
+	return formatted;
 }/**
  * Converts a file size in bytes to a human-readable string with appropriate units
  * @param {number|string|bigint} arg - The file size in bytes to convert
