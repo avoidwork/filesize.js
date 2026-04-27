@@ -215,7 +215,7 @@ filesize.js/
 ## Browser Usage
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/filesize@11/dist/filesize.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/filesize@11.0.16/dist/filesize.js"></script>
 <script>
   filesize(1024); // "1.02 kB"
 </script>
