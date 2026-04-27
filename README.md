@@ -212,15 +212,6 @@ filesize.js/
 2. Avoid locale formatting in performance-critical code
 3. Use `object` output for fastest structured data access
 
-## Browser Usage
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/filesize@11.0.16/dist/filesize.js"></script>
-<script>
-  filesize(1024); // "1.02 kB"
-</script>
-```
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guidelines](https://github.com/avoidwork/filesize.js/blob/master/CONTRIBUTING.md) for details.
