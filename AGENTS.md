@@ -341,6 +341,10 @@ When auditing or modifying AGENTS.md (or any file):
 3. Push the feature branch and open a PR with `gh pr create --base master`.
 4. Never commit or push directly to `main` or `master`.
 
+### 7.4 Pull Request Templates
+
+If a `.github/PULL_REQUEST_TEMPLATE.md` file exists, it MUST be used when creating PRs. Fill out every section — do not leave any section blank. If a section does not apply, write `N/A` rather than skipping it.
+
 ---
 
 ## 8. Operational Rules
