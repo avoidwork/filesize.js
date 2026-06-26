@@ -11,6 +11,7 @@ Thank you for your interest in contributing to filesize.js! This document outlin
 - [Code Style](#code-style)
 - [Commit Messages](#commit-messages)
 - [Pull Request Process](#pull-request-process)
+- [Code Review](#code-review)
 - [License](#license)
 
 ## Getting Started
@@ -40,6 +41,8 @@ When creating a new issue, include:
 - Expected vs. actual behavior
 - Environment details (Node.js version, OS, browser)
 - Code samples if applicable
+
+**Use the issue templates** provided in `.github/ISSUE_TEMPLATE/` for bug reports and feature requests.
 
 ## Development Workflow
 
@@ -244,6 +247,32 @@ test: add coverage for NaN exponent edge case
 - [ ] No linting errors
 - [ ] Documentation updated (if applicable)
 - [ ] Build successful (`npm run build`)
+
+## Code Review
+
+All pull requests require at least one review before merging.
+
+### Review Process
+
+1. **Automated checks**: CI must pass (tests, lint, build)
+2. **Manual review**: At least one maintainer reviews the changes
+3. **Feedback**: Address any review comments
+4. **Approval**: Once approved, the PR can be merged
+
+### What Reviewers Look For
+
+- **Correctness**: Does the code work as intended?
+- **Coverage**: Are all edge cases tested?
+- **Performance**: Does the change impact performance?
+- **Style**: Does the code follow project conventions?
+- **Documentation**: Is the code documented?
+
+### Review Tips
+
+- Keep PRs small and focused
+- Provide context in the PR description
+- Respond to review comments promptly
+- Be open to feedback and suggestions
 
 ## License
 

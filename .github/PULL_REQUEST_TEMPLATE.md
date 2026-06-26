@@ -25,3 +25,8 @@
 - [ ] No hardcoded secrets or credentials introduced
 - [ ] Zero external dependencies added
 - [ ] ES Modules only (no CommonJS in src/)
+- [ ] JSDoc comments added/updated
+- [ ] CHANGELOG.md updated (if applicable)
+
+## Screenshots (if applicable)
+<!-- Add screenshots or GIFs for UI changes -->
