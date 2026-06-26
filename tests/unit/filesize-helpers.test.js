@@ -316,3 +316,38 @@ describe("handleZeroValue with fullform and custom fullforms", () => {
 		assert.deepStrictEqual(result, { value: 0, symbol: "my byte", exponent: 0, unit: "my byte" });
 	});
 });
+
+describe("applyNumberFormatting padding with separator bug fix", () => {
+	it("should truncate excess decimal places when separator and pad are both set", () => {
+		// applyNumberFormatting only replaces the decimal separator and pads —
+		// it does NOT add grouping separators to the integer part.
+		const result = applyNumberFormatting(1234.567, "", {}, ",", true, 2);
+		assert.strictEqual(result, "1234,57");
+	});
+
+	it("should truncate multiple excess decimal places with separator and pad", () => {
+		const result = applyNumberFormatting(1234.5678, "", {}, ",", true, 2);
+		assert.strictEqual(result, "1234,57");
+	});
+
+	it("should pad with fewer decimals than round when separator and pad are set", () => {
+		const result = applyNumberFormatting(1234.5, "", {}, ",", true, 2);
+		assert.strictEqual(result, "1234,50");
+	});
+
+	it("should not change value when decimals match round with separator and pad", () => {
+		const result = applyNumberFormatting(1234.56, "", {}, ",", true, 2);
+		assert.strictEqual(result, "1234,56");
+	});
+
+	it("should still pad without separator (existing behavior preserved)", () => {
+		const result = applyNumberFormatting(1234.5, "", {}, "", true, 2);
+		assert.strictEqual(result, "1234.50");
+	});
+
+	it("should still replace separator without pad (existing behavior preserved)", () => {
+		// Without pad, the function only replaces the decimal separator — no rounding.
+		const result = applyNumberFormatting(1234.567, "", {}, ",", false, 2);
+		assert.strictEqual(result, "1234,567");
+	});
+});

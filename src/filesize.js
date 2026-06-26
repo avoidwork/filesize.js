@@ -79,7 +79,7 @@ export function filesize(
 	} else {
 		num = Number(arg);
 
-		if (isNaN(arg)) {
+		if (isNaN(num)) {
 			throw new TypeError(INVALID_NUMBER);
 		}
 
@@ -231,9 +231,18 @@ export function partial({
 	fullforms = [],
 } = {}) {
 	const cloned = {
-		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
-		symbols: JSON.parse(JSON.stringify(symbols)),
-		fullforms: JSON.parse(JSON.stringify(fullforms)),
+		localeOptions:
+			typeof structuredClone === "function"
+				? structuredClone(localeOptions)
+				: JSON.parse(JSON.stringify(localeOptions)),
+		symbols:
+			typeof structuredClone === "function"
+				? structuredClone(symbols)
+				: JSON.parse(JSON.stringify(symbols)),
+		fullforms:
+			typeof structuredClone === "function"
+				? structuredClone(fullforms)
+				: JSON.parse(JSON.stringify(fullforms)),
 	};
 
 	return (arg) =>

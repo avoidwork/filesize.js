@@ -238,6 +238,12 @@ export function applyNumberFormatting(value, locale, localeOptions, separator, p
 	} else if (locale.length > 0) {
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else if (separator.length > 0) {
+		// Round before separator replacement to ensure excess decimal places
+		// are truncated when pad is also set (fixes padding + separator bug).
+		if (pad && round > 0) {
+			const p = Math.pow(10, round);
+			result = Math.round(result * p) / p;
+		}
 		result = result.toString().replace(PERIOD, separator);
 	}
 
