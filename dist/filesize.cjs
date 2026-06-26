@@ -303,6 +303,12 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
 	} else if (locale.length > 0) {
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else if (separator.length > 0) {
+		// Round before separator replacement to ensure excess decimal places
+		// are truncated when pad is also set (fixes padding + separator bug).
+		if (pad && round > 0) {
+			const p = Math.pow(10, round);
+			result = Math.round(result * p) / p;
+		}
 		result = result.toString().replace(PERIOD, separator);
 	}
 
@@ -571,7 +577,7 @@ function filesize(
 	} else {
 		num = Number(arg);
 
-		if (isNaN(arg)) {
+		if (isNaN(num)) {
 			throw new TypeError(INVALID_NUMBER);
 		}
 
@@ -723,9 +729,18 @@ function partial({
 	fullforms = [],
 } = {}) {
 	const cloned = {
-		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
-		symbols: JSON.parse(JSON.stringify(symbols)),
-		fullforms: JSON.parse(JSON.stringify(fullforms)),
+		localeOptions:
+			typeof structuredClone === "function"
+				? structuredClone(localeOptions)
+				: JSON.parse(JSON.stringify(localeOptions)),
+		symbols:
+			typeof structuredClone === "function"
+				? structuredClone(symbols)
+				: JSON.parse(JSON.stringify(symbols)),
+		fullforms:
+			typeof structuredClone === "function"
+				? structuredClone(fullforms)
+				: JSON.parse(JSON.stringify(fullforms)),
 	};
 
 	return (arg) =>
