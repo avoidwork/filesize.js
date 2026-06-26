@@ -283,7 +283,15 @@ function applyPrecisionHandling(
  * @param {number} round - Round value
  * @returns {string|number} Formatted value
  */
-function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
+function applyNumberFormatting(
+	value,
+	locale,
+	localeOptions,
+	separator,
+	pad,
+	round,
+	roundingFunc,
+) {
 	let result = value;
 
 	// When padding alongside a locale, let the locale formatter emit the fixed
@@ -303,7 +311,7 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
 		// are truncated when pad is also set (fixes padding + separator bug).
 		if (pad && round > 0) {
 			const p = Math.pow(10, round);
-			result = Math.round(result * p) / p;
+			result = roundingFunc(result * p) / p;
 		}
 		result = result.toString().replace(PERIOD, separator);
 	}
@@ -442,6 +450,7 @@ function decorateResult(
 	actualStandard,
 	e,
 	bits,
+	roundingFunc,
 ) {
 	if (neg) {
 		result[0] = -result[0];
@@ -451,7 +460,15 @@ function decorateResult(
 		result[1] = symbols[result[1]];
 	}
 
-	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
+	result[0] = applyNumberFormatting(
+		result[0],
+		locale,
+		localeOptions,
+		separator,
+		pad,
+		round,
+		roundingFunc,
+	);
 
 	if (full) {
 		let unit;
@@ -673,6 +690,7 @@ function filesize(
 		actualStandard,
 		e,
 		bits,
+		roundingFunc,
 	);
 
 	return formatOutput(result, e, u, output, spacer);
