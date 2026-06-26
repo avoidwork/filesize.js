@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.17
+ * @version 11.0.18
  */
 // Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -286,26 +286,31 @@ function applyPrecisionHandling(
 function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
 	let result = value;
 
+	// When padding alongside a locale, let the locale formatter emit the fixed
+	// number of fraction digits. The manual string padding below cannot tell a
+	// locale-inserted grouping separator from the decimal separator, so it
+	// dropped digits (e.g. "1,234,500" became "1,234").
+	const localePad =
+		pad && round > 0 ? { minimumFractionDigits: round, maximumFractionDigits: round } : undefined;
+
 	// Apply locale formatting
 	if (locale === true) {
-		result = result.toLocaleString();
+		result = result.toLocaleString(undefined, localePad);
 	} else if (locale.length > 0) {
-		result = result.toLocaleString(locale, localeOptions);
+		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else if (separator.length > 0) {
 		result = result.toString().replace(PERIOD, separator);
 	}
 
-	// Apply padding
-	if (pad && round > 0) {
+	// Apply padding for the non-locale paths, where the string has a single
+	// decimal separator and no grouping is inserted.
+	if (pad && round > 0 && locale !== true && locale.length === 0) {
 		const resultStr = result.toString();
-		const x = separator || (resultStr.slice(1).match(/[.,]/g) || []).pop() || PERIOD;
+		const x = separator || PERIOD;
 		const tmp = resultStr.split(x);
 		const s = tmp[1] || EMPTY;
 
-		const l = s.length;
-		const n = round - l;
-
-		result = `${tmp[0]}${x}${s.padEnd(l + n, ZERO)}`;
+		result = `${tmp[0]}${x}${s.padEnd(round, ZERO)}`;
 	}
 
 	return result;
