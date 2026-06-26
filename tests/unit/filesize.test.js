@@ -178,6 +178,17 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(1234567, { locale: "en-US", pad: true, round: 2 }), "1.23 MB");
 			assert.strictEqual(filesize(1234567890, { locale: "en-US", pad: true, round: 2 }), "1.23 GB");
 		});
+
+		it("should keep every digit group and pad when an integer value has grouping separators", () => {
+			// en: comma grouping with no decimal in the raw value. Previously the
+			// trailing grouping comma was mistaken for the decimal separator, which
+			// dropped digit groups and skipped padding.
+			assert.strictEqual(
+				filesize(1234500e24, { locale: "en", pad: true, round: 2 }),
+				"1,234,500.00 YB",
+			);
+			assert.strictEqual(filesize(1000e24, { locale: "en", pad: true, round: 2 }), "1,000.00 YB");
+		});
 	});
 
 	describe("Custom separators and spacers", () => {
