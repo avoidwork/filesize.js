@@ -181,6 +181,7 @@ export function filesize(
 		actualStandard,
 		e,
 		bits,
+		roundingFunc,
 	);
 
 	return formatOutput(result, e, u, output, spacer);
