@@ -230,19 +230,24 @@ export function partial({
 	symbols = {},
 	fullforms = [],
 } = {}) {
+	/**
+	 * Safely clone an object using structuredClone with JSON fallback.
+	 * structuredClone can throw for functions, circular refs, etc.
+	 */
+	function safeClone(value) {
+		try {
+			return typeof structuredClone === "function"
+				? structuredClone(value)
+				: JSON.parse(JSON.stringify(value));
+		} catch {
+			return JSON.parse(JSON.stringify(value));
+		}
+	}
+
 	const cloned = {
-		localeOptions:
-			typeof structuredClone === "function"
-				? structuredClone(localeOptions)
-				: JSON.parse(JSON.stringify(localeOptions)),
-		symbols:
-			typeof structuredClone === "function"
-				? structuredClone(symbols)
-				: JSON.parse(JSON.stringify(symbols)),
-		fullforms:
-			typeof structuredClone === "function"
-				? structuredClone(fullforms)
-				: JSON.parse(JSON.stringify(fullforms)),
+		localeOptions: safeClone(localeOptions),
+		symbols: safeClone(symbols),
+		fullforms: safeClone(fullforms),
 	};
 
 	return (arg) =>
