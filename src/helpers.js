@@ -222,7 +222,15 @@ export function applyPrecisionHandling(
  * @param {number} round - Round value
  * @returns {string|number} Formatted value
  */
-export function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
+export function applyNumberFormatting(
+	value,
+	locale,
+	localeOptions,
+	separator,
+	pad,
+	round,
+	roundingFunc,
+) {
 	let result = value;
 
 	// When padding alongside a locale, let the locale formatter emit the fixed
@@ -238,6 +246,12 @@ export function applyNumberFormatting(value, locale, localeOptions, separator, p
 	} else if (locale.length > 0) {
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else if (separator.length > 0) {
+		// Round before separator replacement to ensure excess decimal places
+		// are truncated when pad is also set (fixes padding + separator bug).
+		if (pad && round > 0) {
+			const p = Math.pow(10, round);
+			result = roundingFunc(result * p) / p;
+		}
 		result = result.toString().replace(PERIOD, separator);
 	}
 
@@ -375,6 +389,7 @@ export function decorateResult(
 	actualStandard,
 	e,
 	bits,
+	roundingFunc,
 ) {
 	if (neg) {
 		result[0] = -result[0];
@@ -384,7 +399,15 @@ export function decorateResult(
 		result[1] = symbols[result[1]];
 	}
 
-	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
+	result[0] = applyNumberFormatting(
+		result[0],
+		locale,
+		localeOptions,
+		separator,
+		pad,
+		round,
+		roundingFunc,
+	);
 
 	if (full) {
 		let unit;

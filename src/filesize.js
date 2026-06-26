@@ -79,7 +79,7 @@ export function filesize(
 	} else {
 		num = Number(arg);
 
-		if (isNaN(arg)) {
+		if (isNaN(num)) {
 			throw new TypeError(INVALID_NUMBER);
 		}
 
@@ -181,6 +181,7 @@ export function filesize(
 		actualStandard,
 		e,
 		bits,
+		roundingFunc,
 	);
 
 	return formatOutput(result, e, u, output, spacer);
@@ -230,10 +231,24 @@ export function partial({
 	symbols = {},
 	fullforms = [],
 } = {}) {
+	/**
+	 * Safely clone an object using structuredClone with JSON fallback.
+	 * structuredClone can throw for functions, circular refs, etc.
+	 */
+	function safeClone(value) {
+		try {
+			return typeof structuredClone === "function"
+				? structuredClone(value)
+				: JSON.parse(JSON.stringify(value));
+		} catch {
+			return JSON.parse(JSON.stringify(value));
+		}
+	}
+
 	const cloned = {
-		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
-		symbols: JSON.parse(JSON.stringify(symbols)),
-		fullforms: JSON.parse(JSON.stringify(fullforms)),
+		localeOptions: safeClone(localeOptions),
+		symbols: safeClone(symbols),
+		fullforms: safeClone(fullforms),
 	};
 
 	return (arg) =>

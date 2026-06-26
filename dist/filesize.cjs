@@ -287,7 +287,15 @@ function applyPrecisionHandling(
  * @param {number} round - Round value
  * @returns {string|number} Formatted value
  */
-function applyNumberFormatting(value, locale, localeOptions, separator, pad, round) {
+function applyNumberFormatting(
+	value,
+	locale,
+	localeOptions,
+	separator,
+	pad,
+	round,
+	roundingFunc,
+) {
 	let result = value;
 
 	// When padding alongside a locale, let the locale formatter emit the fixed
@@ -303,6 +311,12 @@ function applyNumberFormatting(value, locale, localeOptions, separator, pad, rou
 	} else if (locale.length > 0) {
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else if (separator.length > 0) {
+		// Round before separator replacement to ensure excess decimal places
+		// are truncated when pad is also set (fixes padding + separator bug).
+		if (pad && round > 0) {
+			const p = Math.pow(10, round);
+			result = roundingFunc(result * p) / p;
+		}
 		result = result.toString().replace(PERIOD, separator);
 	}
 
@@ -440,6 +454,7 @@ function decorateResult(
 	actualStandard,
 	e,
 	bits,
+	roundingFunc,
 ) {
 	if (neg) {
 		result[0] = -result[0];
@@ -449,7 +464,15 @@ function decorateResult(
 		result[1] = symbols[result[1]];
 	}
 
-	result[0] = applyNumberFormatting(result[0], locale, localeOptions, separator, pad, round);
+	result[0] = applyNumberFormatting(
+		result[0],
+		locale,
+		localeOptions,
+		separator,
+		pad,
+		round,
+		roundingFunc,
+	);
 
 	if (full) {
 		let unit;
@@ -571,7 +594,7 @@ function filesize(
 	} else {
 		num = Number(arg);
 
-		if (isNaN(arg)) {
+		if (isNaN(num)) {
 			throw new TypeError(INVALID_NUMBER);
 		}
 
@@ -673,6 +696,7 @@ function filesize(
 		actualStandard,
 		e,
 		bits,
+		roundingFunc,
 	);
 
 	return formatOutput(result, e, u, output, spacer);
@@ -722,10 +746,24 @@ function partial({
 	symbols = {},
 	fullforms = [],
 } = {}) {
+	/**
+	 * Safely clone an object using structuredClone with JSON fallback.
+	 * structuredClone can throw for functions, circular refs, etc.
+	 */
+	function safeClone(value) {
+		try {
+			return typeof structuredClone === "function"
+				? structuredClone(value)
+				: JSON.parse(JSON.stringify(value));
+		} catch {
+			return JSON.parse(JSON.stringify(value));
+		}
+	}
+
 	const cloned = {
-		localeOptions: JSON.parse(JSON.stringify(localeOptions)),
-		symbols: JSON.parse(JSON.stringify(symbols)),
-		fullforms: JSON.parse(JSON.stringify(fullforms)),
+		localeOptions: safeClone(localeOptions),
+		symbols: safeClone(symbols),
+		fullforms: safeClone(fullforms),
 	};
 
 	return (arg) =>

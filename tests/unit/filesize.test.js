@@ -992,3 +992,45 @@ describe("partial", () => {
 		});
 	});
 });
+
+describe("partial structuredClone", () => {
+	it("should use structuredClone when available for localeOptions", () => {
+		const opts = { localeOptions: { minimumFractionDigits: 2 } };
+		const format = partial(opts);
+		const result = format(1234.5);
+		assert(typeof result === "string");
+		// Mutate original - should not affect partial
+		opts.localeOptions.minimumFractionDigits = 5;
+		const result2 = format(1234.5);
+		assert(typeof result2 === "string");
+	});
+
+	it("should use structuredClone when available for symbols", () => {
+		const opts = { symbols: { kB: "custom_kB" } };
+		const format = partial(opts);
+		assert.strictEqual(format(1000), "1 custom_kB");
+		opts.symbols.kB = "mutated_kB";
+		assert.strictEqual(format(1000), "1 custom_kB");
+	});
+
+	it("should use structuredClone when available for fullforms", () => {
+		const opts = { fullforms: ["my_byte"], fullform: true };
+		const format = partial(opts);
+		assert.strictEqual(format(1), "1 my_byte");
+		opts.fullforms[0] = "mutated";
+		assert.strictEqual(format(1), "1 my_byte");
+	});
+
+	it("should maintain deep independence between partial instances", () => {
+		const opts1 = { symbols: { kB: "first" } };
+		const opts2 = { symbols: { kB: "second" } };
+		const format1 = partial(opts1);
+		const format2 = partial(opts2);
+		assert.strictEqual(format1(1000), "1 first");
+		assert.strictEqual(format2(1000), "1 second");
+		opts1.symbols.kB = "mutated_first";
+		opts2.symbols.kB = "mutated_second";
+		assert.strictEqual(format1(1000), "1 first");
+		assert.strictEqual(format2(1000), "1 second");
+	});
+});
