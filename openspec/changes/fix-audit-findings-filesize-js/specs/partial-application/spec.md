@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: Partial function uses structuredClone for deep cloning
 The `partial` function MUST use `structuredClone` for deep cloning `localeOptions`, `symbols`, and `fullforms` options, with a fallback to `JSON.parse(JSON.stringify())` for environments where `structuredClone` is not available.
@@ -14,8 +14,6 @@ The `partial` function MUST use `structuredClone` for deep cloning `localeOption
 #### Scenario: Partial falls back to JSON clone when structuredClone unavailable
 - **WHEN** `structuredClone` is not available in the runtime
 - **THEN** `partial` falls back to `JSON.parse(JSON.stringify())` for deep cloning
-
-## ADDED Requirements
 
 ### Requirement: Partial function preserves non-cloneable values with fallback
 When `structuredClone` is not available, the `partial` function MUST maintain backward compatibility by using `JSON.parse(JSON.stringify())` which preserves plain objects, arrays, strings, numbers, booleans, and null.
