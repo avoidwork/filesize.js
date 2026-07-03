@@ -289,6 +289,11 @@ export function calculateExponent(num, e, exponent, isDecimal, precision) {
 		if (e < 0) {
 			e = 0;
 		}
+	} else if (e < 0) {
+		// A forced exponent below the auto sentinel (-1) has no meaning and
+		// would otherwise index the power-of-ten/two lookup tables out of
+		// bounds (producing NaN). Clamp to 0, mirroring the e > 8 clamp below.
+		e = 0;
 	}
 
 	if (e > 8) {

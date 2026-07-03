@@ -615,6 +615,23 @@ describe("filesize", () => {
 			const result = filesize(1024, { exponent: NaN, standard: "iec" });
 			assert.strictEqual(result, "1 KiB");
 		});
+
+		it("should clamp an out-of-range negative exponent to 0 instead of returning NaN", () => {
+			// Only -1 is the documented "auto" sentinel. Any other negative exponent
+			// indexed the power lookup tables out of bounds and produced "NaN undefined".
+			assert.strictEqual(filesize(1024, { exponent: -2 }), "1024 B");
+			assert.strictEqual(filesize(1024, { exponent: -100 }), "1024 B");
+		});
+
+		it("should clamp a negative exponent to 0 for object output", () => {
+			const result = filesize(1024, { exponent: -3, output: "object" });
+			assert.deepStrictEqual(result, { value: 1024, symbol: "B", exponent: 0, unit: "B" });
+		});
+
+		it("should clamp a negative exponent to 0 for array output", () => {
+			const result = filesize(1024, { exponent: -3, output: "array" });
+			assert.deepStrictEqual(result, [1024, "B"]);
+		});
 	});
 
 	describe("Error handling", () => {
