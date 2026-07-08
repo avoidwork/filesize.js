@@ -126,10 +126,6 @@ export function filesize(
 	e = calculatedE;
 	const autoExponent = exponent === -1 || isNaN(exponent);
 
-	if (output === EXPONENT) {
-		return e;
-	}
-
 	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
 		num,
 		e,
@@ -162,6 +158,13 @@ export function filesize(
 		);
 		result[0] = precisionResult.value;
 		e = precisionResult.e;
+	}
+
+	// Return the exponent only after every adjustment that other output
+	// modes apply (bits auto-increment, rounding overflow, precision), so
+	// it always matches the exponent reported by object output.
+	if (output === EXPONENT) {
+		return e;
 	}
 
 	u = resolveSymbol(actualStandard, bits, e, isDecimal);
