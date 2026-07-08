@@ -112,6 +112,8 @@ export function filesize(
 			fullforms,
 			output,
 			spacer,
+			pad,
+			round,
 		);
 	}
 
