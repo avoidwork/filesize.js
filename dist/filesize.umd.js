@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.21
+ * @version 11.0.22
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';// Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -471,6 +471,16 @@ function decorateResult(
 		result[1] = symbols[result[1]];
 	}
 
+	// Capture the numeric value before formatting; a comma decimal separator
+	// (via separator or a locale such as de-DE) would otherwise make parseFloat
+	// read "1,5" as 1 and select the singular unit name.
+	let numericValue;
+	if (typeof result[0] === "string") {
+		numericValue = parseFloat(result[0]);
+	} else {
+		numericValue = result[0];
+	}
+
 	result[0] = applyNumberFormatting(
 		result[0],
 		locale,
@@ -488,15 +498,9 @@ function decorateResult(
 		} else {
 			unit = BYTE;
 		}
-		let val;
-		if (typeof result[0] === "string") {
-			val = parseFloat(result[0]);
-		} else {
-			val = result[0];
-		}
 		// Determine singular/plural suffix
 		let suffix;
-		if (val === 1) {
+		if (numericValue === 1) {
 			suffix = EMPTY;
 		} else {
 			suffix = S;
