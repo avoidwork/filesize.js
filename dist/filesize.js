@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.20
+ * @version 11.0.21
  */
 // Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -123,6 +123,8 @@ function getBaseConfiguration(standard, base) {
  * @param {Array} fullforms - Custom full forms
  * @param {string} output - Output format
  * @param {string} spacer - Spacer character
+ * @param {boolean} pad - Whether to pad decimal places
+ * @param {number} round - Number of decimal places for padding
  * @param {string} [symbol] - Symbol to use (defaults based on bits/standard)
  * @returns {string|Array|Object|number} Formatted result
  */
@@ -135,11 +137,15 @@ function handleZeroValue(
 	fullforms,
 	output,
 	spacer,
+	pad,
+	round,
 	symbol,
 ) {
 	let value;
 	if (precision > 0) {
 		value = (0).toPrecision(precision);
+	} else if (pad && round > 0) {
+		value = (0).toFixed(round);
 	} else {
 		value = 0;
 	}
@@ -626,6 +632,8 @@ function filesize(
 			fullforms,
 			output,
 			spacer,
+			pad,
+			round,
 		);
 	}
 
@@ -639,10 +647,6 @@ function filesize(
 	);
 	e = calculatedE;
 	const autoExponent = exponent === -1 || isNaN(exponent);
-
-	if (output === EXPONENT) {
-		return e;
-	}
 
 	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
 		num,
@@ -676,6 +680,13 @@ function filesize(
 		);
 		result[0] = precisionResult.value;
 		e = precisionResult.e;
+	}
+
+	// Return the exponent only after every adjustment that other output
+	// modes apply (bits auto-increment, rounding overflow, precision), so
+	// it always matches the exponent reported by object output.
+	if (output === EXPONENT) {
+		return e;
 	}
 
 	u = resolveSymbol(actualStandard, bits, e, isDecimal);
