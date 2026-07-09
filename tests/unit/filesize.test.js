@@ -128,6 +128,26 @@ describe("filesize", () => {
 			assert.strictEqual(typeof result, "number");
 			assert.strictEqual(result, 1);
 		});
+
+		it("should match the object exponent when rounding overflows the unit", () => {
+			// 999999 renders as "1 MB", so the exponent is 2, not 1
+			assert.strictEqual(filesize(999999, { output: "exponent" }), 2);
+			assert.strictEqual(
+				filesize(999999, { output: "exponent" }),
+				filesize(999999, { output: "object" }).exponent,
+			);
+			// IEC: 1048575 renders as "1 MiB"
+			assert.strictEqual(filesize(1048575, { standard: "iec", output: "exponent" }), 2);
+		});
+
+		it("should match the object exponent when bits auto-increment the unit", () => {
+			// 125000 bytes = 1 Mbit, so the exponent is 2, not 1
+			assert.strictEqual(filesize(125000, { bits: true, output: "exponent" }), 2);
+			assert.strictEqual(
+				filesize(125000, { bits: true, output: "exponent" }),
+				filesize(125000, { bits: true, output: "object" }).exponent,
+			);
+		});
 	});
 
 	describe("Rounding", () => {
