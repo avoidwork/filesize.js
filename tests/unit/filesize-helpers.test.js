@@ -261,22 +261,70 @@ describe("Helper Functions", () => {
 
 describe("handleZeroValue with explicit symbol", () => {
 	it("should use provided symbol for string output", () => {
-		const result = handleZeroValue(0, "jedec", false, {}, false, [], "string", " ", "CustomB");
+		const result = handleZeroValue(
+			0,
+			"jedec",
+			false,
+			{},
+			false,
+			[],
+			"string",
+			" ",
+			false,
+			2,
+			"CustomB",
+		);
 		assert.strictEqual(result, "0 CustomB");
 	});
 
 	it("should use provided symbol for array output", () => {
-		const result = handleZeroValue(0, "jedec", false, {}, false, [], "array", " ", "CustomB");
+		const result = handleZeroValue(
+			0,
+			"jedec",
+			false,
+			{},
+			false,
+			[],
+			"array",
+			" ",
+			false,
+			2,
+			"CustomB",
+		);
 		assert.deepStrictEqual(result, [0, "CustomB"]);
 	});
 
 	it("should use provided symbol for object output", () => {
-		const result = handleZeroValue(0, "jedec", false, {}, false, [], "object", " ", "CustomB");
+		const result = handleZeroValue(
+			0,
+			"jedec",
+			false,
+			{},
+			false,
+			[],
+			"object",
+			" ",
+			false,
+			2,
+			"CustomB",
+		);
 		assert.deepStrictEqual(result, { value: 0, symbol: "CustomB", exponent: 0, unit: "CustomB" });
 	});
 
 	it("should use provided symbol for exponent output", () => {
-		const result = handleZeroValue(0, "jedec", false, {}, false, [], "exponent", " ", "CustomB");
+		const result = handleZeroValue(
+			0,
+			"jedec",
+			false,
+			{},
+			false,
+			[],
+			"exponent",
+			" ",
+			false,
+			2,
+			"CustomB",
+		);
 		assert.strictEqual(result, 0);
 	});
 });

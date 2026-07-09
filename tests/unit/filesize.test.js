@@ -60,6 +60,16 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(0, { output: "exponent" }), 0);
 		});
 
+		it("should pad zero like any other value", () => {
+			assert.strictEqual(filesize(0, { pad: true, round: 2 }), "0.00 B");
+			assert.strictEqual(filesize(0, { pad: true, round: 3 }), "0.000 B");
+			assert.strictEqual(filesize(0, { pad: true, round: 0 }), "0 B");
+		});
+
+		it("should prefer precision over pad for zero", () => {
+			assert.strictEqual(filesize(0, { precision: 3, pad: true, round: 5 }), "0.00 B");
+		});
+
 		it("should handle zero with custom symbols", () => {
 			assert.strictEqual(filesize(0, { symbols: { B: "Bytes" } }), "0 Bytes");
 		});

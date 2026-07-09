@@ -62,6 +62,8 @@ export function getBaseConfiguration(standard, base) {
  * @param {Array} fullforms - Custom full forms
  * @param {string} output - Output format
  * @param {string} spacer - Spacer character
+ * @param {boolean} pad - Whether to pad decimal places
+ * @param {number} round - Number of decimal places for padding
  * @param {string} [symbol] - Symbol to use (defaults based on bits/standard)
  * @returns {string|Array|Object|number} Formatted result
  */
@@ -74,11 +76,15 @@ export function handleZeroValue(
 	fullforms,
 	output,
 	spacer,
+	pad,
+	round,
 	symbol,
 ) {
 	let value;
 	if (precision > 0) {
 		value = (0).toPrecision(precision);
+	} else if (pad && round > 0) {
+		value = (0).toFixed(round);
 	} else {
 		value = 0;
 	}
