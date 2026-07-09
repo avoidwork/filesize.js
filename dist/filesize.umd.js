@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.19
+ * @version 11.0.20
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';// Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -350,6 +350,11 @@ function calculateExponent(num, e, exponent, isDecimal, precision) {
 		if (e < 0) {
 			e = 0;
 		}
+	} else if (e < 0) {
+		// A forced exponent below the auto sentinel (-1) has no meaning and
+		// would otherwise index the power-of-ten/two lookup tables out of
+		// bounds (producing NaN). Clamp to 0, mirroring the e > 8 clamp below.
+		e = 0;
 	}
 
 	if (e > 8) {
