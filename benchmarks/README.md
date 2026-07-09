@@ -198,9 +198,7 @@ function benchmark(testName, testFunction, iterations = ITERATIONS) {
 
 // Your custom test
 const result = benchmark("Custom test", () => {
-	return filesize(1024 * 1024, {
-		/* your options */
-	});
+	return filesize(1024 * 1024, {/* your options */});
 });
 
 console.log(result);
