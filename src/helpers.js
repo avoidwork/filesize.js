@@ -410,6 +410,16 @@ export function decorateResult(
 		result[1] = symbols[result[1]];
 	}
 
+	// Capture the numeric value before formatting; a comma decimal separator
+	// (via separator or a locale such as de-DE) would otherwise make parseFloat
+	// read "1,5" as 1 and select the singular unit name.
+	let numericValue;
+	if (typeof result[0] === "string") {
+		numericValue = parseFloat(result[0]);
+	} else {
+		numericValue = result[0];
+	}
+
 	result[0] = applyNumberFormatting(
 		result[0],
 		locale,
@@ -427,15 +437,9 @@ export function decorateResult(
 		} else {
 			unit = BYTE;
 		}
-		let val;
-		if (typeof result[0] === "string") {
-			val = parseFloat(result[0]);
-		} else {
-			val = result[0];
-		}
 		// Determine singular/plural suffix
 		let suffix;
-		if (val === 1) {
+		if (numericValue === 1) {
 			suffix = EMPTY;
 		} else {
 			suffix = S;
