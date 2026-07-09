@@ -283,6 +283,11 @@ describe("filesize", () => {
 			);
 			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
 		});
+
+		it("should keep the plural fullform when a comma decimal separator is used", () => {
+			assert.strictEqual(filesize(1500000, { fullform: true, separator: "," }), "1,5 megabytes");
+			assert.strictEqual(filesize(1500000, { fullform: true, locale: "de-DE" }), "1,5 megabytes");
+		});
 	});
 
 	describe("Base and exponent options", () => {
