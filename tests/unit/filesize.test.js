@@ -394,6 +394,16 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(-1234567890, { precision: 2 }), "-1.2 GB");
 		});
 
+		it("should keep precision trailing zeros for negative values", () => {
+			// A negative value must carry the same significant digits as its positive counterpart
+			assert.strictEqual(filesize(1500, { precision: 3 }), "1.50 kB");
+			assert.strictEqual(filesize(-1500, { precision: 3 }), "-1.50 kB");
+			assert.strictEqual(filesize(-1000, { precision: 3 }), "-1.00 kB");
+			assert.strictEqual(filesize(-1, { precision: 3 }), "-1.00 B");
+			assert.deepStrictEqual(filesize(-1500, { precision: 3, output: "array" }), ["-1.50", "kB"]);
+			assert.strictEqual(filesize(-1500, { precision: 3, output: "object" }).value, "-1.50");
+		});
+
 		it("should ensure no scientific notation in any precision result", () => {
 			// Test a range of numbers that would normally produce scientific notation from toPrecision
 			// but should have it removed by our implementation
