@@ -403,7 +403,10 @@ export function decorateResult(
 	roundingFunc,
 ) {
 	if (neg) {
-		result[0] = -result[0];
+		// `precision` leaves the value as a string from toPrecision (e.g. "1.50").
+		// Negating that arithmetically coerces it back to a number and drops the
+		// trailing zeros the option asked for, so prefix the sign instead.
+		result[0] = typeof result[0] === "string" ? `-${result[0]}` : -result[0];
 	}
 
 	if (symbols[result[1]]) {
