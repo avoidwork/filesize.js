@@ -268,6 +268,16 @@ describe("filesize", () => {
 			);
 		});
 
+		it("should keep the singular fullform name for negative one-magnitude values", () => {
+			assert.strictEqual(filesize(-1, { fullform: true }), "-1 byte");
+			assert.strictEqual(filesize(-0.125, { bits: true, fullform: true }), "-1 bit");
+		});
+
+		it("should keep the plural fullform name for negative values", () => {
+			assert.strictEqual(filesize(-2, { fullform: true }), "-2 bytes");
+			assert.strictEqual(filesize(-0.25, { bits: true, fullform: true }), "-2 bits");
+		});
+
 		it("should handle bits fullform singular", () => {
 			assert.strictEqual(filesize(0.125, { bits: true, fullform: true }), "1 bit");
 		});

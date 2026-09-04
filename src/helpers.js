@@ -402,6 +402,16 @@ export function decorateResult(
 	bits,
 	roundingFunc,
 ) {
+	// Capture the number before the sign and the formatting: a comma decimal
+	// separator makes parseFloat read "1,5" as 1, and a leading "-" breaks the
+	// "=== 1" singular check.
+	let numericValue;
+	if (typeof result[0] === "string") {
+		numericValue = parseFloat(result[0]);
+	} else {
+		numericValue = result[0];
+	}
+
 	if (neg) {
 		// `precision` leaves the value as a string from toPrecision (e.g. "1.50").
 		// Negating that arithmetically coerces it back to a number and drops the
@@ -411,16 +421,6 @@ export function decorateResult(
 
 	if (symbols[result[1]]) {
 		result[1] = symbols[result[1]];
-	}
-
-	// Capture the numeric value before formatting; a comma decimal separator
-	// (via separator or a locale such as de-DE) would otherwise make parseFloat
-	// read "1,5" as 1 and select the singular unit name.
-	let numericValue;
-	if (typeof result[0] === "string") {
-		numericValue = parseFloat(result[0]);
-	} else {
-		numericValue = result[0];
 	}
 
 	result[0] = applyNumberFormatting(
