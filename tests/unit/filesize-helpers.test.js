@@ -12,6 +12,10 @@ import {
 	applyPrecisionHandling,
 	applyNumberFormatting,
 	applyRounding,
+	calculateExponent,
+	resolveSymbol,
+	decorateResult,
+	formatOutput,
 } from "../../src/helpers.js";
 
 describe("Helper Functions", () => {
@@ -397,5 +401,123 @@ describe("applyNumberFormatting padding with separator bug fix", () => {
 		// Without pad, the function only replaces the decimal separator — no rounding.
 		const result = applyNumberFormatting(1234.567, "", {}, ",", false, 2, Math.round);
 		assert.strictEqual(result, "1234,567");
+	});
+});
+
+describe("calculateExponent edge cases", () => {
+	it("should coerce a string exponent to a number", () => {
+		const result = calculateExponent(1000, "1", "1", true, 0);
+		assert.strictEqual(result.e, 1);
+	});
+
+	it("should floor a non-integer positive exponent", () => {
+		const result = calculateExponent(1000, 1.5, 1.5, true, 0);
+		assert.strictEqual(result.e, 1);
+	});
+
+	it("should clamp a negative exponent to zero", () => {
+		const result = calculateExponent(1024, -2, -2, false, 0);
+		assert.strictEqual(result.e, 0);
+	});
+
+	it("should clamp an exponent above 8 and adjust precision", () => {
+		const result = calculateExponent(1e30, 12, 12, true, 2);
+		assert.strictEqual(result.e, 8);
+		assert.strictEqual(result.precision, -2);
+	});
+});
+
+describe("resolveSymbol edge cases", () => {
+	it("should use SI special case for exponent 1", () => {
+		assert.strictEqual(resolveSymbol("jedec", false, 1, true), "kB");
+	});
+
+	it("should use SI special case for bits exponent 1", () => {
+		assert.strictEqual(resolveSymbol("jedec", true, 1, true), "kbit");
+	});
+
+	it("should use the symbol table for non-SI exponent 1", () => {
+		assert.strictEqual(resolveSymbol("iec", false, 1, false), "KiB");
+	});
+
+	it("should use the symbol table for exponent 0", () => {
+		assert.strictEqual(resolveSymbol("jedec", false, 0, true), "B");
+	});
+});
+
+describe("decorateResult edge cases", () => {
+	it("should preserve sign when a negative value rounds to zero", () => {
+		const result = [0, "B"];
+		decorateResult(
+			result,
+			true,
+			{},
+			"",
+			{},
+			"",
+			false,
+			2,
+			false,
+			[],
+			"jedec",
+			0,
+			false,
+			Math.round,
+		);
+		assert.strictEqual(result[0], "-0");
+	});
+
+	it("should use singular fullform for negative one", () => {
+		const result = [-1, "B"];
+		decorateResult(result, true, {}, "", {}, "", false, 2, true, [], "jedec", 0, false, Math.round);
+		assert.strictEqual(result[1], "byte");
+	});
+
+	it("should use plural fullform for negative values other than one", () => {
+		const result = [-2, "B"];
+		decorateResult(result, true, {}, "", {}, "", false, 2, true, [], "jedec", 0, false, Math.round);
+		assert.strictEqual(result[1], "bytes");
+	});
+});
+
+describe("formatOutput edge cases", () => {
+	it("should throw TypeError for invalid output", () => {
+		assert.throws(() => formatOutput([1, "kB"], 1, "kB", "foo", " "), TypeError);
+	});
+
+	it("should return array for array output", () => {
+		const result = formatOutput([1, "kB"], 1, "kB", "array", " ");
+		assert.deepStrictEqual(result, [1, "kB"]);
+	});
+
+	it("should return object for object output", () => {
+		const result = formatOutput([1, "kB"], 1, "kB", "object", " ");
+		assert.deepStrictEqual(result, { value: 1, symbol: "kB", exponent: 1, unit: "kB" });
+	});
+
+	it("should return string for string output", () => {
+		const result = formatOutput([1, "kB"], 1, "kB", "string", " ");
+		assert.strictEqual(result, "1 kB");
+	});
+});
+
+describe("applyPrecisionHandling validation", () => {
+	it("should throw TypeError for out-of-range precision", () => {
+		assert.throws(
+			() => applyPrecisionHandling(1.5, 101, 1, 1024, false, false, 1024, Math.round, 2, -1),
+			TypeError,
+		);
+	});
+
+	it("should throw TypeError for non-numeric precision", () => {
+		assert.throws(
+			() => applyPrecisionHandling(1.5, "foo", 1, 1024, false, false, 1024, Math.round, 2, -1),
+			TypeError,
+		);
+	});
+
+	it("should floor non-integer precision", () => {
+		const result = applyPrecisionHandling(1.5, 2.5, 1, 1024, false, false, 1024, Math.round, 2, -1);
+		assert.strictEqual(result.value, "1.5");
 	});
 });

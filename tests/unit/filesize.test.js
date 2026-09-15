@@ -692,6 +692,228 @@ describe("filesize", () => {
 		});
 	});
 
+	describe("Edge case hardening (issue #343)", () => {
+		describe("Input validation", () => {
+			it("should throw TypeError for overflowing BigInt", () => {
+				assert.throws(() => filesize(BigInt("1" + "0".repeat(400))), TypeError);
+			});
+
+			it("should clamp a non-integer positive exponent", () => {
+				assert.strictEqual(filesize(1000, { exponent: 1.5 }), "1 kB");
+				assert.strictEqual(filesize(1000000, { exponent: 2.9 }), "1 MB");
+			});
+
+			it("should coerce a string exponent to match the number path", () => {
+				assert.strictEqual(filesize(1000, { exponent: "1" }), "1 kB");
+				assert.strictEqual(filesize(1000000, { exponent: "2" }), "1 MB");
+				assert.strictEqual(filesize(1000, { exponent: "0" }), "1000 B");
+			});
+
+			it("should throw TypeError for out-of-range precision", () => {
+				assert.throws(() => filesize(1000, { precision: 101 }), TypeError);
+			});
+
+			it("should throw TypeError for invalid output format", () => {
+				assert.throws(() => filesize(1000, { output: "foo" }), TypeError);
+			});
+
+			it("should throw TypeError for invalid numeric strings", () => {
+				assert.throws(() => filesize("1_000"), TypeError);
+				assert.throws(() => filesize("1000n"), TypeError);
+				assert.throws(() => filesize(undefined), TypeError);
+			});
+		});
+
+		describe("Number coercion", () => {
+			it("should coerce null to zero", () => {
+				assert.strictEqual(filesize(null), "0 B");
+			});
+
+			it("should coerce booleans to their numeric value", () => {
+				assert.strictEqual(filesize(true), "1 B");
+				assert.strictEqual(filesize(false), "0 B");
+			});
+
+			it("should coerce empty and whitespace strings to zero", () => {
+				assert.strictEqual(filesize(""), "0 B");
+				assert.strictEqual(filesize(" "), "0 B");
+			});
+
+			it("should coerce single-element arrays", () => {
+				assert.strictEqual(filesize([1000]), "1 kB");
+			});
+
+			it("should parse hex, binary, and octal literals", () => {
+				assert.strictEqual(filesize("0x1F"), "31 B");
+				assert.strictEqual(filesize("0b101"), "5 B");
+				assert.strictEqual(filesize("0o17"), "15 B");
+			});
+		});
+
+		describe("Sign handling", () => {
+			it("should preserve sign when a negative value rounds to zero", () => {
+				assert.strictEqual(filesize(-0.4), "-0 B");
+				assert.strictEqual(filesize(-0.4, { pad: true, round: 2 }), "-0.00 B");
+				assert.deepStrictEqual(filesize(-0.4, { output: "array" }), ["-0", "B"]);
+			});
+
+			it("should use singular fullform for negative one", () => {
+				assert.strictEqual(filesize(-1, { fullform: true }), "-1 byte");
+				assert.strictEqual(filesize(-1, { fullform: true, precision: 3 }), "-1.00 byte");
+			});
+
+			it("should use plural fullform for negative values other than one", () => {
+				assert.strictEqual(filesize(-2, { fullform: true }), "-2 bytes");
+			});
+
+			it("should not leak scientific notation for extreme values", () => {
+				const result = filesize(Number.MAX_VALUE);
+				assert(!result.includes("e+"), `Result "${result}" contains scientific notation`);
+				assert(!result.includes("e-"), `Result "${result}" contains scientific notation`);
+			});
+		});
+
+		describe("Option precedence", () => {
+			it("should let standard win over base", () => {
+				assert.strictEqual(filesize(1024, { standard: "iec", base: 10 }), "1 KiB");
+				assert.strictEqual(filesize(1024, { standard: "si", base: 2 }), "1.02 kB");
+			});
+
+			it("should let fullform win over symbols", () => {
+				assert.strictEqual(
+					filesize(1000, { symbols: { kB: "kilobyte" }, fullform: true }),
+					"1 kilobyte",
+				);
+			});
+
+			it("should let locale win over separator", () => {
+				assert.strictEqual(filesize(1536, { locale: "de-DE", separator: "_" }), "1,54 kB");
+			});
+
+			it("should fall back to default fullform when fullforms[e] is missing", () => {
+				assert.strictEqual(
+					filesize(1000000, { fullform: true, fullforms: ["custom"] }),
+					"1 megabyte",
+				);
+			});
+		});
+
+		describe("Rounding and precision edge cases", () => {
+			it("should treat negative round as zero", () => {
+				assert.strictEqual(filesize(1536, { round: -1 }), "2 kB");
+				assert.strictEqual(filesize(1536, { round: -1, pad: true }), "2 kB");
+			});
+
+			it("should auto-increment when rounding reaches the ceiling", () => {
+				assert.strictEqual(filesize(999.5, { round: 0 }), "1 kB");
+				assert.strictEqual(filesize(999.999, { round: 2 }), "1 kB");
+			});
+
+			it("should floor non-integer precision", () => {
+				assert.strictEqual(filesize(1000, { precision: 2.5 }), "1.0 kB");
+			});
+
+			it("should round sub-byte values", () => {
+				assert.strictEqual(filesize(0.4), "0 B");
+				assert.strictEqual(filesize(0.5), "1 B");
+				assert.strictEqual(filesize(1.4), "1 B");
+				assert.strictEqual(filesize(1.5), "2 B");
+			});
+		});
+
+		describe("Bits auto-increment boundary", () => {
+			it("should auto-increment at the bits boundary", () => {
+				assert.strictEqual(filesize(125, { bits: true }), "1 kbit");
+				assert.strictEqual(filesize(124, { bits: true }), "992 bit");
+			});
+
+			it("should not auto-increment when exponent is forced", () => {
+				assert.strictEqual(filesize(125, { bits: true, exponent: 0 }), "1000 bit");
+				assert.strictEqual(filesize(124, { bits: true, exponent: 0 }), "992 bit");
+			});
+		});
+
+		describe("Precision value type in output", () => {
+			it("should return string value in array output with precision", () => {
+				const result = filesize(1234567890, { precision: 2, output: "array" });
+				assert.deepStrictEqual(result, ["1.2", "GB"]);
+			});
+
+			it("should return string value in object output with precision", () => {
+				const result = filesize(1234567890, { precision: 2, output: "object" });
+				assert.strictEqual(result.value, "1.2");
+				assert.strictEqual(result.symbol, "GB");
+			});
+		});
+
+		describe("Custom fullforms with bits", () => {
+			it("should use default when fullforms[0] is empty", () => {
+				assert.strictEqual(
+					filesize(0.125, { bits: true, fullform: true, fullforms: ["", "custom-bit"] }),
+					"1 bit",
+				);
+			});
+
+			it("should apply custom fullform for bits", () => {
+				assert.strictEqual(
+					filesize(1024, { bits: true, fullform: true, fullforms: ["", "customkbit"] }),
+					"8.19 customkbit",
+				);
+			});
+		});
+
+		describe("Negative values with bits and fullform", () => {
+			it("should handle negative bits", () => {
+				assert.strictEqual(filesize(-1000, { bits: true }), "-8 kbit");
+			});
+
+			it("should handle negative fullform bits", () => {
+				assert.strictEqual(filesize(-1000, { fullform: true, bits: true }), "-8 kilobits");
+			});
+		});
+
+		describe("Locale and localeOptions", () => {
+			it("should ignore localeOptions when locale is true", () => {
+				assert.strictEqual(
+					filesize(1536, { locale: true, localeOptions: { maximumFractionDigits: 1 } }),
+					"1.54 kB",
+				);
+			});
+
+			it("should merge localeOptions with locale", () => {
+				assert.strictEqual(
+					filesize(1536, {
+						locale: "de-DE",
+						localeOptions: { useGrouping: false },
+						pad: true,
+						round: 2,
+					}),
+					"1,54 kB",
+				);
+			});
+		});
+
+		describe("Symbol resolution", () => {
+			it("should handle empty symbols object", () => {
+				assert.strictEqual(filesize(1000, { symbols: {} }), "1 kB");
+			});
+
+			it("should ignore non-matching symbol keys", () => {
+				assert.strictEqual(filesize(1000, { symbols: { MB: "megabyte" } }), "1 kB");
+			});
+		});
+
+		describe("Spacer edge cases", () => {
+			it("should support multi-character spacers", () => {
+				assert.strictEqual(filesize(1000, { spacer: " - " }), "1 - kB");
+			});
+
+			it("should ignore spacer for array output", () => {
+				assert.deepStrictEqual(filesize(1000, { spacer: "", output: "array" }), [1, "kB"]);
+			});
+		});
+	});
+
 	describe("Input type handling", () => {
 		describe("Number input", () => {
 			describe("filesize() with number input", () => {
