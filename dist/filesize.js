@@ -8,6 +8,7 @@
 // Error Messages
 const INVALID_NUMBER = "Invalid number";
 const INVALID_ROUND = "Invalid rounding method";
+const INVALID_PRECISION = "Invalid precision";
 
 // Standard Types
 const IEC = "iec";
@@ -253,6 +254,17 @@ function applyPrecisionHandling(
 		value = parseFloat(value);
 	}
 
+	// Validate precision range. toPrecision() throws a raw RangeError for
+	// values outside 1-100; normalize to a clean TypeError and floor any
+	// non-integer value (which toPrecision would otherwise truncate silently).
+	if (typeof precision !== "number" || isNaN(precision)) {
+		throw new TypeError(INVALID_PRECISION);
+	}
+	precision = Math.floor(precision);
+	if (precision < 1 || precision > 100) {
+		throw new TypeError(INVALID_PRECISION);
+	}
+
 	let result = value.toPrecision(precision);
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
@@ -322,6 +334,13 @@ function applyNumberFormatting(
 		result = result.toString().replace(PERIOD, separator);
 	}
 
+	// Expand scientific notation to full decimal so pathological values like
+	// Number.MAX_VALUE don't leak "e+284" into the output. Only applies when
+	// the value is a finite number whose string form uses exponent notation.
+	if (typeof result === "number" && isFinite(result) && result.toString().includes(E)) {
+		result = result.toLocaleString("en-US", { useGrouping: false });
+	}
+
 	// Apply padding for the non-locale paths, where the string has a single
 	// decimal separator and no grouping is inserted.
 	if (pad && round > 0 && locale !== true && locale.length === 0) {
@@ -347,6 +366,13 @@ function applyNumberFormatting(
  * @returns {Object} Object with computed e value and possibly adjusted precision
  */
 function calculateExponent(num, e, exponent, isDecimal, precision) {
+	// A string exponent (e.g. "1") must be coerced to a number before the
+	// strict `e === 1` checks below; otherwise it indexes the symbol tables
+	// with a string and misses the SI special case in resolveSymbol.
+	if (typeof e === "string") {
+		e = Number(e);
+	}
+
 	if (e === -1 || isNaN(e)) {
 		if (isDecimal) {
 			e = Math.floor(Math.log(num) / LOG_10_1000);
@@ -361,6 +387,11 @@ function calculateExponent(num, e, exponent, isDecimal, precision) {
 		// would otherwise index the power-of-ten/two lookup tables out of
 		// bounds (producing NaN). Clamp to 0, mirroring the e > 8 clamp below.
 		e = 0;
+	} else {
+		// A non-integer positive exponent (e.g. 1.5) would index the
+		// power-of-ten/two lookup tables out of bounds (producing NaN).
+		// Floor it to the nearest valid integer, mirroring the clamps above.
+		e = Math.floor(e);
 	}
 
 	if (e > 8) {
@@ -467,7 +498,16 @@ function decorateResult(
 		// `precision` leaves the value as a string from toPrecision (e.g. "1.50").
 		// Negating that arithmetically coerces it back to a number and drops the
 		// trailing zeros the option asked for, so prefix the sign instead.
-		result[0] = typeof result[0] === "string" ? `-${result[0]}` : -result[0];
+		if (typeof result[0] === "string") {
+			result[0] = `-${result[0]}`;
+		} else if (result[0] === 0) {
+			// A negative value that rounds to zero (e.g. -0.4) becomes -0, which
+			// stringifies to "0" and drops the sign. Emit the string "-0" so the
+			// sign is preserved consistently with the precision path.
+			result[0] = "-0";
+		} else {
+			result[0] = -result[0];
+		}
 	}
 
 	if (symbols[result[1]]) {
@@ -501,9 +541,10 @@ function decorateResult(
 		} else {
 			unit = BYTE;
 		}
-		// Determine singular/plural suffix
+		// Determine singular/plural suffix. Use Math.abs so a negative value
+		// of exactly 1 (e.g. -1) selects the singular unit name.
 		let suffix;
-		if (numericValue === 1) {
+		if (Math.abs(numericValue) === 1) {
 			suffix = EMPTY;
 		} else {
 			suffix = S;
@@ -527,6 +568,13 @@ function decorateResult(
  * @returns {string|Array|Object|number} Formatted result in requested type
  */
 function formatOutput(result, e, u, output, spacer) {
+	// Validate the output option. Any value other than the supported set
+	// (array, object, string, exponent) would silently fall through to the
+	// string branch below and produce misleading output.
+	if (output !== ARRAY && output !== OBJECT && output !== STRING && output !== EXPONENT) {
+		throw new TypeError(`Invalid output: ${output}`);
+	}
+
 	if (output === ARRAY) {
 		return result;
 	}
@@ -568,11 +616,23 @@ function formatOutput(result, e, u, output, spacer) {
  * @param {string} [options.roundingMethod="round"] - Math rounding method to use
  * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
  * @returns {string|Array|Object|number} Formatted file size based on output option
- * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
+ * @throws {TypeError} When arg is not a valid number, roundingMethod is invalid,
+ *   precision is out of range (1-100), or output is not a supported format
  * @example
  * filesize(1024) // "1.02 kB"
  * filesize(1024, {bits: true}) // "8.19 kbit"
  * filesize(1024, {output: "object"}) // {value: 1.02, symbol: "kB", exponent: 1, unit: "kB"}
+ *
+ * @remarks
+ * **Input coercion:** `arg` is coerced via `Number()`. Numeric strings, hex
+ *   (`"0x1F"`), binary (`"0b101"`), and octal (`"0o17"`) literals are parsed;
+ *   `null`, `""`, `" "`, `true`, `false`, and single-element arrays coerce to
+ *   their numeric value. `undefined`, `"1_000"`, and `"1000n"` throw `TypeError`.
+ *   A `bigint` that overflows `Number.MAX_SAFE_INTEGER` throws `TypeError`.
+ *
+ * **Option precedence:** When multiple options conflict, `standard` wins over
+ *   `base`; `fullform` wins over `symbols`; `locale` wins over `separator`;
+ *   and a missing `fullforms[e]` falls back to the default unit name.
  */
 function filesize(
 	arg,
@@ -601,18 +661,14 @@ function filesize(
 		val = 0,
 		u = EMPTY;
 
-	if (typeof arg === "bigint") {
-		num = Number(arg);
-	} else {
-		num = Number(arg);
+	num = Number(arg);
 
-		if (isNaN(num)) {
-			throw new TypeError(INVALID_NUMBER);
-		}
+	if (isNaN(num)) {
+		throw new TypeError(INVALID_NUMBER);
+	}
 
-		if (!isFinite(num)) {
-			throw new TypeError(INVALID_NUMBER);
-		}
+	if (!isFinite(num)) {
+		throw new TypeError(INVALID_NUMBER);
 	}
 
 	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);

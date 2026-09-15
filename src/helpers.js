@@ -10,6 +10,7 @@ import {
 	EMPTY,
 	EXPONENT,
 	IEC,
+	INVALID_PRECISION,
 	JEDEC,
 	LOG_10_1000,
 	LOG_2_1024,
@@ -20,6 +21,7 @@ import {
 	SI_KBIT,
 	SI_KBYTE,
 	SPACE,
+	STRING,
 	STRINGS,
 	ZERO,
 } from "./constants.js";
@@ -192,6 +194,17 @@ export function applyPrecisionHandling(
 		value = parseFloat(value);
 	}
 
+	// Validate precision range. toPrecision() throws a raw RangeError for
+	// values outside 1-100; normalize to a clean TypeError and floor any
+	// non-integer value (which toPrecision would otherwise truncate silently).
+	if (typeof precision !== "number" || isNaN(precision)) {
+		throw new TypeError(INVALID_PRECISION);
+	}
+	precision = Math.floor(precision);
+	if (precision < 1 || precision > 100) {
+		throw new TypeError(INVALID_PRECISION);
+	}
+
 	let result = value.toPrecision(precision);
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
@@ -261,6 +274,13 @@ export function applyNumberFormatting(
 		result = result.toString().replace(PERIOD, separator);
 	}
 
+	// Expand scientific notation to full decimal so pathological values like
+	// Number.MAX_VALUE don't leak "e+284" into the output. Only applies when
+	// the value is a finite number whose string form uses exponent notation.
+	if (typeof result === "number" && isFinite(result) && result.toString().includes(E)) {
+		result = result.toLocaleString("en-US", { useGrouping: false });
+	}
+
 	// Apply padding for the non-locale paths, where the string has a single
 	// decimal separator and no grouping is inserted.
 	if (pad && round > 0 && locale !== true && locale.length === 0) {
@@ -286,6 +306,13 @@ export function applyNumberFormatting(
  * @returns {Object} Object with computed e value and possibly adjusted precision
  */
 export function calculateExponent(num, e, exponent, isDecimal, precision) {
+	// A string exponent (e.g. "1") must be coerced to a number before the
+	// strict `e === 1` checks below; otherwise it indexes the symbol tables
+	// with a string and misses the SI special case in resolveSymbol.
+	if (typeof e === "string") {
+		e = Number(e);
+	}
+
 	if (e === -1 || isNaN(e)) {
 		if (isDecimal) {
 			e = Math.floor(Math.log(num) / LOG_10_1000);
@@ -300,6 +327,11 @@ export function calculateExponent(num, e, exponent, isDecimal, precision) {
 		// would otherwise index the power-of-ten/two lookup tables out of
 		// bounds (producing NaN). Clamp to 0, mirroring the e > 8 clamp below.
 		e = 0;
+	} else {
+		// A non-integer positive exponent (e.g. 1.5) would index the
+		// power-of-ten/two lookup tables out of bounds (producing NaN).
+		// Floor it to the nearest valid integer, mirroring the clamps above.
+		e = Math.floor(e);
 	}
 
 	if (e > 8) {
@@ -406,7 +438,16 @@ export function decorateResult(
 		// `precision` leaves the value as a string from toPrecision (e.g. "1.50").
 		// Negating that arithmetically coerces it back to a number and drops the
 		// trailing zeros the option asked for, so prefix the sign instead.
-		result[0] = typeof result[0] === "string" ? `-${result[0]}` : -result[0];
+		if (typeof result[0] === "string") {
+			result[0] = `-${result[0]}`;
+		} else if (result[0] === 0) {
+			// A negative value that rounds to zero (e.g. -0.4) becomes -0, which
+			// stringifies to "0" and drops the sign. Emit the string "-0" so the
+			// sign is preserved consistently with the precision path.
+			result[0] = "-0";
+		} else {
+			result[0] = -result[0];
+		}
 	}
 
 	if (symbols[result[1]]) {
@@ -440,9 +481,10 @@ export function decorateResult(
 		} else {
 			unit = BYTE;
 		}
-		// Determine singular/plural suffix
+		// Determine singular/plural suffix. Use Math.abs so a negative value
+		// of exactly 1 (e.g. -1) selects the singular unit name.
 		let suffix;
-		if (numericValue === 1) {
+		if (Math.abs(numericValue) === 1) {
 			suffix = EMPTY;
 		} else {
 			suffix = S;
@@ -466,6 +508,13 @@ export function decorateResult(
  * @returns {string|Array|Object|number} Formatted result in requested type
  */
 export function formatOutput(result, e, u, output, spacer) {
+	// Validate the output option. Any value other than the supported set
+	// (array, object, string, exponent) would silently fall through to the
+	// string branch below and produce misleading output.
+	if (output !== ARRAY && output !== OBJECT && output !== STRING && output !== EXPONENT) {
+		throw new TypeError(`Invalid output: ${output}`);
+	}
+
 	if (output === ARRAY) {
 		return result;
 	}

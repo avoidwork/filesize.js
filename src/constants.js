@@ -1,6 +1,7 @@
 // Error Messages
 export const INVALID_NUMBER = "Invalid number";
 export const INVALID_ROUND = "Invalid rounding method";
+export const INVALID_PRECISION = "Invalid precision";
 
 // Standard Types
 export const IEC = "iec";

@@ -41,11 +41,23 @@ import {
  * @param {string} [options.roundingMethod="round"] - Math rounding method to use
  * @param {number} [options.precision=0] - Number of significant digits (0 for auto)
  * @returns {string|Array|Object|number} Formatted file size based on output option
- * @throws {TypeError} When arg is not a valid number or roundingMethod is invalid
+ * @throws {TypeError} When arg is not a valid number, roundingMethod is invalid,
+ *   precision is out of range (1-100), or output is not a supported format
  * @example
  * filesize(1024) // "1.02 kB"
  * filesize(1024, {bits: true}) // "8.19 kbit"
  * filesize(1024, {output: "object"}) // {value: 1.02, symbol: "kB", exponent: 1, unit: "kB"}
+ *
+ * @remarks
+ * **Input coercion:** `arg` is coerced via `Number()`. Numeric strings, hex
+ *   (`"0x1F"`), binary (`"0b101"`), and octal (`"0o17"`) literals are parsed;
+ *   `null`, `""`, `" "`, `true`, `false`, and single-element arrays coerce to
+ *   their numeric value. `undefined`, `"1_000"`, and `"1000n"` throw `TypeError`.
+ *   A `bigint` that overflows `Number.MAX_SAFE_INTEGER` throws `TypeError`.
+ *
+ * **Option precedence:** When multiple options conflict, `standard` wins over
+ *   `base`; `fullform` wins over `symbols`; `locale` wins over `separator`;
+ *   and a missing `fullforms[e]` falls back to the default unit name.
  */
 export function filesize(
 	arg,
@@ -74,18 +86,14 @@ export function filesize(
 		val = 0,
 		u = EMPTY;
 
-	if (typeof arg === "bigint") {
-		num = Number(arg);
-	} else {
-		num = Number(arg);
+	num = Number(arg);
 
-		if (isNaN(num)) {
-			throw new TypeError(INVALID_NUMBER);
-		}
+	if (isNaN(num)) {
+		throw new TypeError(INVALID_NUMBER);
+	}
 
-		if (!isFinite(num)) {
-			throw new TypeError(INVALID_NUMBER);
-		}
+	if (!isFinite(num)) {
+		throw new TypeError(INVALID_NUMBER);
 	}
 
 	const { isDecimal, ceil, actualStandard } = getBaseConfiguration(standard, base);
