@@ -164,7 +164,7 @@ npm test              # Run all tests (lint + node:test)
 npm run test:watch    # Live test watching
 ```
 
-**100% test coverage** with 149 tests:
+**100% test coverage** with 255 tests:
 
 ```
 --------------|---------|----------|---------|---------|-------------------
@@ -181,10 +181,10 @@ All files     |     100 |      100 |     100 |     100 |
 
 ```bash
 npm install         # Install dependencies
-npm run dev         # Development mode with live reload
+npm run dev         # Build distributions in watch mode
 npm run build       # Build distributions
 npm run lint        # Check code style
-npm run lint:fix    # Auto-fix linting issues
+npm run fix         # Auto-fix linting issues
 ```
 
 ### Project Structure
@@ -192,9 +192,9 @@ npm run lint:fix    # Auto-fix linting issues
 ```
 filesize.js/
 ├── src/
-│   ├── filesize.js      # Main implementation (285 lines)
-│   ├── helpers.js       # Helper functions (215 lines)
-│   └── constants.js     # Constants (81 lines)
+│   ├── filesize.js      # Main implementation (286 lines)
+│   ├── helpers.js       # Helper functions (538 lines)
+│   └── constants.js     # Constants (82 lines)
 ├── tests/
 │   └── unit/
 ├── dist/                # Built distributions
