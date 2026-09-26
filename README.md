@@ -4,7 +4,7 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![Build Status](https://github.com/avoidwork/filesize.js/actions/workflows/ci.yml/badge.svg)](https://github.com/avoidwork/filesize.js/actions)
 
-A lightweight, zero-dependency JavaScript utility that converts bytes to human-readable strings. A popular choice for client and server applications that need to display file sizes — from download counters to disk-usage reports.
+A lightweight, zero-dependency JavaScript utility that converts bytes to human-readable strings. Built for client and server applications that need to display file sizes — from download counters to disk-usage reports.
 
 ## Why filesize?
 
