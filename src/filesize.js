@@ -11,6 +11,8 @@ import {
 import {
 	applyPrecisionHandling,
 	applyRounding,
+	calculateBigIntExponent,
+	calculateBigIntValue,
 	calculateExponent,
 	calculateOptimizedValue,
 	decorateResult,
@@ -86,6 +88,8 @@ export function filesize(
 		val = 0,
 		u = EMPTY;
 
+	const isBigInt = typeof arg === "bigint";
+
 	num = Number(arg);
 
 	if (isNaN(num)) {
@@ -125,27 +129,43 @@ export function filesize(
 		);
 	}
 
+	// BigInt inputs use bigint arithmetic to preserve precision above
+	// Number.MAX_SAFE_INTEGER and detect unit boundaries accurately.
+	const bigNum = isBigInt ? (neg ? -BigInt(arg) : BigInt(arg)) : null;
+
 	// Exponent calculation + clamp + precision adjustment
-	const { e: calculatedE, precision: precisionAdjusted } = calculateExponent(
-		num,
-		e,
-		exponent,
-		isDecimal,
-		precision,
-	);
-	e = calculatedE;
+	let precisionAdjusted = precision;
+	if (isBigInt) {
+		const { e: calculatedE, precision: pa } = calculateBigIntExponent(
+			bigNum,
+			e,
+			exponent,
+			isDecimal,
+			precision,
+		);
+		e = calculatedE;
+		precisionAdjusted = pa;
+	} else {
+		const { e: calculatedE, precision: pa } = calculateExponent(
+			num,
+			e,
+			exponent,
+			isDecimal,
+			precision,
+		);
+		e = calculatedE;
+		precisionAdjusted = pa;
+	}
 	const autoExponent = exponent === -1 || isNaN(exponent);
 
-	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
-		num,
-		e,
-		isDecimal,
-		bits,
-		ceil,
-		autoExponent,
-	);
-	val = valueResult;
-	e = valueExponent;
+	let valueResult;
+	if (isBigInt) {
+		valueResult = calculateBigIntValue(bigNum, e, isDecimal, bits, ceil, autoExponent);
+	} else {
+		valueResult = calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent);
+	}
+	val = valueResult.result;
+	e = valueResult.e;
 
 	// Rounding + auto-increment ceiling
 	const rounded = applyRounding(val, ceil, e, round, roundingFunc, autoExponent);

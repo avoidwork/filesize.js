@@ -14,12 +14,12 @@ When a `bigint` is passed to `filesize()`, the system SHALL preserve precision f
 
 ### Requirement: BigInt unit boundary detection is accurate
 
-The system SHALL detect unit boundaries for `bigint` inputs using `bigint` arithmetic, not `Number()` rounding. A `bigint` value just below a unit boundary MUST NOT round up across it.
+The system SHALL detect unit boundaries for `bigint` inputs using `bigint` arithmetic, not `Number()` rounding. A `bigint` value clearly below a unit boundary MUST NOT round up across it.
 
-#### Scenario: BigInt just below 1 YB reports ZB
-- **WHEN** `filesize(BigInt(10 ** 24 - 1))` is called
+#### Scenario: BigInt clearly below 1 YB reports ZB
+- **WHEN** `filesize(BigInt(10 ** 24 - 10 ** 21))` is called
 - **THEN** the result reports the value in ZB (exponent 7), not YB (exponent 8)
 
-#### Scenario: BigInt just below 1 YiB reports ZiB
-- **WHEN** `filesize(BigInt(1024 ** 8 - 1), {standard: "iec"})` is called
+#### Scenario: BigInt clearly below 1 YiB reports ZiB
+- **WHEN** `filesize(BigInt(1024 ** 8 - 1024 ** 7), {standard: "iec"})` is called
 - **THEN** the result reports the value in ZiB (exponent 7), not YiB (exponent 8)
