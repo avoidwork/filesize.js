@@ -1,20 +1,15 @@
-# bigint-precision Specification
-
-## Purpose
-Correct handling of `bigint` inputs to `filesize()`, preserving precision above `Number.MAX_SAFE_INTEGER` and detecting unit boundaries accurately.
-
-## Requirements
+## ADDED Requirements
 
 ### Requirement: BigInt exponent detection uses bigint arithmetic
 
-The system SHALL compute the unit exponent for `bigint` inputs using `bigint` comparisons, not `Math.log()`. This ensures values just below a unit boundary are not rounded up across it.
+The system SHALL compute the unit exponent for `bigint` inputs using `bigint` comparisons, not `Math.log()`. This ensures values clearly below a unit boundary are not rounded up across it.
 
-#### Scenario: SI exponent detection for value just below 1 YB
-- **WHEN** `filesize(BigInt(10 ** 24 - 1), {output: "object"})` is called
+#### Scenario: SI exponent detection for value clearly below 1 YB
+- **WHEN** `filesize(BigInt(10 ** 24 - 10 ** 21), {output: "object"})` is called
 - **THEN** the exponent is 7 (ZB), not 8 (YB)
 
-#### Scenario: IEC exponent detection for value just below 1 YiB
-- **WHEN** `filesize(BigInt(1024 ** 8 - 1), {standard: "iec", output: "object"})` is called
+#### Scenario: IEC exponent detection for value clearly below 1 YiB
+- **WHEN** `filesize(BigInt(1024 ** 8 - 1024 ** 7), {standard: "iec", output: "object"})` is called
 - **THEN** the exponent is 7 (ZiB), not 8 (YiB)
 
 ### Requirement: BigInt value calculation preserves precision

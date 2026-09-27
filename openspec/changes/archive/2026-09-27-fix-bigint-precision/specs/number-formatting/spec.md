@@ -1,4 +1,4 @@
-## MODIFIED Requirements
+## ADDED Requirements
 
 ### Requirement: BigInt inputs preserve precision above Number.MAX_SAFE_INTEGER
 
