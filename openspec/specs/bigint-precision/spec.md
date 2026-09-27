@@ -1,0 +1,33 @@
+# bigint-precision Specification
+
+## Purpose
+TBD - created by archiving change fix-bigint-precision. Update Purpose after archive.
+## Requirements
+### Requirement: BigInt exponent detection uses bigint arithmetic
+
+The system SHALL compute the unit exponent for `bigint` inputs using `bigint` comparisons, not `Math.log()`. This ensures values clearly below a unit boundary are not rounded up across it.
+
+#### Scenario: SI exponent detection for value clearly below 1 YB
+- **WHEN** `filesize(BigInt(10 ** 24 - 10 ** 21), {output: "object"})` is called
+- **THEN** the exponent is 7 (ZB), not 8 (YB)
+
+#### Scenario: IEC exponent detection for value clearly below 1 YiB
+- **WHEN** `filesize(BigInt(1024 ** 8 - 1024 ** 7), {standard: "iec", output: "object"})` is called
+- **THEN** the exponent is 7 (ZiB), not 8 (YiB)
+
+### Requirement: BigInt value calculation preserves precision
+
+The system SHALL compute the value for `bigint` inputs using `bigint` arithmetic, converting to `number` only at the final division. This preserves precision above 2^53.
+
+#### Scenario: BigInt value above 2^53 is distinct
+- **WHEN** `filesize(BigInt(2 ** 53 + 1), {round: 15, output: "object"})` is called
+- **THEN** the value differs from `filesize(BigInt(2 ** 53), {round: 15, output: "object"})`
+
+### Requirement: BigInt values above the unit ceiling clamp to exponent 8
+
+The system SHALL clamp the exponent to 8 (YB for SI, YiB for IEC) for `bigint` values above the unit ceiling, preserving existing behavior for huge values.
+
+#### Scenario: BigInt above 1 YB clamps to YB
+- **WHEN** `filesize(BigInt(10 ** 30), {output: "object"})` is called
+- **THEN** the exponent is 8 (YB) and the value reflects the clamped unit
+

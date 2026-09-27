@@ -225,6 +225,77 @@ function calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent = t
 }
 
 /**
+ * Calculates the unit exponent for a bigint input using bigint comparisons
+ * @param {bigint} num - Input file size in bytes
+ * @param {number} e - Current exponent value
+ * @param {number} exponent - Original user-provided exponent option (-1 for auto)
+ * @param {boolean} isDecimal - Whether to use decimal (SI) base
+ * @param {number} precision - Current precision value (modified when e > 8)
+ * @returns {Object} Object with computed e value and possibly adjusted precision
+ */
+function calculateBigIntExponent(num, e, exponent, isDecimal, precision) {
+	if (typeof e === "string") {
+		e = Number(e);
+	}
+
+	if (e === -1 || isNaN(e)) {
+		e = 0;
+		if (isDecimal) {
+			while (e < 8 && num >= 10n ** BigInt(3 * (e + 1))) {
+				e++;
+			}
+		} else {
+			while (e < 8 && num >= 1024n ** BigInt(e + 1)) {
+				e++;
+			}
+		}
+	} else if (e < 0) {
+		e = 0;
+	} else {
+		e = Math.floor(e);
+	}
+
+	if (e > 8) {
+		if (precision > 0) {
+			precision += 8 - e;
+		}
+		return { e: 8, precision };
+	}
+
+	return { e, precision };
+}
+
+/**
+ * Calculates the value for a bigint input using bigint arithmetic
+ * @param {bigint} num - Input file size in bytes
+ * @param {number} e - Current exponent
+ * @param {boolean} isDecimal - Whether using decimal base
+ * @param {boolean} bits - Whether to calculate bits
+ * @param {number} ceil - Ceiling value for auto-increment
+ * @param {boolean} autoExponent - Whether exponent is auto (-1 or NaN)
+ * @returns {Object} Object with result and e properties
+ */
+function calculateBigIntValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
+	const power = isDecimal ? 10n ** BigInt(3 * e) : 1024n ** BigInt(e);
+	// Scaled division preserves precision above Number.MAX_SAFE_INTEGER.
+	// Multiply by 10^16 before dividing, then scale back down, so the
+	// quotient keeps ~16 significant digits instead of collapsing to a float.
+	const SHIFT = 10n ** 16n;
+	let result = Number((num * SHIFT) / power) / Number(SHIFT);
+
+	if (bits) {
+		result *= 8;
+		// Handle auto-increment for bits (only when exponent is auto)
+		if (autoExponent && result >= ceil && e < 8) {
+			result /= ceil;
+			e++;
+		}
+	}
+
+	return { result, e };
+}
+
+/**
  * Optimized precision handling with scientific notation correction
  * @param {number} value - Current value
  * @param {number} precision - Precision to apply
@@ -661,6 +732,8 @@ function filesize(
 		val = 0,
 		u = EMPTY;
 
+	const isBigInt = typeof arg === "bigint";
+
 	num = Number(arg);
 
 	if (isNaN(num)) {
@@ -700,27 +773,43 @@ function filesize(
 		);
 	}
 
+	// BigInt inputs use bigint arithmetic to preserve precision above
+	// Number.MAX_SAFE_INTEGER and detect unit boundaries accurately.
+	const bigNum = isBigInt ? (neg ? -BigInt(arg) : BigInt(arg)) : null;
+
 	// Exponent calculation + clamp + precision adjustment
-	const { e: calculatedE, precision: precisionAdjusted } = calculateExponent(
-		num,
-		e,
-		exponent,
-		isDecimal,
-		precision,
-	);
-	e = calculatedE;
+	let precisionAdjusted = precision;
+	if (isBigInt) {
+		const { e: calculatedE, precision: pa } = calculateBigIntExponent(
+			bigNum,
+			e,
+			exponent,
+			isDecimal,
+			precision,
+		);
+		e = calculatedE;
+		precisionAdjusted = pa;
+	} else {
+		const { e: calculatedE, precision: pa } = calculateExponent(
+			num,
+			e,
+			exponent,
+			isDecimal,
+			precision,
+		);
+		e = calculatedE;
+		precisionAdjusted = pa;
+	}
 	const autoExponent = exponent === -1 || isNaN(exponent);
 
-	const { result: valueResult, e: valueExponent } = calculateOptimizedValue(
-		num,
-		e,
-		isDecimal,
-		bits,
-		ceil,
-		autoExponent,
-	);
-	val = valueResult;
-	e = valueExponent;
+	let valueResult;
+	if (isBigInt) {
+		valueResult = calculateBigIntValue(bigNum, e, isDecimal, bits, ceil, autoExponent);
+	} else {
+		valueResult = calculateOptimizedValue(num, e, isDecimal, bits, ceil, autoExponent);
+	}
+	val = valueResult.result;
+	e = valueResult.e;
 
 	// Rounding + auto-increment ceiling
 	const rounded = applyRounding(val, ceil, e, round, roundingFunc, autoExponent);

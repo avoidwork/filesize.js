@@ -1113,6 +1113,78 @@ describe("filesize", () => {
 			});
 		});
 	});
+
+	describe("BigInt precision (issue #354)", () => {
+		it("should preserve precision above Number.MAX_SAFE_INTEGER", () => {
+			const base = filesize(2n ** 53n, { round: 15 });
+			const incremented = filesize(2n ** 53n + 1n, { round: 15 });
+			assert.notStrictEqual(base, incremented);
+		});
+
+		it("should produce distinct values for 2^53 and 2^53+1", () => {
+			const base = filesize(2n ** 53n, { round: 15, output: "object" });
+			const incremented = filesize(2n ** 53n + 1n, { round: 15, output: "object" });
+			assert.notStrictEqual(base.value, incremented.value);
+		});
+
+		it("should detect SI unit boundaries accurately", () => {
+			const result = filesize(10n ** 24n - 10n ** 21n, { output: "object" });
+			assert.strictEqual(result.exponent, 7);
+			assert.strictEqual(result.symbol, "ZB");
+		});
+
+		it("should detect IEC unit boundaries accurately", () => {
+			const result = filesize(1024n ** 8n - 1024n ** 7n, { standard: "iec", output: "object" });
+			assert.strictEqual(result.exponent, 7);
+			assert.strictEqual(result.symbol, "ZiB");
+		});
+
+		it("should clamp values above the unit ceiling to exponent 8", () => {
+			const result = filesize(10n ** 30n, { output: "object" });
+			assert.strictEqual(result.exponent, 8);
+			assert.strictEqual(result.symbol, "YB");
+		});
+
+		it("should handle BigInt with bits option", () => {
+			const result = filesize(1024n, { bits: true, round: 2 });
+			assert.strictEqual(result, "8.19 kbit");
+		});
+
+		it("should clamp a forced exponent below -1 to 0 for BigInt", () => {
+			const result = filesize(1024n, { exponent: -2, output: "object" });
+			assert.strictEqual(result.exponent, 0);
+			assert.strictEqual(result.symbol, "B");
+		});
+
+		it("should clamp a forced exponent above 8 to 8 for BigInt", () => {
+			const result = filesize(1024n, { exponent: 10, output: "object" });
+			assert.strictEqual(result.exponent, 8);
+			assert.strictEqual(result.symbol, "YB");
+		});
+
+		it("should auto-increment the exponent for BigInt bits", () => {
+			const result = filesize(125000n, { bits: true, output: "object" });
+			assert.strictEqual(result.exponent, 2);
+			assert.strictEqual(result.symbol, "Mbit");
+		});
+
+		it("should coerce a string exponent for BigInt", () => {
+			const result = filesize(1024n, { exponent: "1" });
+			assert.strictEqual(result, "1.02 kB");
+		});
+
+		it("should adjust precision when clamping a forced exponent above 8 for BigInt", () => {
+			const result = filesize(1024n, { exponent: 10, precision: 3, output: "object" });
+			assert.strictEqual(result.exponent, 8);
+			assert.strictEqual(result.symbol, "YB");
+		});
+
+		it("should not auto-increment BigInt bits when exponent is already 8", () => {
+			const result = filesize(10n ** 30n, { bits: true, output: "object" });
+			assert.strictEqual(result.exponent, 8);
+			assert.strictEqual(result.symbol, "Ybit");
+		});
+	});
 });
 
 describe("partial", () => {
