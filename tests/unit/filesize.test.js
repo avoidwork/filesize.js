@@ -38,6 +38,13 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(0, { locale: "de-DE", output: "exponent" }), 0);
 		});
 
+		it("should retain zero precision when a locale is requested", () => {
+			assert.strictEqual(filesize(0, { locale: "de-DE", precision: 3 }), "0.00 B");
+			assert.strictEqual(filesize(0, { locale: "de-DE", precision: 3, pad: true }), "0.00 B");
+			assert.strictEqual(filesize(0, { locale: true, precision: 3 }), "0.00 B");
+			assert.strictEqual(filesize(0, { separator: ",", precision: 3, pad: true }), "0,00 B");
+		});
+
 		it("should handle small numbers", () => {
 			assert.strictEqual(filesize(1), "1 B");
 			assert.strictEqual(filesize(512), "512 B");

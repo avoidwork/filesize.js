@@ -102,7 +102,7 @@ export function handleZeroValue(
 	}
 
 	value = applyNumberFormatting(
-		locale === true || locale.length > 0 ? 0 : value,
+		precision <= 0 && (locale === true || locale.length > 0) ? 0 : value,
 		locale,
 		localeOptions,
 		separator,
