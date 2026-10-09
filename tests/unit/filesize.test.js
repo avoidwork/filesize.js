@@ -19,6 +19,25 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(0), "0 B");
 		});
 
+		it("should format zero using locale and separator options", () => {
+			assert.strictEqual(filesize(0, { locale: "de-DE", pad: true }), "0,00 B");
+			assert.strictEqual(filesize(0n, { separator: ",", pad: true }), "0,00 B");
+			assert.strictEqual(filesize(0, { separator: ",", precision: 3 }), "0,00 B");
+			assert.deepStrictEqual(
+				filesize(0, {
+					locale: "en-US",
+					localeOptions: { minimumFractionDigits: 3 },
+					output: "array",
+				}),
+				["0.000", "B"],
+			);
+			assert.strictEqual(
+				filesize(0, { locale: true, pad: true, output: "object" }).value,
+				(0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+			);
+			assert.strictEqual(filesize(0, { locale: "de-DE", output: "exponent" }), 0);
+		});
+
 		it("should handle small numbers", () => {
 			assert.strictEqual(filesize(1), "1 B");
 			assert.strictEqual(filesize(512), "512 B");
