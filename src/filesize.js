@@ -126,6 +126,10 @@ export function filesize(
 			spacer,
 			pad,
 			round,
+			undefined,
+			locale,
+			localeOptions,
+			separator,
 		);
 	}
 

@@ -127,6 +127,9 @@ function getBaseConfiguration(standard, base) {
  * @param {boolean} pad - Whether to pad decimal places
  * @param {number} round - Number of decimal places for padding
  * @param {string} [symbol] - Symbol to use (defaults based on bits/standard)
+ * @param {string|boolean} [locale=""] - Locale setting
+ * @param {Object} [localeOptions={}] - Locale formatting options
+ * @param {string} [separator=""] - Custom decimal separator
  * @returns {string|Array|Object|number} Formatted result
  */
 function handleZeroValue(
@@ -141,6 +144,9 @@ function handleZeroValue(
 	pad,
 	round,
 	symbol,
+	locale = EMPTY,
+	localeOptions = {},
+	separator = EMPTY,
 ) {
 	let value;
 	if (precision > 0) {
@@ -154,6 +160,16 @@ function handleZeroValue(
 	if (output === EXPONENT) {
 		return 0;
 	}
+
+	value = applyNumberFormatting(
+		precision <= 0 && (locale === true || locale.length > 0) ? 0 : value,
+		locale,
+		localeOptions,
+		separator,
+		pad && precision <= 0,
+		round,
+		Math.round,
+	);
 
 	// Set default symbol if not provided
 	if (!symbol) {
@@ -770,6 +786,10 @@ function filesize(
 			spacer,
 			pad,
 			round,
+			undefined,
+			locale,
+			localeOptions,
+			separator,
 		);
 	}
 
