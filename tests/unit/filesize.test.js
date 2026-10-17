@@ -797,6 +797,35 @@ describe("filesize", () => {
 				assert(!result.includes("e+"), `Result "${result}" contains scientific notation`);
 				assert(!result.includes("e-"), `Result "${result}" contains scientific notation`);
 			});
+
+			it("should not truncate small values when expanding scientific notation", () => {
+				// 1 B in GB rounded to 10 places is 1e-9, which used to collapse to "0".
+				assert.strictEqual(filesize(1, { exponent: 3, round: 10 }), "0.000000001 GB");
+				assert.strictEqual(filesize(5, { exponent: 3, round: 9 }), "0.000000005 GB");
+				assert.strictEqual(filesize(-1, { exponent: 3, round: 10 }), "-0.000000001 GB");
+				assert.strictEqual(filesize(1, { exponent: 3, round: 10, pad: true }), "0.0000000010 GB");
+				assert.deepStrictEqual(filesize(150, { exponent: 3, round: 10, output: "array" }), [
+					"0.00000015",
+					"GB",
+				]);
+			});
+
+			it("should not leak scientific notation with a custom separator", () => {
+				assert.strictEqual(
+					filesize(1, { exponent: 3, round: 10, separator: "," }),
+					"0,000000001 GB",
+				);
+				assert.strictEqual(
+					filesize(1e22, { exponent: 0, separator: "," }),
+					"10000000000000000000000 B",
+				);
+				assert.strictEqual(
+					filesize(1e22, { exponent: 0, separator: ",", pad: true }),
+					"10000000000000000000000,00 B",
+				);
+				const result = filesize(Number.MAX_VALUE, { separator: "," });
+				assert(!result.includes("e+"), `Result "${result}" contains scientific notation`);
+			});
 		});
 
 		describe("Option precedence", () => {
