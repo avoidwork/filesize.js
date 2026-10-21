@@ -411,21 +411,27 @@ function applyNumberFormatting(
 		result = result.toLocaleString(undefined, localePad);
 	} else if (locale.length > 0) {
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
-	} else if (separator.length > 0) {
+	} else {
 		// Round before separator replacement to ensure excess decimal places
 		// are truncated when pad is also set (fixes padding + separator bug).
-		if (pad && round > 0) {
+		if (separator.length > 0 && pad && round > 0) {
 			const p = Math.pow(10, round);
 			result = roundingFunc(result * p) / p;
 		}
-		result = result.toString().replace(PERIOD, separator);
-	}
 
-	// Expand scientific notation to full decimal so pathological values like
-	// Number.MAX_VALUE don't leak "e+284" into the output. Only applies when
-	// the value is a finite number whose string form uses exponent notation.
-	if (typeof result === "number" && isFinite(result) && result.toString().includes(E)) {
-		result = result.toLocaleString("en-US", { useGrouping: false });
+		// Expand scientific notation to full decimal so pathological values like
+		// Number.MAX_VALUE don't leak "e+284" into the output. Only applies when
+		// the value is a finite number whose string form uses exponent notation.
+		// It runs before the separator is applied so a custom separator can't
+		// leave "1e-9" behind, and keeps up to 20 fraction digits so small
+		// values such as 1e-9 aren't truncated to "0" (the Intl default is 3).
+		if (typeof result === "number" && isFinite(result) && result.toString().includes(E)) {
+			result = result.toLocaleString("en-US", { useGrouping: false, maximumFractionDigits: 20 });
+		}
+
+		if (separator.length > 0) {
+			result = result.toString().replace(PERIOD, separator);
+		}
 	}
 
 	// Apply padding for the non-locale paths, where the string has a single
