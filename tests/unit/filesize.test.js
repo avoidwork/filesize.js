@@ -337,6 +337,16 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(1536000, { precision: 2 }), "1.5 MB");
 		});
 
+		it("should apply locale formatting when precision is set", () => {
+			// A string value from toPrecision ignores toLocaleString, so the
+			// locale's decimal separator was previously dropped (1.2, not 1,2).
+			assert.strictEqual(filesize(1234, { locale: "sv", precision: 2 }), "1,2 kB");
+			assert.strictEqual(filesize(1234, { locale: "de-DE", precision: 2 }), "1,2 kB");
+			assert.strictEqual(filesize(1234, { locale: "en-US", precision: 2 }), "1.2 kB");
+			assert.strictEqual(filesize(1234, { locale: "sv", precision: 3 }), "1,23 kB");
+			assert.strictEqual(filesize(-1234, { locale: "sv", precision: 2 }), "−1,2 kB");
+		});
+
 		it("should remove scientific notation from precision results", () => {
 			// Test cases where toPrecision would normally produce scientific notation
 			// but our implementation removes it by splitting on "e"
