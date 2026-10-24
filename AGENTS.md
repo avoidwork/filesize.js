@@ -78,7 +78,7 @@ filesize.js/
 - **Helper functions**: `src/helpers.js`
 - **Constants**: `src/constants.js`
 - **Zero dependencies**: Uses only native JavaScript APIs
-- **100% test coverage**: ~149 tests passing
+- **100% test coverage**: ~273 tests passing
 
 ### 2.1 Quick Commands
 
