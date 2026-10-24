@@ -347,6 +347,22 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(-1234, { locale: "sv", precision: 2 }), "−1,2 kB");
 		});
 
+		it("should apply the system locale when precision is set", () => {
+			for (const value of [1234, -1234]) {
+				assert.strictEqual(
+					filesize(value, { locale: true, precision: 6, exponent: 0 }),
+					`${new Intl.NumberFormat().format(value)} B`,
+				);
+				assert.strictEqual(
+					filesize(value, { locale: true, precision: 6, exponent: 0, pad: true }),
+					`${new Intl.NumberFormat(undefined, {
+						minimumFractionDigits: 2,
+						maximumFractionDigits: 2,
+					}).format(value)} B`,
+				);
+			}
+		});
+
 		it("should remove scientific notation from precision results", () => {
 			// Test cases where toPrecision would normally produce scientific notation
 			// but our implementation removes it by splitting on "e"
