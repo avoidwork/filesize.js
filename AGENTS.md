@@ -15,9 +15,12 @@ When updating this document, append new information or sections. Do NOT delete o
 The following are **strictly prohibited**:
 
 - Hardcoded secrets, API keys, or credentials.
-- `eval()`, `Function` constructor, or command injection.
-- `*` imports.
+- `console.log()` statements in production code (use a structured logger instead).
+- `catch (err) {}` empty or silent catch blocks.
+- `eval()`, `new Function()`, or command injection at any level.
+- Wildcard exports (`export * from '...'`).
 - Mutating a list while iterating over it.
+- Blocking operations (`fs.readFileSync`, `sync` HTTP clients) inside async functions.
 - Prototype pollution (write-only symbol access).
 
 ### 1.2 Security Rules
@@ -33,14 +36,19 @@ Follow the [OWASP Top 10](https://owasp.org/www-project-top-10/) for every piece
 ### 1.3 Git Operations
 
 - **Never rebase under any circumstance without explicit agreement from the user.** Never assume your decision is correct.
+- **Never amend a commit.** Use additional commits instead.
 - Never force push.
+- **Skill execution is implied authorization.** When a skill is executing — standalone or as part of a chained workflow — the skill's own directives constitute the user's authorization for the git operations it performs (staging, committing, pushing, and opening a PR on the branch it created). Do not halt to request explicit agreement for these. The prohibitions above (rebase, amend, force-push) still apply and are never implied by skill execution.
 
 ### 1.4 Core Principles
 
 - **DRY**: Extract repeated logic into functions, classes, or utilities.
 - **KISS**: Prefer simple, readable code over clever solutions.
 - **YAGNI**: Do NOT build features, abstractions, or configurations not required by the current spec.
+- **No Unneeded Refactoring**: Do not refactor working code for style, naming, or structure unless it directly addresses a bug, improves performance, or is required by the current spec. Refactoring without a clear purpose wastes time and introduces risk.
 - **Single Responsibility**: Each module, class, and function must have one reason to change.
+- **Open/Closed**: Extend via composition — not by modifying existing logic.
+- **Dependency Inversion**: Depend on abstractions (interfaces / DI containers) for external services.
 
 ---
 
@@ -105,14 +113,19 @@ filesize.js/
 - Raise typed errors. `filesize("invalid")` throws `TypeError: "Invalid number"`.
 - No `eval`, `Function` constructor, or command injection.
 
-### 3.4 Testing
+### 3.4 Async
+
+- Use `async/await` consistently. Never mix blocking I/O in async contexts.
+- filesize.js is a synchronous library; this applies if async is introduced.
+
+### 3.5 Testing
 
 - Unit tests live in `tests/unit/`.
 - Use `describe()` and `it()` from `node:test`.
 - Each public function or class must have at least one test.
 - **100%** statement, branch, function, and line coverage required.
 
-### 3.5 Code Style Template
+### 3.6 Code Style Template
 
 ```javascript
 // Function with JSDoc
@@ -341,13 +354,21 @@ When auditing or modifying AGENTS.md (or any file):
 3. Push the feature branch and open a PR with `gh pr create --base master`.
 4. Never commit or push directly to `main` or `master`.
 
-### 7.4 Pull Request Templates
+### 7.4 Code Review
+
+- All changes require at least one other reviewer (automated checks are mandatory but not sufficient).
+- No merging without passing CI (lint → test).
+- PR descriptions must reference related items from design documents.
+
+### 7.5 Pull Request Templates
 
 If a `.github/PULL_REQUEST_TEMPLATE.md` file exists, it MUST be used when creating PRs. Fill out every section — do not leave any section blank. If a section does not apply, write `N/A` rather than skipping it.
 
 ---
 
 ## 8. Operational Rules
+
+Session learnings — critical gotchas that affect how code must be written and tested.
 
 ### 8.1 Coverage
 
@@ -358,7 +379,25 @@ npm test              # Full test suite (lint + node:test with coverage)
 npm run test:watch    # Live test watching
 ```
 
-### 8.2 Build Process
+### 8.2 Pre-commit Hook and coverage.txt
+
+The hook is `.husky/pre-commit`, installed by husky via the `prepare` npm script (`core.hooksPath` = `.husky/_`). Its body is:
+
+```
+npm run build && npm run coverage
+```
+
+The `npm run coverage` script regenerates `coverage.txt` via `node --test --experimental-test-coverage`. Because the hook runs `npm run build` first, a build failure fails the commit. The hook does **not** run `git add -A`, so files it regenerates are **not** staged automatically — stage them explicitly before committing.
+
+Do not "fix" a hook-modified file by amending: §1.3 forbids amending outright. If a commit lands with content you did not intend to stage, add a follow-up commit instead.
+
+### 8.3 Pre-commit Runs Tests
+
+The hook gates on tests indirectly: `npm run coverage` runs `node --test` across the whole suite, and `set -o pipefail` propagates a test failure through the `grep`/redirect pipeline so the commit fails. A commit can therefore fail on test failures or build failures.
+
+There is no coverage *threshold* gate beyond the `--experimental-test-coverage` report — the report is regenerated and committed, but no minimum is enforced beyond the project's 100% convention. "100% coverage" is a review convention, not an automated check.
+
+### 8.4 Build Process
 
 ```bash
 npm run build         # Build all distributions
@@ -376,7 +415,7 @@ npm run build:analyze # Bundle size analysis
 
 **Build System**: The `ensureNewline()` plugin in `rollup.config.js` uses `generateBundle()` (not `renderChunk()`) to add trailing newlines. This preserves sourcemaps in minified builds by modifying the bundle after sourcemap generation.
 
-### 8.3 Performance
+### 8.5 Performance
 
 ### Fast Operations (>10M ops/sec)
 - Basic conversions: `filesize(1024)`
@@ -391,9 +430,23 @@ npm run build:analyze # Bundle size analysis
 2. Avoid locale formatting in performance-critical code
 3. Use `object` output for fastest structured data access
 
+### 8.6 Unreachable Code
+
+Code that can never execute is a smell. Remove dead code to avoid coverage gaps and confusion.
+
 ---
 
-## 9. Checklist Before Marking a TODO Complete
+## 9. Session Learnings
+
+Discovery notes about the codebase.
+
+### 9.1 README is the source of truth for project layout
+
+The `README.md` may show a more up-to-date project structure (e.g., additional modules, dist outputs). When in doubt, use it to verify the layout in section 2.0.
+
+---
+
+## 10. Checklist Before Marking a TODO Complete
 
 - [ ] JSDoc on all exported functions
 - [ ] Unit tests written and passing
@@ -403,3 +456,4 @@ npm run build:analyze # Bundle size analysis
 - [ ] No hardcoded secrets or credentials introduced
 - [ ] Zero external dependencies added
 - [ ] ES Modules only (no CommonJS in src/)
+- [ ] Threat model considerations addressed in PR description
