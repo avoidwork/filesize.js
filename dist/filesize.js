@@ -406,17 +406,20 @@ function applyNumberFormatting(
 	const localePad =
 		pad && round > 0 ? { minimumFractionDigits: round, maximumFractionDigits: round } : undefined;
 
+	// Strings from toPrecision ignore toLocaleString; preserve zero strings
+	// so their precision (e.g. "0.00") is retained.
+	if (
+		(locale === true || locale.length > 0) &&
+		typeof result === "string" &&
+		Number(result) !== 0
+	) {
+		result = parseFloat(result);
+	}
+
 	// Apply locale formatting
 	if (locale === true) {
 		result = result.toLocaleString(undefined, localePad);
 	} else if (locale.length > 0) {
-		// A string value (e.g. from toPrecision) ignores toLocaleString, so
-		// coerce it back to a number first to let the locale formatter apply
-		// its decimal separator (e.g. "1.2" -> "1,2" for sv/de-DE). Zero is
-		// left as a string so its precision (e.g. "0.00") is retained.
-		if (typeof result === "string" && Number(result) !== 0) {
-			result = parseFloat(result);
-		}
 		result = result.toLocaleString(locale, { ...localeOptions, ...localePad });
 	} else {
 		// Round before separator replacement to ensure excess decimal places
