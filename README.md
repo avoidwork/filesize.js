@@ -171,7 +171,7 @@ npm test              # Run all tests (lint + node:test)
 npm run test:watch    # Live test watching
 ```
 
-**100% test coverage** with 255 tests:
+**100% test coverage** with 273 tests:
 
 ```
 --------------|---------|----------|---------|---------|-------------------
@@ -199,8 +199,8 @@ npm run fix         # Auto-fix linting issues
 ```
 filesize.js/
 ├── src/
-│   ├── filesize.js      # Main implementation (286 lines)
-│   ├── helpers.js       # Helper functions (538 lines)
+│   ├── filesize.js      # Main implementation (310 lines)
+│   ├── helpers.js       # Helper functions (641 lines)
 │   └── constants.js     # Constants (82 lines)
 ├── tests/
 │   └── unit/
