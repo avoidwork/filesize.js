@@ -126,6 +126,7 @@ filesize(1, {symbols: {B: "Б"}}); // "1 Б"
 
 // BigInt
 filesize(BigInt(1024)); // "1.02 kB"
+filesize(1024n ** 6n, {standard: "iec"}); // "1 EiB" (above Number.MAX_SAFE_INTEGER)
 
 // Negative numbers
 filesize(-1024); // "-1.02 kB"
@@ -149,7 +150,7 @@ try {
 }
 ```
 
-Invalid input includes non-numeric values, `NaN`, `Infinity`, and BigInt values that overflow `Number.MAX_SAFE_INTEGER`.
+Invalid input includes non-numeric values, `NaN`, `Infinity`, and BigInt values whose conversion to `Number` is non-finite (for example, `10n ** 309n`). BigInt values above `Number.MAX_SAFE_INTEGER` are supported.
 
 ## TypeScript
 
