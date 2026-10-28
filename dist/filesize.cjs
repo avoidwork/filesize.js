@@ -737,7 +737,8 @@ function formatOutput(result, e, u, output, spacer) {
  *   (`"0x1F"`), binary (`"0b101"`), and octal (`"0o17"`) literals are parsed;
  *   `null`, `""`, `" "`, `true`, `false`, and single-element arrays coerce to
  *   their numeric value. `undefined`, `"1_000"`, and `"1000n"` throw `TypeError`.
- *   A `bigint` that overflows `Number.MAX_SAFE_INTEGER` throws `TypeError`.
+ *   BigInt values above `Number.MAX_SAFE_INTEGER` are supported. A `bigint`
+ *   whose conversion to `Number` is non-finite throws `TypeError`.
  *
  * **Option precedence:** When multiple options conflict, `standard` wins over
  *   `base`; `fullform` wins over `symbols`; `locale` wins over `separator`;
