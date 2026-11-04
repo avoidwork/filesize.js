@@ -1,7 +1,8 @@
 import {
+	CEIL,
 	EMPTY,
 	EXPONENT,
-	FUNCTION,
+	FLOOR,
 	INVALID_NUMBER,
 	INVALID_ROUND,
 	ROUND,
@@ -107,7 +108,10 @@ export function filesize(
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
-	if (typeof roundingFunc !== FUNCTION) {
+	// Restrict roundingMethod to the documented/typed set (round, floor, ceil).
+	// Math[roundingMethod] accepts any Math function (e.g. sqrt, abs), which
+	// produces nonsensical size output; validate the string against a whitelist.
+	if (roundingMethod !== ROUND && roundingMethod !== FLOOR && roundingMethod !== CEIL) {
 		throw new TypeError(INVALID_ROUND);
 	}
 

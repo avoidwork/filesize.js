@@ -24,6 +24,8 @@ export const STRING: "string";
 // Processing Constants
 export const EXPONENT: "exponent";
 export const ROUND: "round";
+export const FLOOR: "floor";
+export const CEIL: "ceil";
 
 // Special Characters and Values
 export const E: "e";
