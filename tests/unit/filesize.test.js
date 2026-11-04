@@ -741,6 +741,9 @@ describe("filesize", () => {
 		it("should throw TypeError for invalid rounding method", () => {
 			assert.throws(() => filesize(1024, { roundingMethod: "invalid" }), TypeError);
 			assert.throws(() => filesize(1024, { roundingMethod: "nonexistent" }), TypeError);
+			// Math functions outside the supported set must also be rejected
+			assert.throws(() => filesize(1024, { roundingMethod: "sqrt" }), TypeError);
+			assert.throws(() => filesize(1024, { roundingMethod: "abs" }), TypeError);
 		});
 	});
 

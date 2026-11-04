@@ -25,13 +25,14 @@ const SI_KBYTE = "kB";
 
 // Output Format Types
 const ARRAY = "array";
-const FUNCTION = "function";
 const OBJECT = "object";
 const STRING = "string";
 
 // Processing Constants
 const EXPONENT = "exponent";
 const ROUND = "round";
+const FLOOR = "floor";
+const CEIL = "ceil";
 
 // Special Characters and Values
 const E = "e";
@@ -783,7 +784,10 @@ function filesize(
 		neg = num < 0,
 		roundingFunc = Math[roundingMethod];
 
-	if (typeof roundingFunc !== FUNCTION) {
+	// Restrict roundingMethod to the documented/typed set (round, floor, ceil).
+	// Math[roundingMethod] accepts any Math function (e.g. sqrt, abs), which
+	// produces nonsensical size output; validate the string against a whitelist.
+	if (roundingMethod !== ROUND && roundingMethod !== FLOOR && roundingMethod !== CEIL) {
 		throw new TypeError(INVALID_ROUND);
 	}
 
