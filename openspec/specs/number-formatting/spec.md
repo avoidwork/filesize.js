@@ -2,7 +2,9 @@
 
 ## Purpose
 TBD - created by archiving change fix-audit-findings-filesize-js. Update Purpose after archive.
+
 ## Requirements
+
 ### Requirement: Padding truncates excess decimal places with separator
 When both `separator` and `pad` options are set, the formatted value MUST be truncated to the specified `round` decimal places before the separator is applied, ensuring the output never exceeds the requested precision.
 
@@ -54,3 +56,36 @@ The system SHALL detect unit boundaries for `bigint` inputs using `bigint` arith
 - **WHEN** `filesize(BigInt(1024 ** 8 - 1024 ** 7), {standard: "iec"})` is called
 - **THEN** the result reports the value in ZiB (exponent 7), not YiB (exponent 8)
 
+### Requirement: Rounding method is restricted to supported values
+
+The `roundingMethod` option MUST be one of `round`, `floor`, or `ceil`. Any other value MUST throw `TypeError` with the message `"Invalid rounding method"`.
+
+#### Scenario: Unsupported Math function throws
+
+- **WHEN** `filesize(1536, {roundingMethod: "sqrt"})` is called
+- **THEN** a `TypeError` is thrown with message `"Invalid rounding method"`
+
+#### Scenario: Another unsupported Math function throws
+
+- **WHEN** `filesize(1536, {roundingMethod: "abs"})` is called
+- **THEN** a `TypeError` is thrown with message `"Invalid rounding method"`
+
+#### Scenario: Unknown method throws
+
+- **WHEN** `filesize(1536, {roundingMethod: "bogus"})` is called
+- **THEN** a `TypeError` is thrown with message `"Invalid rounding method"`
+
+#### Scenario: Supported round method still works
+
+- **WHEN** `filesize(1536, {roundingMethod: "round"})` is called
+- **THEN** the result is `"1.54 kB"`
+
+#### Scenario: Supported floor method still works
+
+- **WHEN** `filesize(1536, {roundingMethod: "floor"})` is called
+- **THEN** the result is `"1.53 kB"`
+
+#### Scenario: Supported ceil method still works
+
+- **WHEN** `filesize(1536, {roundingMethod: "ceil"})` is called
+- **THEN** the result is `"1.54 kB"`
