@@ -337,6 +337,19 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(1536000, { precision: 2 }), "1.5 MB");
 		});
 
+		it("should let precision work on the un-rounded value", () => {
+			// `round` used to run first, so 999.499 kB became 999.5 and
+			// toPrecision(3) produced "1.00e+3" — a premature unit bump — and
+			// digits beyond `round` were lost before toPrecision() saw them (#399).
+			assert.strictEqual(filesize(1245, { precision: 2 }), "1.2 kB");
+			assert.strictEqual(filesize(2887, { precision: 4 }), "2.887 kB");
+			assert.strictEqual(filesize(999499, { precision: 3 }), "999 kB");
+			assert.strictEqual(filesize(1245, { precision: 2, round: 0 }), "1.2 kB");
+			// whole bytes still round to integers
+			assert.strictEqual(filesize(0.001, { precision: 1 }), "0 B");
+			assert.strictEqual(filesize(0.5, { precision: 1 }), "1 B");
+		});
+
 		it("should apply locale formatting when precision is set", () => {
 			// A string value from toPrecision ignores toLocaleString, so the
 			// locale's decimal separator was previously dropped (1.2, not 1,2).
