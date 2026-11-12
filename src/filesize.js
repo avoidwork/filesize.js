@@ -176,8 +176,17 @@ export function filesize(
 	val = valueResult.result;
 	e = valueResult.e;
 
-	// Rounding + auto-increment ceiling
-	const rounded = applyRounding(val, ceil, e, round, roundingFunc, autoExponent);
+	// Rounding + auto-increment ceiling.
+	// `precision` takes precedence over `round` for decimal units (e > 0): the
+	// significant-digit pass below must see the un-rounded scaled value, or a
+	// boundary value is rounded twice (999.499 kB -> 999.5 -> "1.00e+3" -> a
+	// premature unit bump) and digits beyond `round` never survive to
+	// toPrecision(). Whole bytes (e === 0) still round to integers — a byte
+	// count is an integer quantity, and the sub-1-byte outputs are pinned on it.
+	const precisionFirst = precisionAdjusted > 0 && e > 0;
+	const rounded = precisionFirst
+		? { value: val, e }
+		: applyRounding(val, ceil, e, round, roundingFunc, autoExponent);
 	result[0] = rounded.value;
 	e = rounded.e;
 
