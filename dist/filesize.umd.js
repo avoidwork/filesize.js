@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.31
+ * @version 11.0.32
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';// Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -101,6 +101,14 @@ const STANDARD_CONFIGS = {
  * @returns {Object} Configuration object
  */
 function getBaseConfiguration(standard, base) {
+	// Case-normalize: the JSDoc advertises "SI, IEC, JEDEC", but the lookup
+	// keys are lowercase; a wrong-case spelling of a valid standard must not
+	// silently fall back to a different unit system. The parameter is a string
+	// by contract (the caller destructures a "" default), so a non-string is
+	// invalid input and fails fast right here. Unknown values keep the
+	// existing fallback behavior.
+	standard = standard.toLowerCase();
+
 	// Use cached lookup table for better performance
 	if (STANDARD_CONFIGS[standard]) {
 		return STANDARD_CONFIGS[standard];
