@@ -1487,3 +1487,28 @@ describe("partial structuredClone", () => {
 		assert.strictEqual(format2(1000), "1 second");
 	});
 });
+
+describe("standard option case-insensitivity", () => {
+	it("should accept uppercase IEC", () => {
+		assert.strictEqual(filesize(1024, { standard: "IEC" }), "1 KiB");
+		assert.strictEqual(filesize(1048576, { standard: "IEC" }), "1 MiB");
+	});
+
+	it("should accept uppercase SI", () => {
+		assert.strictEqual(filesize(1000, { standard: "SI" }), "1 kB");
+	});
+
+	it("should accept uppercase JEDEC", () => {
+		assert.strictEqual(filesize(1024, { standard: "JEDEC" }), "1 KB");
+		assert.strictEqual(filesize(1048576, { standard: "JEDEC" }), "1 MB");
+	});
+
+	it("should keep the fallback for unknown standards", () => {
+		assert.strictEqual(filesize(1024, { standard: "foobar" }), "1.02 kB");
+	});
+
+	it("should accept uppercase standard in partial()", () => {
+		const format = partial({ standard: "IEC" });
+		assert.strictEqual(format(1048576), "1 MiB");
+	});
+});

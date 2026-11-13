@@ -40,6 +40,14 @@ const STANDARD_CONFIGS = {
  * @returns {Object} Configuration object
  */
 export function getBaseConfiguration(standard, base) {
+	// Case-normalize: the JSDoc advertises "SI, IEC, JEDEC", but the lookup
+	// keys are lowercase; a wrong-case spelling of a valid standard must not
+	// silently fall back to a different unit system. The parameter is a string
+	// by contract (the caller destructures a "" default), so a non-string is
+	// invalid input and fails fast right here. Unknown values keep the
+	// existing fallback behavior.
+	standard = standard.toLowerCase();
+
 	// Use cached lookup table for better performance
 	if (STANDARD_CONFIGS[standard]) {
 		return STANDARD_CONFIGS[standard];
