@@ -145,65 +145,32 @@ describe("Helper Functions", () => {
 
 	describe("applyPrecisionHandling", () => {
 		it("should apply precision without scientific notation", () => {
-			const result = applyPrecisionHandling(1.5, 2, 1, 1024, false, false, 1024, Math.round, 2, -1);
+			const result = applyPrecisionHandling(1.5, 2, 1, 1024, false, false, 1024, -1);
 			assert.deepStrictEqual(result, { value: "1.5", e: 1 });
 		});
 
 		it("should handle scientific notation with increment when exponent is -1", () => {
 			// Test with a large number that would produce scientific notation
-			const result = applyPrecisionHandling(
-				1000000000000,
-				1,
-				3,
-				1e15,
-				true,
-				false,
-				1000,
-				Math.round,
-				2,
-				-1,
-			);
+			const result = applyPrecisionHandling(1000000000000, 1, 3, 1e15, true, false, 1000, -1);
 			assert(typeof result.value === "string");
 			assert(typeof result.e === "number");
 		});
 
 		it("should handle scientific notation with increment when exponent is NaN", () => {
 			// Test that NaN also triggers auto-increment like -1
-			const result = applyPrecisionHandling(
-				1000000000000,
-				1,
-				3,
-				1e15,
-				true,
-				false,
-				1000,
-				Math.round,
-				2,
-				NaN,
-			);
+			const result = applyPrecisionHandling(1000000000000, 1, 3, 1e15, true, false, 1000, NaN);
 			assert(typeof result.value === "string");
 			assert(typeof result.e === "number");
 		});
 
 		it("should not increment when exponent is forced", () => {
 			// Test that forced exponent prevents auto-increment
-			const result = applyPrecisionHandling(
-				1000000000000,
-				1,
-				3,
-				1e15,
-				true,
-				false,
-				1000,
-				Math.round,
-				2,
-				5,
-			);
+			const result = applyPrecisionHandling(1000000000000, 1, 3, 1e15, true, false, 1000, 5);
 			assert.deepStrictEqual(result, { value: "1e+12", e: 3 });
 		});
 
 		it("should not increment when e >= 8", () => {
-			const result = applyPrecisionHandling(1.5, 2, 8, 1024, false, false, 1024, Math.round, 2, -1);
+			const result = applyPrecisionHandling(1.5, 2, 8, 1024, false, false, 1024, -1);
 			assert.deepStrictEqual(result, { value: "1.5", e: 8 });
 		});
 	});
@@ -335,7 +302,7 @@ describe("handleZeroValue with explicit symbol", () => {
 
 describe("applyPrecisionHandling with string value", () => {
 	it("should parse string value and apply precision", () => {
-		const result = applyPrecisionHandling("1.5", 2, 1, 1024, false, false, 1024, Math.round, 2, -1);
+		const result = applyPrecisionHandling("1.5", 2, 1, 1024, false, false, 1024, -1);
 		assert.deepStrictEqual(result, { value: "1.5", e: 1 });
 	});
 
@@ -504,20 +471,20 @@ describe("formatOutput edge cases", () => {
 describe("applyPrecisionHandling validation", () => {
 	it("should throw TypeError for out-of-range precision", () => {
 		assert.throws(
-			() => applyPrecisionHandling(1.5, 101, 1, 1024, false, false, 1024, Math.round, 2, -1),
+			() => applyPrecisionHandling(1.5, 101, 1, 1024, false, false, 1024, -1),
 			TypeError,
 		);
 	});
 
 	it("should throw TypeError for non-numeric precision", () => {
 		assert.throws(
-			() => applyPrecisionHandling(1.5, "foo", 1, 1024, false, false, 1024, Math.round, 2, -1),
+			() => applyPrecisionHandling(1.5, "foo", 1, 1024, false, false, 1024, -1),
 			TypeError,
 		);
 	});
 
 	it("should floor non-integer precision", () => {
-		const result = applyPrecisionHandling(1.5, 2.5, 1, 1024, false, false, 1024, Math.round, 2, -1);
+		const result = applyPrecisionHandling(1.5, 2.5, 1, 1024, false, false, 1024, -1);
 		assert.strictEqual(result.value, "1.5");
 	});
 });

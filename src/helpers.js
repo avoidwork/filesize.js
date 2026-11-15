@@ -260,7 +260,7 @@ export function calculateBigIntValue(num, e, isDecimal, bits, ceil, autoExponent
 }
 
 /**
- * Optimized precision handling with scientific notation correction
+ * Optimized precision handling with unit overflow correction
  * @param {number} value - Current value
  * @param {number} precision - Precision to apply
  * @param {number} e - Current exponent
@@ -268,23 +268,10 @@ export function calculateBigIntValue(num, e, isDecimal, bits, ceil, autoExponent
  * @param {boolean} isDecimal - Whether using decimal base
  * @param {boolean} bits - Whether calculating bits
  * @param {number} ceil - Ceiling value
- * @param {Function} roundingFunc - Rounding function
- * @param {number} round - Round value
  * @param {number} exponent - Forced exponent (-1 for auto)
  * @returns {Object} Object with value and e properties
  */
-export function applyPrecisionHandling(
-	value,
-	precision,
-	e,
-	num,
-	isDecimal,
-	bits,
-	ceil,
-	roundingFunc,
-	round,
-	exponent,
-) {
+export function applyPrecisionHandling(value, precision, e, num, isDecimal, bits, ceil, exponent) {
 	if (typeof value === "string") {
 		value = parseFloat(value);
 	}
@@ -304,23 +291,14 @@ export function applyPrecisionHandling(
 
 	const autoExponent = exponent === -1 || isNaN(exponent);
 
-	// Handle scientific notation by recalculating with incremented exponent
-	if (result.includes(E) && e < 8 && autoExponent) {
+	// Move to the next unit when the significant digits overflow into
+	// scientific notation ("1.00e+3") or reach the unit ceiling ("1000 kB",
+	// "1024 KiB"). The new value is taken straight from the input so
+	// `precision` sees every digit, as it does in the main path.
+	if ((result.includes(E) || Number(result) >= ceil) && e < 8 && autoExponent) {
 		e++;
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-		let p;
-		if (round > 0) {
-			p = Math.pow(10, round);
-		} else {
-			p = 1;
-		}
-		let computed;
-		if (p === 1) {
-			computed = roundingFunc(valueResult);
-		} else {
-			computed = roundingFunc(valueResult * p) / p;
-		}
-		result = computed.toPrecision(precision);
+		result = valueResult.toPrecision(precision);
 	}
 
 	return { value: result, e };
