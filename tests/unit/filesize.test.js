@@ -305,7 +305,7 @@ describe("filesize", () => {
 		it("should handle fullform with precision (string value path)", () => {
 			assert.strictEqual(
 				filesize(1058223158, { standard: "iec", precision: 3, fullform: true }),
-				"0.990 gibibytes",
+				"0.986 gibibytes",
 			);
 			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
 		});
@@ -575,10 +575,10 @@ describe("filesize", () => {
 
 		it("should handle precision with specific test case for GiB values", () => {
 			// Test specific precision case: filesize(1058223158, {base: 2, standard: 'iec', precision: 3})
-			// This should output '0.990 GiB'
+			// This should output '0.986 GiB'
 			assert.strictEqual(
 				filesize(1058223158, { base: 2, standard: "iec", precision: 3 }),
-				"0.990 GiB",
+				"0.986 GiB",
 			);
 		});
 

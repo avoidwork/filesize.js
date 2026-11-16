@@ -307,20 +307,10 @@ export function applyPrecisionHandling(
 	// Handle scientific notation by recalculating with incremented exponent
 	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
+		// Apply precision to the unrounded value; rounding to `round` decimals
+		// first would round twice and discard significant digits.
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-		let p;
-		if (round > 0) {
-			p = Math.pow(10, round);
-		} else {
-			p = 1;
-		}
-		let computed;
-		if (p === 1) {
-			computed = roundingFunc(valueResult);
-		} else {
-			computed = roundingFunc(valueResult * p) / p;
-		}
-		result = computed.toPrecision(precision);
+		result = valueResult.toPrecision(precision);
 	}
 
 	return { value: result, e };
