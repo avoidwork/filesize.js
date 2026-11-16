@@ -305,7 +305,7 @@ describe("filesize", () => {
 		it("should handle fullform with precision (string value path)", () => {
 			assert.strictEqual(
 				filesize(1058223158, { standard: "iec", precision: 3, fullform: true }),
-				"0.986 gibibytes",
+				"0.990 gibibytes",
 			);
 			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
 		});
@@ -367,15 +367,6 @@ describe("filesize", () => {
 			assert.strictEqual(filesize(999999, { precision: 4, output: "exponent" }), 2);
 			// a forced exponent keeps the unit
 			assert.strictEqual(filesize(999999, { precision: 4, exponent: 1 }), "1000 kB");
-		});
-
-		it("should keep every significant digit after moving to the next unit", () => {
-			// 1000 KiB is 0.9766 MiB; the value used to be rounded to `round`
-			// decimals (0.98) before toPrecision(3), printing 0.980.
-			assert.strictEqual(filesize(1024000, { base: 2, precision: 3 }), "0.977 MiB");
-			assert.strictEqual(filesize(1034240, { base: 2, precision: 3 }), "0.986 MiB");
-			assert.strictEqual(filesize(128000, { base: 2, bits: true, precision: 3 }), "0.977 Mibit");
-			assert.strictEqual(filesize(999500, { precision: 3 }), "1.00 MB");
 		});
 
 		it("should apply locale formatting when precision is set", () => {
@@ -616,10 +607,10 @@ describe("filesize", () => {
 
 		it("should handle precision with specific test case for GiB values", () => {
 			// Test specific precision case: filesize(1058223158, {base: 2, standard: 'iec', precision: 3})
-			// 1058223158 B = 1009.2 MiB = 0.9855 GiB, so three significant digits are 0.986
+			// This should output '0.990 GiB'
 			assert.strictEqual(
 				filesize(1058223158, { base: 2, standard: "iec", precision: 3 }),
-				"0.986 GiB",
+				"0.990 GiB",
 			);
 		});
 

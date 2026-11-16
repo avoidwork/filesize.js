@@ -200,6 +200,8 @@ export function filesize(
 			isDecimal,
 			bits,
 			ceil,
+			roundingFunc,
+			round,
 			exponent,
 		);
 		result[0] = precisionResult.value;

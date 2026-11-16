@@ -482,13 +482,12 @@ Dispatches the formatted result array into the requested output type. Handles `A
 - `symbol`: `result[1]` — what appears in string/array output
 - `unit`: `u` — the base unit before customization
 
-#### `applyPrecisionHandling(value, precision, e, num, isDecimal, bits, ceil, exponent)`
+#### `applyPrecisionHandling(value, precision, e, num, isDecimal, bits, ceil, roundingFunc, round, exponent)`
 
-Handles significant digit formatting via `Number.prototype.toPrecision()`. Corrects scientific notation and unit overflow by recalculating with incremented exponent.
+Handles significant digit formatting via `Number.prototype.toPrecision()`. Corrects scientific notation by recalculating with incremented exponent.
 
 **Key behavior:**
 - `toPrecision()` can produce strings like `"1e+21"`, or reach the unit ceiling (`"1000"` kB, `"1024"` KiB) — if detected and `e < 8`, recalculates with `e + 1`
-- The recalculated value is not rounded to `round` first, so `precision` keeps every significant digit
 - Only auto-increments in auto-exponent mode
 
 #### `applyNumberFormatting(value, locale, localeOptions, separator, pad, round)`
