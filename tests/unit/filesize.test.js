@@ -305,7 +305,7 @@ describe("filesize", () => {
 		it("should handle fullform with precision (string value path)", () => {
 			assert.strictEqual(
 				filesize(1058223158, { standard: "iec", precision: 3, fullform: true }),
-				"0.990 gibibytes",
+				"0.986 gibibytes",
 			);
 			assert.strictEqual(filesize(1234567890, { precision: 2, fullform: true }), "1.2 gigabytes");
 		});
@@ -575,10 +575,10 @@ describe("filesize", () => {
 
 		it("should handle precision with specific test case for GiB values", () => {
 			// Test specific precision case: filesize(1058223158, {base: 2, standard: 'iec', precision: 3})
-			// This should output '0.990 GiB'
+			// This should output '0.986 GiB'
 			assert.strictEqual(
 				filesize(1058223158, { base: 2, standard: "iec", precision: 3 }),
-				"0.990 GiB",
+				"0.986 GiB",
 			);
 		});
 
@@ -1497,5 +1497,27 @@ describe("standard option case-insensitivity", () => {
 	it("should accept uppercase standard in partial()", () => {
 		const format = partial({ standard: "IEC" });
 		assert.strictEqual(format(1048576), "1 MiB");
+	});
+});
+
+describe("precision rounding", () => {
+	it("should keep the unit when precision rounds to the ceiling", () => {
+		assert.strictEqual(filesize(999999, { precision: 4 }), "1.000 MB");
+	});
+
+	it("should keep the unit when base 2 precision rounds to the ceiling", () => {
+		assert.strictEqual(filesize(1048575, { base: 2, precision: 4 }), "1.000 MiB");
+	});
+
+	it("should round to the first decimal before the unit conversion", () => {
+		assert.strictEqual(filesize(1024000, { base: 2, precision: 3 }), "0.977 MiB");
+	});
+
+	it("should round to the first decimal before the unit conversion (GiB)", () => {
+		assert.strictEqual(filesize(1058223158, { base: 2, precision: 3 }), "0.986 GiB");
+	});
+
+	it("should round to zero when round is 0", () => {
+		assert.strictEqual(filesize(392, { precision: 1, round: 0 }), "0.4 kB");
 	});
 });

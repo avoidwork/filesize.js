@@ -368,20 +368,10 @@ function applyPrecisionHandling(
 	// Handle scientific notation by recalculating with incremented exponent
 	if (result.includes(E) && e < 8 && autoExponent) {
 		e++;
+		// Apply precision to the unrounded value; rounding to `round` decimals
+		// first would round twice and discard significant digits.
 		const { result: valueResult } = calculateOptimizedValue(num, e, isDecimal, bits, ceil);
-		let p;
-		if (round > 0) {
-			p = Math.pow(10, round);
-		} else {
-			p = 1;
-		}
-		let computed;
-		if (p === 1) {
-			computed = roundingFunc(valueResult);
-		} else {
-			computed = roundingFunc(valueResult * p) / p;
-		}
-		result = computed.toPrecision(precision);
+		result = valueResult.toPrecision(precision);
 	}
 
 	return { value: result, e };
@@ -860,17 +850,8 @@ function filesize(
 	val = valueResult.result;
 	e = valueResult.e;
 
-	// Rounding + auto-increment ceiling.
-	// `precision` takes precedence over `round` for decimal units (e > 0): the
-	// significant-digit pass below must see the un-rounded scaled value, or a
-	// boundary value is rounded twice (999.499 kB -> 999.5 -> "1.00e+3" -> a
-	// premature unit bump) and digits beyond `round` never survive to
-	// toPrecision(). Whole bytes (e === 0) still round to integers — a byte
-	// count is an integer quantity, and the sub-1-byte outputs are pinned on it.
-	const precisionFirst = precisionAdjusted > 0 && e > 0;
-	const rounded = precisionFirst
-		? { value: val, e }
-		: applyRounding(val, ceil, e, round, roundingFunc, autoExponent);
+	// Rounding + auto-increment ceiling
+	const rounded = applyRounding(val, ceil, e, round, roundingFunc, autoExponent);
 	result[0] = rounded.value;
 	e = rounded.e;
 
