@@ -1520,4 +1520,10 @@ describe("precision rounding", () => {
 	it("should round to zero when round is 0", () => {
 		assert.strictEqual(filesize(392, { precision: 1, round: 0 }), "0.4 kB");
 	});
+
+	it("should not leak scientific notation at the exponent ceiling", () => {
+		assert.strictEqual(filesize(10n ** 30n, { precision: 3 }), "1000000 YB");
+		assert.strictEqual(filesize(1024n ** 8n * 1000n, { precision: 2, standard: "iec" }), "1000 YiB");
+		assert.strictEqual(filesize(10n ** 27n, { precision: 3 }), "1000 YB");
+	});
 });
