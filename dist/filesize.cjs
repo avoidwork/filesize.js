@@ -444,7 +444,10 @@ function applyNumberFormatting(
 			(typeof result === "string" && result.includes(E)) ||
 			(typeof result === "number" && isFinite(result) && result.toString().includes(E))
 		) {
-			result = Number(result).toLocaleString("en-US", { useGrouping: false, maximumFractionDigits: 20 });
+			result = Number(result).toLocaleString("en-US", {
+				useGrouping: false,
+				maximumFractionDigits: 20,
+			});
 		}
 
 		if (separator.length > 0) {
