@@ -368,13 +368,21 @@ export function applyNumberFormatting(
 		}
 
 		// Expand scientific notation to full decimal so pathological values like
-		// Number.MAX_VALUE don't leak "e+284" into the output. Only applies when
-		// the value is a finite number whose string form uses exponent notation.
-		// It runs before the separator is applied so a custom separator can't
-		// leave "1e-9" behind, and keeps up to 20 fraction digits so small
-		// values such as 1e-9 aren't truncated to "0" (the Intl default is 3).
-		if (typeof result === "number" && isFinite(result) && result.toString().includes(E)) {
-			result = result.toLocaleString("en-US", { useGrouping: false, maximumFractionDigits: 20 });
+		// Number.MAX_VALUE don't leak "e+284" into the output. Also handles the
+		// string results from toPrecision in the precision path, which can
+		// produce "1.00e+6" at the exponent ceiling. Only applies when the
+		// value's string form uses exponent notation. It runs before the
+		// separator is applied so a custom separator can't leave "1e-9" behind,
+		// and keeps up to 20 fraction digits so small values such as 1e-9
+		// aren't truncated to "0" (the Intl default is 3).
+		if (
+			(typeof result === "string" && result.includes(E)) ||
+			(typeof result === "number" && isFinite(result) && result.toString().includes(E))
+		) {
+			result = Number(result).toLocaleString("en-US", {
+				useGrouping: false,
+				maximumFractionDigits: 20,
+			});
 		}
 
 		if (separator.length > 0) {
