@@ -337,6 +337,11 @@ export function applyNumberFormatting(
 ) {
 	let result = value;
 
+	// decorateResult passes a negative value that rounds to zero as "-0" so its
+	// sign survives. It must still get the locale, padding and separator that
+	// any other zero gets.
+	const negativeZero = result === "-0";
+
 	// When padding alongside a locale, let the locale formatter emit the fixed
 	// number of fraction digits. The manual string padding below cannot tell a
 	// locale-inserted grouping separator from the decimal separator, so it
@@ -345,11 +350,12 @@ export function applyNumberFormatting(
 		pad && round > 0 ? { minimumFractionDigits: round, maximumFractionDigits: round } : undefined;
 
 	// Strings from toPrecision ignore toLocaleString; preserve zero strings
-	// so their precision (e.g. "0.00") is retained.
+	// so their precision (e.g. "0.00") is retained. "-0" becomes the number -0,
+	// which the locale formatter prints with its own minus sign.
 	if (
 		(locale === true || locale.length > 0) &&
 		typeof result === "string" &&
-		Number(result) !== 0
+		(Number(result) !== 0 || negativeZero)
 	) {
 		result = parseFloat(result);
 	}
@@ -362,7 +368,9 @@ export function applyNumberFormatting(
 	} else {
 		// Round before separator replacement to ensure excess decimal places
 		// are truncated when pad is also set (fixes padding + separator bug).
-		if (separator.length > 0 && pad && round > 0) {
+		// Skipped for "-0": the arithmetic would turn it into -0, whose string
+		// form "0" drops the sign.
+		if (separator.length > 0 && pad && round > 0 && !negativeZero) {
 			const p = Math.pow(10, round);
 			result = roundingFunc(result * p) / p;
 		}
