@@ -60,7 +60,12 @@ export function handleZeroValue(
   fullforms: string[],
   output: string,
   spacer: string,
-  symbol?: string
+  pad: boolean,
+  round: number,
+  symbol?: string,
+  locale?: string | boolean,
+  localeOptions?: Intl.NumberFormatOptions,
+  separator?: string
 ): string | [number | string, string] | { value: number | string; symbol: string; exponent: number; unit: string } | number;
 
 /**
@@ -75,6 +80,42 @@ export function handleZeroValue(
  */
 export function calculateOptimizedValue(
   num: number,
+  e: number,
+  isDecimal: boolean,
+  bits: boolean,
+  ceil: number,
+  autoExponent?: boolean
+): OptimizedValueResult;
+
+/**
+ * Calculates the unit exponent for a bigint input using bigint comparisons
+ * @param num - Input file size in bytes
+ * @param e - Current exponent value
+ * @param exponent - Original user-provided exponent option (-1 for auto)
+ * @param isDecimal - Whether to use decimal (SI) base
+ * @param precision - Current precision value (modified when e > 8)
+ * @returns Object with computed e value and possibly adjusted precision
+ */
+export function calculateBigIntExponent(
+  num: bigint,
+  e: number,
+  exponent: number,
+  isDecimal: boolean,
+  precision: number
+): ExponentCalculationResult;
+
+/**
+ * Calculates the value for a bigint input using bigint arithmetic
+ * @param num - Input file size in bytes
+ * @param e - Current exponent
+ * @param isDecimal - Whether using decimal base
+ * @param bits - Whether to calculate bits
+ * @param ceil - Ceiling value for auto-increment
+ * @param autoExponent - Whether exponent is auto (-1 or NaN)
+ * @returns Object with result and e properties
+ */
+export function calculateBigIntValue(
+  num: bigint,
   e: number,
   isDecimal: boolean,
   bits: boolean,
@@ -125,7 +166,8 @@ export function applyNumberFormatting(
   localeOptions: Intl.NumberFormatOptions,
   separator: string,
   pad: boolean,
-  round: number
+  round: number,
+  roundingFunc: (x: number) => number
 ): string | number;
 
 /**
@@ -222,7 +264,8 @@ export function decorateResult(
   fullforms: string[],
   actualStandard: string,
   e: number,
-  bits: boolean
+  bits: boolean,
+  roundingFunc: (x: number) => number
 ): void;
 
 /**

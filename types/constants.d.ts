@@ -1,6 +1,7 @@
 // Error Messages
 export const INVALID_NUMBER: "Invalid number";
 export const INVALID_ROUND: "Invalid rounding method";
+export const INVALID_PRECISION: "Invalid precision";
 
 // Standard Types
 export const IEC: "iec";
@@ -54,7 +55,7 @@ export const STRINGS: {
 };
 
 // Pre-computed lookup tables for performance optimization
-export const BINARY_POWERS: readonly [
+export const BINARY_POWERS: [
   1, // 2^0
   1024, // 2^10
   1048576, // 2^20
@@ -66,7 +67,7 @@ export const BINARY_POWERS: readonly [
   1208925819614629174706176 // 2^80
 ];
 
-export const DECIMAL_POWERS: readonly [
+export const DECIMAL_POWERS: [
   1, // 10^0
   1000, // 10^3
   1000000, // 10^6
