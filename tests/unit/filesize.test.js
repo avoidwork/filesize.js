@@ -812,6 +812,24 @@ describe("filesize", () => {
 				assert.deepStrictEqual(filesize(-0.4, { output: "array" }), ["-0", "B"]);
 			});
 
+			it("should format a negative value that rounds to zero like any other zero", () => {
+				// pad + separator used to drop the sign ("0,00 MB")
+				assert.strictEqual(filesize(-1, { exponent: 2, pad: true, separator: "," }), "-0,00 MB");
+				assert.strictEqual(filesize(-0.4, { pad: true, separator: "," }), "-0,00 B");
+				// a locale used to skip padding, localeOptions and locale digits ("-0 MB")
+				assert.strictEqual(filesize(-1, { exponent: 2, pad: true, locale: "de" }), "-0,00 MB");
+				assert.strictEqual(
+					filesize(-1, { exponent: 2, locale: "de", localeOptions: { minimumFractionDigits: 1 } }),
+					"-0,0 MB",
+				);
+				assert.strictEqual(filesize(-0.4, { locale: "sv" }), "−0 B");
+				assert.strictEqual(
+					filesize(-1, { exponent: 2, pad: true, locale: true }),
+					`${(-0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} MB`,
+				);
+				assert.strictEqual(filesize(-0.4, { locale: "de" }), "-0 B");
+			});
+
 			it("should use singular fullform for negative one", () => {
 				assert.strictEqual(filesize(-1, { fullform: true }), "-1 byte");
 				assert.strictEqual(filesize(-1, { fullform: true, precision: 3 }), "-1.00 byte");
