@@ -3,7 +3,7 @@
  *
  * @copyright 2026 Jason Mulligan <jason.mulligan@avoidwork.com>
  * @license BSD-3-Clause
- * @version 11.0.34
+ * @version 11.0.35
  */
 (function(g,f){typeof exports==='object'&&typeof module!=='undefined'?f(exports):typeof define==='function'&&define.amd?define(['exports'],f):(g=typeof globalThis!=='undefined'?globalThis:g||self,f(g.filesize={}));})(this,(function(exports){'use strict';// Error Messages
 const INVALID_NUMBER = "Invalid number";
@@ -398,6 +398,11 @@ function applyNumberFormatting(
 ) {
 	let result = value;
 
+	// decorateResult passes a negative value that rounds to zero as "-0" so its
+	// sign survives. It must still get the locale, padding and separator that
+	// any other zero gets.
+	const negativeZero = result === "-0";
+
 	// When padding alongside a locale, let the locale formatter emit the fixed
 	// number of fraction digits. The manual string padding below cannot tell a
 	// locale-inserted grouping separator from the decimal separator, so it
@@ -406,11 +411,12 @@ function applyNumberFormatting(
 		pad && round > 0 ? { minimumFractionDigits: round, maximumFractionDigits: round } : undefined;
 
 	// Strings from toPrecision ignore toLocaleString; preserve zero strings
-	// so their precision (e.g. "0.00") is retained.
+	// so their precision (e.g. "0.00") is retained. "-0" becomes the number -0,
+	// which the locale formatter prints with its own minus sign.
 	if (
 		(locale === true || locale.length > 0) &&
 		typeof result === "string" &&
-		Number(result) !== 0
+		(Number(result) !== 0 || negativeZero)
 	) {
 		result = parseFloat(result);
 	}
@@ -423,7 +429,9 @@ function applyNumberFormatting(
 	} else {
 		// Round before separator replacement to ensure excess decimal places
 		// are truncated when pad is also set (fixes padding + separator bug).
-		if (separator.length > 0 && pad && round > 0) {
+		// Skipped for "-0": the arithmetic would turn it into -0, whose string
+		// form "0" drops the sign.
+		if (separator.length > 0 && pad && round > 0 && !negativeZero) {
 			const p = Math.pow(10, round);
 			result = roundingFunc(result * p) / p;
 		}
