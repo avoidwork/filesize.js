@@ -1161,6 +1161,19 @@ describe("filesize", () => {
 					assert.strictEqual(objectResult.value, 1.02);
 					assert.strictEqual(objectResult.symbol, "kB");
 				});
+
+				it("should keep an exact whole value with floor and ceil rounding", () => {
+					assert.strictEqual(filesize(59033n, { exponent: 0, roundingMethod: "floor" }), "59033 B");
+					assert.strictEqual(filesize(59031n, { exponent: 0, roundingMethod: "ceil" }), "59031 B");
+					assert.strictEqual(
+						filesize(76745800n, { exponent: 1, roundingMethod: "floor" }),
+						"76745.8 kB",
+					);
+					assert.strictEqual(
+						filesize(246770688n, { base: 2, exponent: 1, roundingMethod: "floor" }),
+						"240987 KiB",
+					);
+				});
 			});
 
 			describe("partial() with BigInt input", () => {

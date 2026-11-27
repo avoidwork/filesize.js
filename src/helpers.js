@@ -241,11 +241,21 @@ export function calculateBigIntExponent(num, e, exponent, isDecimal, precision) 
  */
 export function calculateBigIntValue(num, e, isDecimal, bits, ceil, autoExponent = true) {
 	const power = isDecimal ? 10n ** BigInt(3 * e) : 1024n ** BigInt(e);
-	// Scaled division preserves precision above Number.MAX_SAFE_INTEGER.
-	// Multiply by 10^16 before dividing, then scale back down, so the
-	// quotient keeps ~16 significant digits instead of collapsing to a float.
-	const SHIFT = 10n ** 16n;
-	let result = Number((num * SHIFT) / power) / Number(SHIFT);
+	const n = Number(num);
+	const d = Number(power);
+	let result;
+	if (BigInt(n) === num && BigInt(d) === power) {
+		// Both values are exact numbers, so one division gives the correctly
+		// rounded quotient (the same value as the number path). The scaled
+		// division below rounds twice and turns 59033 into 59032.99999999999.
+		result = n / d;
+	} else {
+		// Scaled division preserves precision above Number.MAX_SAFE_INTEGER.
+		// Multiply by 10^16 before dividing, then scale back down, so the
+		// quotient keeps ~16 significant digits instead of collapsing to a float.
+		const SHIFT = 10n ** 16n;
+		result = Number((num * SHIFT) / power) / Number(SHIFT);
+	}
 
 	if (bits) {
 		result *= 8;
